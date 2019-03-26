@@ -6,13 +6,53 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="@drawable/bg">
 
+        <ImageView
+            android:id="@+id/imgView_Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="230dp"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            app:srcCompat="@drawable/title" />
+
+        <ImageView
+            android:id="@+id/Btn_CreateGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="120dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="160dp"
+            android:layout_marginEnd="440dp"
+            android:layout_marginBottom="200dp"
+            android:padding="0dp"
+            app:srcCompat="@drawable/btn_creategame" />
+
+        <ImageView
+            android:id="@+id/Btn_JoinGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="440dp"
+            android:layout_marginTop="160dp"
+            android:layout_marginEnd="120dp"
+            android:layout_marginBottom="200dp"
+            app:srcCompat="@drawable/btn_joingame" />
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
