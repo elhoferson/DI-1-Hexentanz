@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/dice"
-        android:layout_width="305dp"
-        android:layout_height="365dp"
-        app:srcCompat="@drawable/dice1"
-        tools:layout_editor_absoluteX="53dp"
-        tools:layout_editor_absoluteY="183dp"
-        />
+
+
+    <Button
+        android:id="@+id/btn_dice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Würfeln"
+        tools:layout_editor_absoluteX="544dp"
+        tools:layout_editor_absoluteY="216dp" />
+
 </android.support.constraint.ConstraintLayout>
