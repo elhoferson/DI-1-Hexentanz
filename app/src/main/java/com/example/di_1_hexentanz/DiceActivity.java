@@ -1,6 +1,7 @@
 package com.example.di_1_hexentanz;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -43,9 +45,9 @@ public class DiceActivity extends Activity {
             float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
 
 
-            if (acceleration > SHAKE_THRESHOLD)
+            if (acceleration > SHAKE_THRESHOLD) {
                 rollDice();
-
+            }
 
 
         }
@@ -75,28 +77,47 @@ public class DiceActivity extends Activity {
     public void rollDice() {
 
         int randomNumber = randomGenerator.nextInt(6) + 1;
+        String number = "0";
 
         switch (randomNumber) {
             case 1:
                 dice.setImageResource(R.drawable.dice1);
+                number = "1";
                 break;
             case 2:
                 dice.setImageResource(R.drawable.dice2);
+                number = "2";
                 break;
             case 3:
                 dice.setImageResource(R.drawable.dice3);
+                number = "3";
                 break;
             case 4:
                 dice.setImageResource(R.drawable.dice4);
+                number = "4";
                 break;
             case 5:
                 dice.setImageResource(R.drawable.dice5);
+                number = "5";
                 break;
             case 6:
                 dice.setImageResource(R.drawable.dice6);
+                number = "6";
+                rolledNumber6();
                 break;
         }
 
+        Toast toast = Toast.makeText(getApplicationContext(), "You've got the number "+ number, Toast.LENGTH_LONG);
+        toast.show();
+
+        //Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        //startActivity(i);
+
+
+    }
+
+
+    public void rolledNumber6() {
 
     }
 }
