@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WalkingActivity">
+
+    <ImageView
+        android:id="@+id/spielbrett"
+        android:layout_width="642dp"
+        android:layout_height="421dp"
+        app:srcCompat="@drawable/spielfeld"
+        tools:layout_editor_absoluteX="87dp"
+        tools:layout_editor_absoluteY="0dp" />
+</android.support.constraint.ConstraintLayout>
