@@ -5,67 +5,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:screenOrientation="landscape"
-    android:layout_height="match_parent">
-
-<<<<<<< HEAD
+    android:layout_height="match_parent"
+    tools:context="com.example.di_1_hexentanz.MainActivity">
 
 
     <Button
         android:id="@+id/btn_dice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="328dp"
+        android:layout_marginBottom="8dp"
         android:text="Würfeln"
-        tools:layout_editor_absoluteX="544dp"
-        tools:layout_editor_absoluteY="216dp" />
-=======
-    <ImageView
-        android:id="@+id/imgBackground2"
-        android:layout_width="859dp"
-        android:layout_height="437dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg" />
+        app:layout_constraintVertical_bias="0.452" />
 
-    <ImageView
-        android:id="@+id/imgTitle2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="100dp"
-        android:layout_marginBottom="260dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/title" />
->>>>>>> 90b9bfaefd2b6823cff67a6e72354f3c4e92fc86
 
-    <Button
-        android:id="@+id/btnCreateGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorButton"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:text="CREATE GAME"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/imgTitle2"
-        app:layout_constraintTop_toBottomOf="@+id/imgTitle2" />
-
-    <Button
-        android:id="@+id/btnJoinGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorButton"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:text="JOIN GAME"
-        android:textSize="18sp"
-        app:layout_constraintRight_toRightOf="@+id/imgTitle2"
-        app:layout_constraintTop_toBottomOf="@+id/imgTitle2" />
 </android.support.constraint.ConstraintLayout>

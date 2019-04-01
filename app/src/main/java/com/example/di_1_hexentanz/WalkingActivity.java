@@ -1,6 +1,8 @@
 package com.example.di_1_hexentanz;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class WalkingActivity extends Activity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

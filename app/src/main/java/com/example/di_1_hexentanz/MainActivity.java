@@ -18,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
         btn_dice = findViewById(R.id.btn_dice);
         btn_dice.setOnClickListener(new View.OnClickListener() {
-            @Override
+            @
+                    Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), DiceActivity.class);
                 startActivity(i);
