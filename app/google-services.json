@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "278630117164",
+    "firebase_url": "https://di-1-hexentanz.firebaseio.com",
+    "project_id": "di-1-hexentanz",
+    "storage_bucket": "di-1-hexentanz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278630117164:android:7189ab09d7512aa5",
+        "android_client_info": {
+          "package_name": "com.example.di_1_hexentanz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278630117164-itrthe0e40hn1j9049ket0j8mccdea7d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.di_1_hexentanz",
+            "certificate_hash": "e2085aabb36a4ea4eebd46aca2790aa4ac788c63"
+          }
+        },
+        {
+          "client_id": "278630117164-n4e7gpqv3uufjkm3tnfho6g6ga1p200j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh3m-Xl6a02X164QlXPkONiACgjUxq-PI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278630117164-n4e7gpqv3uufjkm3tnfho6g6ga1p200j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

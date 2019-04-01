@@ -6,28 +6,53 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.firebase.auth.FirebaseAuth;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import java.util.Currency;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btn_dice;
+    private SignInButton mGoogleBtn;
+    private static final int RC_SIGN_IN = 1;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-        btn_dice = findViewById(R.id.btn_dice);
-        btn_dice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), DiceActivity.class);
-                startActivity(i);
-            }
-        });
+            mGoogleBtn = findViewById(R.id.googleBtn);
+
+
+            // Configure sign-in to request the user's ID, email address, and basic
+// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+            // Build a GoogleSignInClient with the options specified by gso.
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+            // [START initialize_auth]
+            // Initialize Firebase Auth
+            mAuth = FirebaseAuth.getInstance();
+            // [END initialize_auth]
+
+
+                }
 
 
 
     }
-
-
-}
