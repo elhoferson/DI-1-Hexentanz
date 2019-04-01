@@ -12,8 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".WalkingActivity"
-            android:screenOrientation="landscape">
-        </activity>
+            android:screenOrientation="landscape"
+            />
         <activity android:name=".DiceActivity"
             android:screenOrientation="landscape"/>
         <activity
