@@ -17,7 +17,6 @@ public class WalkingActivity extends Activity {
 
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
-        // int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
