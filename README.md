@@ -1,6 +1,6 @@
 # DI-1-Hexentanz
 
-[![Build Status](https://travis-ci.com/elhoferson/DI-1-Hexentanz.svg?branch=master](https://travis-ci.com/elhoferson/DI-1-Hexentanz)
+[![Build Status](https://travis-ci.com/elhoferson/DI-1-Hexentanz.svg?branch=master]
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=DI-1-Hexentanz&metric=alert_status)](https://sonarcloud.io/dashboard?id=DI-1-Hexentanz)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DI-1-Hexentanz&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=DI-1-Hexentanz)
 
@@ -60,30 +60,14 @@ We used __git__ for versioning, and __Github__ for pull requests, reviews, hooks
 ## Authors
 * __Hofer Alexander__
   * Continous Integration 
-  * Card design
-  * Sensor integration
 * __Hofmann Daniel__
-  * Networking
-  * Refactoring
-  * Assuring Code Quality
+  * 
 * __Hülser Matthias__
-  * Game framework
-  * Component integration
-  * Interface design
+  * Board Game Design
 * __Isak Selina__
-  * Continous Integration 
-  * Card design
-  * Sensor integration
+  * Firebase integration
 * __Szolderits Chiara__
-    * Networking
-    * Refactoring
-    * Assuring Code Quality
+    * Sensor implementation
 * __Wiltschnig Kevin__
-    * Game framework
-    * Component integration
-    * Interface design
+    * 
   
-
-## Acknowledgment
-Thank you [stackoverflow](https://stackoverflow.com), for answering many questions :)
-
