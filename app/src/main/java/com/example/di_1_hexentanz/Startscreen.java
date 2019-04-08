@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +30,8 @@ public class Startscreen extends AppCompatActivity {
         BtnCreateGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Create Game Button", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                startActivity(intent);
             }
         });
     }
