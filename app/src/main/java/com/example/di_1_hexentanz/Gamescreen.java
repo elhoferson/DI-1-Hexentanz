@@ -31,6 +31,7 @@ public class Gamescreen extends AppCompatActivity {
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
+
         for (int i = 13; i < 26; i++) {
             felder[i] = new Feld(i, width-600+(i-13)*100, height-300, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
