@@ -18,4 +18,12 @@ public class Feld {
     public FeldView getFeldView() {
         return feldView;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

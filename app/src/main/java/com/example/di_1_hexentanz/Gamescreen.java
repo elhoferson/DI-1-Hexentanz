@@ -31,20 +31,23 @@ public class Gamescreen extends AppCompatActivity {
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
-        for (int i = 13; i < 26; i++) {
-            felder[i] = new Feld(i, width-600+(i-13)*100, height-300, getApplicationContext());
+        for (int i = 13; i < 18; i++) {
+            felder[i] = new Feld(i, width+600, height-300-(i-18)*100, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
-        for (int i = 26; i < 31; i++) {
-            felder[i] = new Feld(i, width-600, height-200+(i-26)*100, getApplicationContext());
+        for (int i = 18; i < 31; i++) {
+            felder[i] = new Feld(i, width+600-(i-18)*100, height-300, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 31; i < 36; i++) {
-            felder[i] = new Feld(i, width+600, height-200+(i-31)*100, getApplicationContext());
+            felder[i] = new Feld(i, width-600, height-200+(i-31)*100, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
+
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
+        addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
     }
 
     @Override

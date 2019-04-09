@@ -20,12 +20,6 @@ public class FeldView extends View {
         this.feldInstanz = feldInstanz;
         this.number = number;
         paint = new Paint();
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Feld " + number, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public void onDraw(Canvas canvas) {
