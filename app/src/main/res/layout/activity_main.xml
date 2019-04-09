@@ -15,7 +15,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg" />
+        />
 
     <ImageView
         android:id="@+id/imgTitle2"
@@ -29,7 +29,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/title" />
+        />
 
     <Button
         android:id="@+id/btnCreateGame"
@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/colorButton"
+        android:onClick="onClick"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="CREATE GAME"
@@ -50,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/colorButton"
+        android:onClick="onClick"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         android:text="JOIN GAME"

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DI-1-Hexentanz</string>
+    <string name="title_activity_join">JoinActivity</string>
+    <string name="title_activity_create">CreateActivity</string>
 </resources>
