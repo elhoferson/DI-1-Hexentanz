@@ -22,6 +22,9 @@ public class DiceActivity extends Activity {
     SensorManager shakingSensor;
     Sensor shakingAccelerometer;
 
+    public DiceActivity() {
+
+    }
 
     private Random randomGenerator = new Random();
     private static int SHAKE_THRESHOLD = 3;

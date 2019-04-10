@@ -27,8 +27,8 @@ public class WalkingActivity extends Activity {
 
     public static int walkFields(int numberOfFields) {
 
-        System.out.printf("gehe %d felder", numberOfFields);
         return numberOfFields;
+
 
     }
 }
