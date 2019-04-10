@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import java.util.Random;
 
-public class Dice extends AppCompatActivity {
+public class Dice extends Activity {
 
     ImageView dice;
     SensorManager shakingSensor;
@@ -31,6 +31,8 @@ public class Dice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice);
+
+
 
         dice = findViewById(R.id.dice);
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);

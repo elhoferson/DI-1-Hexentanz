@@ -1,6 +1,8 @@
 package com.example.di_1_hexentanz;
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -61,6 +63,7 @@ public class Gamescreen extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
 
 
     }
