@@ -6,4 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg1"
-    tools:context=".Gamescreen" />
+    tools:context=".Gamescreen" >
+
+    <Button
+        android:id="@+id/btnYourTurn"
+        android:layout_width="243dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="156dp"
+        android:layout_marginEnd="248dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_yourturn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.689"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.083" />
+</android.support.constraint.ConstraintLayout>
