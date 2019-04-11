@@ -8,28 +8,37 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
     int width;
     int height;
-    Button btn_dice;
+    private static final int FIELD_SIZE = 36;
+    ImageButton btn_dice;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamescreen);
+
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels / 2) - 80;
         int width = displayMetrics.widthPixels / 2;
+
 
         for (int i = 0; i < 13; i++) {
             felder[i] = new Feld(i, width - 600 + i * 100, height + 300, getApplicationContext());
@@ -51,22 +60,14 @@ public class Gamescreen extends AppCompatActivity {
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, btn_dice);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
-
-
-        btn_dice = findViewById(R.id.btnYourTurn);
-        btn_dice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Dice.class);
-                startActivity(i);
-            }
-        });
 
 
 
     }
+
+
 
     @Override
     protected void onResume() {
@@ -76,4 +77,29 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
+
+
+
+    public void yourTurn(View v) {
+        Intent dice = new Intent(this, Dice.class);
+        startActivity(dice);
+
+    }
+
+
+
+    /*
+   private void moveWitch() {
+       Dice dice = new Dice();
+       //Figur figur = new Figur();
+
+       int step = dice.rollDice();
+       //int newPos = figur.getPos() + step;
+
+      '/' if(newPos >= FIELD_SIZE) {
+
+       }
+   }
+   */
 }

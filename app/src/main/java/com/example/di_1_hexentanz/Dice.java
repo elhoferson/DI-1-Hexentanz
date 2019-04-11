@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import java.util.Random;
 
-public class Dice extends Activity {
+public class Dice extends AppCompatActivity {
 
     ImageView dice;
     SensorManager shakingSensor;
@@ -37,6 +37,7 @@ public class Dice extends Activity {
         dice = findViewById(R.id.dice);
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);
         shakingAccelerometer = shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
     }
 
 
@@ -79,7 +80,7 @@ public class Dice extends Activity {
     }
 
 
-    public void rollDice() {
+    public int rollDice() {
 
         int randomNumber = randomGenerator.nextInt(6) + 1;
         String number = "0";
@@ -88,36 +89,35 @@ public class Dice extends Activity {
             case 1:
                 dice.setImageResource(R.drawable.dice1);
                 number = "1";
-                WalkingActivity.walkFields(1);
-                break;
+                return 1;
             case 2:
                 dice.setImageResource(R.drawable.dice2);
                 number = "2";
-                WalkingActivity.walkFields(2);
-                break;
+                Witch.walkFields(2);
+                return 2;
             case 3:
                 dice.setImageResource(R.drawable.dice3);
                 number = "3";
-                WalkingActivity.walkFields(3);
-                break;
+                return 3;
             case 4:
                 dice.setImageResource(R.drawable.dice4);
                 number = "4";
-                WalkingActivity.walkFields(4);
-                break;
+                return 4;
             case 5:
                 dice.setImageResource(R.drawable.dice5);
                 number = "5";
-                WalkingActivity.walkFields(5);
-                break;
+                return 5;
             case 6:
                 dice.setImageResource(R.drawable.dice6);
                 rolledNumber6();
                 break;
+
         }
 
         Toast toast = Toast.makeText(getApplicationContext(), "You've got the number " + number, Toast.LENGTH_LONG);
         toast.show();
+
+        return 6;
 
     }
 
@@ -132,12 +132,12 @@ public class Dice extends Activity {
         })
                 .setNegativeButton( "6 Felder gehen", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(getApplicationContext(), WalkingActivity.class);
+                Intent i = new Intent(getApplicationContext(), Witch.class);
                 startActivity(i);
-                    WalkingActivity.walkFields(6);
+                    Witch.walkFields(6);
             }
         })
-        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
 
 

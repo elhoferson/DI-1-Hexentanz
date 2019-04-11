@@ -13,7 +13,12 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".Gamescreen"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".Startscreen"
             android:screenOrientation="landscape">
@@ -22,17 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".WalkingActivity"
-            android:screenOrientation="landscape"
-            />
         <activity android:name=".Dice"
             android:screenOrientation="landscape"/>
-
-
-
-
 
     </application>
 
