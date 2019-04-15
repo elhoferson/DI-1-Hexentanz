@@ -15,10 +15,9 @@ import android.widget.Toast;
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
-    int width;
-    int height;
-    private static final int FIELD_SIZE = 36;
     ImageButton btn_dice;
+    FeldView view;
+
 
 
     @Override
@@ -40,6 +39,16 @@ public class Gamescreen extends AppCompatActivity {
         int width = displayMetrics.widthPixels / 2;
 
 
+        drawBoardGame(height, width);
+
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, btn_dice);
+        addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
+
+
+
+    }
+
+    public void drawBoardGame(int height, int width) {
         for (int i = 0; i < 13; i++) {
             felder[i] = new Feld(i, width - 600 + i * 100, height + 300, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
@@ -59,13 +68,8 @@ public class Gamescreen extends AppCompatActivity {
             felder[i] = new Feld(i, width - 600, height - 200 + (i - 31) * 100, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
-
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, btn_dice);
-        addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
-
-
-
     }
+
 
 
 
@@ -81,6 +85,7 @@ public class Gamescreen extends AppCompatActivity {
 
 
 
+
     public void yourTurn(View v) {
         Intent dice = new Intent(this, Dice.class);
         startActivity(dice);
@@ -89,17 +94,7 @@ public class Gamescreen extends AppCompatActivity {
 
 
 
-    /*
-   private void moveWitch() {
-       Dice dice = new Dice();
-       //Figur figur = new Figur();
 
-       int step = dice.rollDice();
-       //int newPos = figur.getPos() + step;
 
-      '/' if(newPos >= FIELD_SIZE) {
 
-       }
-   }
-   */
 }

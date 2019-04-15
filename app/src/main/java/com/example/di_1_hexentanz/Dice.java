@@ -1,8 +1,6 @@
 package com.example.di_1_hexentanz;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -25,7 +23,7 @@ public class Dice extends AppCompatActivity {
 
 
     private Random randomGenerator = new Random();
-    private static int SHAKE_THRESHOLD = 3;
+    private static int SHAKE_THRESHOLD = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +35,12 @@ public class Dice extends AppCompatActivity {
         dice = findViewById(R.id.dice);
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);
         shakingAccelerometer = shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 
     }
 
@@ -80,44 +84,37 @@ public class Dice extends AppCompatActivity {
     }
 
 
-    public int rollDice() {
+    public void rollDice() {
 
         int randomNumber = randomGenerator.nextInt(6) + 1;
-        String number = "0";
 
         switch (randomNumber) {
             case 1:
                 dice.setImageResource(R.drawable.dice1);
-                number = "1";
-                return 1;
+                backToGamescreen(1);
+                break;
             case 2:
                 dice.setImageResource(R.drawable.dice2);
-                number = "2";
-                Witch.walkFields(2);
-                return 2;
+                backToGamescreen(2);
+                break;
             case 3:
                 dice.setImageResource(R.drawable.dice3);
-                number = "3";
-                return 3;
+                backToGamescreen(3);
+                break;
             case 4:
                 dice.setImageResource(R.drawable.dice4);
-                number = "4";
-                return 4;
+                backToGamescreen(4);
+                break;
             case 5:
                 dice.setImageResource(R.drawable.dice5);
-                number = "5";
-                return 5;
+                backToGamescreen(5);
+                break;
             case 6:
                 dice.setImageResource(R.drawable.dice6);
                 rolledNumber6();
                 break;
 
         }
-
-        Toast toast = Toast.makeText(getApplicationContext(), "You've got the number " + number, Toast.LENGTH_LONG);
-        toast.show();
-
-        return 6;
 
     }
 
@@ -132,15 +129,29 @@ public class Dice extends AppCompatActivity {
         })
                 .setNegativeButton( "6 Felder gehen", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(getApplicationContext(), Witch.class);
-                startActivity(i);
-                    Witch.walkFields(6);
+                backToGamescreen(6);
             }
         })
         .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
 
 
+
+    }
+
+    public int backToGamescreen(int dicenr) {
+        AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
+        rolledNumber.setTitle("Du hast gewürfelt: " + dicenr);
+        rolledNumber.setPositiveButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(getApplicationContext(), Gamescreen.class);
+                startActivity(i);
+            }
+        })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
+
+        return dicenr;
 
     }
 }
