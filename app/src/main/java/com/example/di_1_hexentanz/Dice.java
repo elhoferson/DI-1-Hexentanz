@@ -86,7 +86,7 @@ public class Dice extends AppCompatActivity {
 
     public void rollDice() {
 
-        int randomNumber = randomGenerator.nextInt(6) + 1;
+        int randomNumber = getRandomNumber();
 
         switch (randomNumber) {
             case 1:
@@ -116,6 +116,10 @@ public class Dice extends AppCompatActivity {
 
         }
 
+    }
+
+    public int getRandomNumber() {
+        return randomGenerator.nextInt(6) + 1;
     }
 
 
