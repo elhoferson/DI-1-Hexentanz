@@ -1,6 +1,7 @@
 package com.example.di_1_hexentanz;
 
 import android.graphics.Color;
+import android.widget.Toast;
 
 public class DetermineWinner {
 
@@ -11,40 +12,43 @@ public class DetermineWinner {
     Color witch1 = Color.valueOf(1);
     Color witch2 = Color.valueOf(2);
 
-    int p1goal = 0;
 
     String winner = "";
 
 
 
-    public boolean isrightWitch(Player player, Color witch) {         //Color witch is placeholder for real witches
+    public void isrightWitch(Player player, Color witch) {         //Color witch is placeholder for real witches
         if(player.getColor().equals(witch)){
             int goal = player.getWitchesInGoal();
             player.setWitchesInGoal(goal++);
 
             if(player.getWitchesInGoal() == 4){                       //number of ingoal is gonna change depending on player numbers
-                winner = player.getName();
+                winner = player.getName();                            //placeholder for ending game method
+                endGame();
             }
-            return true;
         }
-        else {return false;}
-    }
-
-    public boolean checkWitches(Player player, Color witch){
-
-        return true;
-
+        else {
+            wrongWitchinGoal(witch);                                            //placeholder for switching the witch to the real owner of the color
+        }
     }
 
 
 
-    public boolean isWinner(Color player){
+
+    public void endGame(){
 
 
 
 
 
-        return true;
+    }
+
+    public void wrongWitchinGoal(Color witch){                      //changes the witch to the right owners goal
+
+
+
+
+
     }
 
 
