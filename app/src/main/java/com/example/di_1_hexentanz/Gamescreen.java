@@ -46,8 +46,11 @@ public class Gamescreen extends AppCompatActivity {
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this);
         addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
+
+        // Witch testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[15]),getApplicationContext());
+        // testWitch.putWitchOnGameboard(this);
     }
 
     @Override
