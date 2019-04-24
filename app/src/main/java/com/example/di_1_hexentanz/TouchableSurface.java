@@ -18,21 +18,25 @@ public class TouchableSurface extends View {
     Feld[] felder;
     ImageButton dice;
     int [] diceNr = {1,2,3,4,5,6};
+    Witch[] witch;
 
 
 
-    public TouchableSurface(final Context context, Feld[] felder, ImageButton dice) {
+    public TouchableSurface(final Context context, Feld[] felder, ImageButton dice, Witch[] witch) {
         super(context);
         this.felder = felder;
         this.dice = findViewById(R.id.btnYourTurn);
-        this.setOnTouchListener(handleTouch);
+        //this.setOnTouchListener(handleTouch);
         this.setOnTouchListener(yourTurn);
+        this.witch = witch;
+        this.setOnTouchListener(setWitch);
 
 
 
 
     }
 
+    /*
     private View.OnTouchListener handleTouch = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -44,7 +48,7 @@ public class TouchableSurface extends View {
                 case MotionEvent.ACTION_DOWN:
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
-                            Toast.makeText(getContext(), "Feld "+i,Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "Feld "+i,Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -61,6 +65,8 @@ public class TouchableSurface extends View {
         }
 
     };
+
+    */
 
 
 
@@ -86,6 +92,38 @@ public class TouchableSurface extends View {
 
         }
 
+
+    };
+
+
+
+    private View.OnTouchListener setWitch = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    for (int i = 0; i < witch.length; i++) {
+                        if (x < witch[i].getX() + 45 && x > witch[i].getX() - 45 && y < witch[i].getY() + 45 && y > witch[i].getY() - 45) {
+                            //Toast.makeText(getContext(), "Feld "+i,Toast.LENGTH_SHORT).show();
+
+
+                        }
+
+
+                    }
+                    return true;
+
+
+
+            }
+
+            return false;
+
+        }
 
     };
 
