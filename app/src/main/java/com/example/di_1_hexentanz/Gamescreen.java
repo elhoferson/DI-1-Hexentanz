@@ -46,11 +46,8 @@ public class Gamescreen extends AppCompatActivity {
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this);
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
         addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
-
-        // Witch testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[15]),getApplicationContext());
-        // testWitch.putWitchOnGameboard(this);
     }
 
     @Override
@@ -60,5 +57,11 @@ public class Gamescreen extends AppCompatActivity {
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    public void yourTurn(View v) {
+        Intent dice = new Intent(this, Dice.class);
+        startActivity(dice);
+
     }
 }

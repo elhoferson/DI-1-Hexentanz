@@ -13,6 +13,7 @@ public class FeldView extends View {
     Feld feldInstanz;
     Paint paint;
 
+
     public FeldView(final Context context, int x, int y, Feld feldInstanz, final int number) {
         super(context);
         this.x = x;
@@ -23,11 +24,10 @@ public class FeldView extends View {
     }
 
     public void onDraw(Canvas canvas) {
-        int radius = 45;
+
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
-        canvas.drawCircle(x, y, radius, paint);
+        canvas.drawCircle(x, y, 45, paint);
     }
-
 
 }

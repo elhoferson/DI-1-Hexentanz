@@ -26,4 +26,7 @@ public class Feld {
     public int getY() {
         return y;
     }
+
+
+
 }
