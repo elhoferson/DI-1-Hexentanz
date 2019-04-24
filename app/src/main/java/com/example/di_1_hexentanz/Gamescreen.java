@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
+    ImageButton btn_dice;
 
 
     @Override
@@ -23,9 +26,25 @@ public class Gamescreen extends AppCompatActivity {
 
         drawBoardGame();
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this, btn_dice);
         addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
+
+
+
+        ImageButton btn_dice = findViewById(R.id.btnYourTurn);
+        btn_dice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Dice.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
+
+
+
 
     private void drawBoardGame() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -64,9 +83,11 @@ public class Gamescreen extends AppCompatActivity {
     }
 
 
+    /*
     public void yourTurn(View v) {
         Intent dice = new Intent(this, Dice.class);
         startActivity(dice);
 
     }
+    */
 }

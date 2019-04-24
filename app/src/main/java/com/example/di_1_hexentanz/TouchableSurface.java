@@ -5,19 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ImageButton;
+
 
 public class TouchableSurface extends View {
     Feld[] felder;
     Context context;
     Activity activity;
+    ImageButton btn_dice;
 
-    public TouchableSurface(final Context context, Feld[] felder) {
+    public TouchableSurface(final Context context, Feld[] felder, Activity activity, ImageButton btn_dice) {
         super(context);
         this.felder = felder;
+        this.context = context;
+        this.activity = activity;
+        this.btn_dice = btn_dice;
         this.setOnTouchListener(handleTouch);
-        this.setOnTouchListener(yourTurn);
+        //this.setOnTouchListener(yourTurn);
     }
+
+
+
 
     private View.OnTouchListener handleTouch = new OnTouchListener() {
         @Override
@@ -43,6 +52,25 @@ public class TouchableSurface extends View {
 
 
 
+/*
+    private View.OnClickListener yourTurn = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent dice = new Intent(v.getContext(), Dice.class);
+            v.getContext().startActivity(dice);
+
+        }
+    };
+
+    */
+
+
+
+
+
+
+/*
+
     private View.OnTouchListener yourTurn = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -67,6 +95,12 @@ public class TouchableSurface extends View {
 
 
     };
+
+    */
+
+
+
+
 
 
 
