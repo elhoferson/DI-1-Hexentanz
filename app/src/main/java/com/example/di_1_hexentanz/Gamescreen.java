@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -9,8 +10,7 @@ import android.widget.Toast;
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
-    int width;
-    int height;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,13 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        drawBoardGame();
+
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
+        addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
+    }
+
+    private void drawBoardGame() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels/2)-80;
@@ -45,9 +52,6 @@ public class Gamescreen extends AppCompatActivity {
             felder[i] = new Feld(i, width-600, height-200+(i-31)*100, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
-
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder);
-        addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
     }
 
     @Override
@@ -58,6 +62,7 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
 
     public void yourTurn(View v) {
         Intent dice = new Intent(this, Dice.class);

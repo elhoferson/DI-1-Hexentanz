@@ -14,7 +14,7 @@
 
 
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".Startscreen"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,12 +23,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Gamescreen"></activity>
-        <activity
-            android:name=".Startscreen"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Gamescreen"
+            android:screenOrientation="landscape"></activity>
 
         <activity android:name=".Dice"
             android:screenOrientation="landscape"/>
