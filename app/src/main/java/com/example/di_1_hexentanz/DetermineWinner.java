@@ -28,7 +28,7 @@ public class DetermineWinner {
             }
         }
         else {
-            wrongWitchinGoal(witch);                                            //placeholder for switching the witch to the real owner of the color
+            wrongWitchinGoal(witch);                                  //placeholder for switching the witch to the real owner of the color
         }
     }
 
@@ -44,6 +44,9 @@ public class DetermineWinner {
     }
 
     public void wrongWitchinGoal(Color witch){                      //changes the witch to the right owners goal
+
+
+        
 
 
 
