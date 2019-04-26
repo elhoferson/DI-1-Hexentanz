@@ -14,6 +14,7 @@ public class TouchableSurface extends View {
     Context context;
     Activity activity;
     ImageButton btn_dice;
+    private PlayerColor color;
 
     public TouchableSurface(final Context context, Feld[] felder, Activity activity, ImageButton btn_dice) {
         super(context);
@@ -38,7 +39,7 @@ public class TouchableSurface extends View {
                 case MotionEvent.ACTION_DOWN:
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX()+45 && x > felder[i].getX()-45 && y < felder[i].getY()+45 && y > felder[i].getY()-45) {
-                            Witch testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[i], felder[15]), context);
+                            Witch testWitch = new Witch(0, new Player("name", color,1, felder[i], felder[15]), context);
                             testWitch.putWitchOnGameboard(activity);
                         }
                     }
@@ -49,6 +50,13 @@ public class TouchableSurface extends View {
         }
     };
 
+    public void setColor(PlayerColor color){
+        this.color = color;
+    }
+
+    public PlayerColor getColor(){
+        return this.color;
+    }
 
 
 

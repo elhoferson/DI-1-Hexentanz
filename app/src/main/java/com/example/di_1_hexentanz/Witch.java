@@ -16,10 +16,12 @@ public class Witch {
     Feld currentField;
     WitchView witchView;
 
+
     public Witch(int number, Player player, Context context) {
         this.number = number;
         this.player = player;
         this.witchView = new WitchView(context, player.getStartFeld().getX(), player.getStartFeld().getY(), this);
+        this.witchView.setColor(player.getColor());
     }
 
     public void putWitchOnGameboard(Activity activity) {

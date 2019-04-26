@@ -13,6 +13,11 @@ public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
     ImageButton btn_dice;
+    private static PlayerColor color;
+
+    public static void setColor(PlayerColor color){
+        Gamescreen.color = color;
+    }
 
 
     @Override
@@ -27,6 +32,7 @@ public class Gamescreen extends AppCompatActivity {
         drawBoardGame();
 
         TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this, btn_dice);
+        surface.setColor(color);
         addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
 
 

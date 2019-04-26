@@ -12,6 +12,7 @@ class WitchView extends View {
     int x,y;
     Witch witchInstance;
     Paint paint;
+    PlayerColor color;
 
     public WitchView(Context context, int x, int y, Witch witchInstance) {
         super(context);
@@ -25,7 +26,7 @@ class WitchView extends View {
     protected void onDraw(Canvas canvas) {
         int radius = 40;
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.GRAY);
+        paint.setColor(getColorFromPlayerColor(this.color));
         canvas.drawCircle(x, y, radius, paint);
     }
 
@@ -50,5 +51,31 @@ class WitchView extends View {
                 invalidate();
             }
         });
+    }
+
+    public void setColor(PlayerColor color){
+        this.color = color;
+    }
+
+    public int getColorFromPlayerColor(PlayerColor playerColor){
+        int color;
+        switch (playerColor){
+            case BLUE:
+                color = Color.BLUE;
+                break;
+            case GREEN:
+                color = Color.GREEN;
+                break;
+            case YELLOW:
+                color = Color.YELLOW;
+                break;
+            case RED:
+                color = Color.RED;
+                break;
+            default:
+                color = Color.BLACK;
+                break;
+        }
+        return color;
     }
 }
