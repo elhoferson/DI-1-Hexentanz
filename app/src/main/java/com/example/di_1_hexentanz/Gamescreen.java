@@ -83,11 +83,11 @@ public class Gamescreen extends AppCompatActivity {
     }
 
 
-    /*
+
     public void yourTurn(View v) {
         Intent dice = new Intent(this, Dice.class);
         startActivity(dice);
 
     }
-    */
+
 }
