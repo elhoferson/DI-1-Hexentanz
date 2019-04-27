@@ -10,6 +10,7 @@ public class TouchableSurface extends View {
     Feld[] felder;
     Context context;
     Activity activity;
+    Witch selectedWitch;
 
     public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
         super(context);
@@ -17,6 +18,10 @@ public class TouchableSurface extends View {
         this.context = context;
         this.activity = activity;
         this.setOnTouchListener(handleTouch);
+    }
+
+    public void setSelectedWitch(Witch selectedWitch) {
+        this.selectedWitch = selectedWitch;
     }
 
     private View.OnTouchListener handleTouch = new OnTouchListener() {
@@ -29,8 +34,7 @@ public class TouchableSurface extends View {
                 case MotionEvent.ACTION_DOWN:
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX()+45 && x > felder[i].getX()-45 && y < felder[i].getY()+45 && y > felder[i].getY()-45) {
-                            Witch testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[i], felder[15]), context);
-                            testWitch.putWitchOnGameboard(activity);
+                            selectedWitch.moveWitch(felder[i]);
                         }
                     }
                     return true;

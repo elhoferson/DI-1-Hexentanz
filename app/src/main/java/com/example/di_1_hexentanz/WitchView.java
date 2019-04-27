@@ -50,5 +50,7 @@ class WitchView extends View {
                 invalidate();
             }
         });
+        animatorx.start();
+        animatory.start();
     }
 }
