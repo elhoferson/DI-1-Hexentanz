@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
-    ImageButton btn_dice;
 
 
     @Override
@@ -24,12 +22,8 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+
         drawBoardGame();
-
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this, btn_dice);
-        addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
-
-
 
         ImageButton btn_dice = findViewById(R.id.btnYourTurn);
         btn_dice.setOnClickListener(new View.OnClickListener() {
@@ -41,16 +35,22 @@ public class Gamescreen extends AppCompatActivity {
         });
 
 
+
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this);
+        addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
+
+        Witch testWitch = new Witch(0, new Player("name", PlayerColor.BLUE, 1, felder[0], felder[15]), getApplicationContext());
+        testWitch.putWitchOnGameboard(this);
+
+        surface.setSelectedWitch(testWitch);
     }
-
-
-
 
     private void drawBoardGame() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels/2)-80;
         int width = displayMetrics.widthPixels/2;
+
 
         for (int i = 0; i < 13; i++) {
             felder[i] = new Feld(i, width-600+i*100, height+300, getApplicationContext());
@@ -73,6 +73,7 @@ public class Gamescreen extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -83,11 +84,7 @@ public class Gamescreen extends AppCompatActivity {
     }
 
 
-    /*
-    public void yourTurn(View v) {
-        Intent dice = new Intent(this, Dice.class);
-        startActivity(dice);
 
-    }
-    */
+
+
 }
