@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class TouchableSurface extends View {
@@ -19,7 +20,7 @@ public class TouchableSurface extends View {
         this.context = context;
         this.activity = activity;
         this.setOnTouchListener(handleTouch);
-        //this.setOnTouchListener(yourTurn);
+        //this.setOnClickListener(yourTurn);
     }
 
     public void setSelectedWitch(Witch selectedWitch) {
@@ -27,8 +28,10 @@ public class TouchableSurface extends View {
     }
 
     private View.OnTouchListener handleTouch = new OnTouchListener() {
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
             int x = (int) event.getX();
             int y = (int) event.getY();
 
@@ -39,31 +42,26 @@ public class TouchableSurface extends View {
                             selectedWitch.moveWitch(felder[i]);
                         }
                     }
-                    return true;
+                    return false;
             }
 
-            return false;
+
+            return true;
         }
     };
 
 
 
-
-    /*
     private View.OnTouchListener yourTurn = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
 
-            switch (event.getActionButton()) {
-                case MotionEvent.ACTION_BUTTON_PRESS:
+            switch (v.getId()) {
+                case R.id.btnYourTurn:
                     Intent i = new Intent(getContext(), Dice.class);
                     i.getAction();
-
-                    return true;
-
-
-
+                    performClick();
 
             }
 
@@ -74,5 +72,33 @@ public class TouchableSurface extends View {
 
 
     };
+
+
+
+
+
+    /*
+    public View.OnClickListener yourTurn = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), Dice.class);
+            intent.getAction();
+            performClick();
+
+
+        }
+    };
+
     */
+
+    @Override
+    public boolean performClick() {
+        super.performClick();
+
+        return true;
+
+
+    }
+
 }

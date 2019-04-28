@@ -25,16 +25,7 @@ public class Gamescreen extends AppCompatActivity {
 
         drawBoardGame();
 
-        ImageButton btn_dice = findViewById(R.id.btnYourTurn);
-        btn_dice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Dice.class);
-                startActivity(intent);
-            }
-        });
-
-
+        rollDice();
 
         TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
@@ -44,6 +35,21 @@ public class Gamescreen extends AppCompatActivity {
 
         surface.setSelectedWitch(testWitch);
     }
+
+
+
+
+    private void rollDice() {
+        ImageButton btn_dice = findViewById(R.id.btnYourTurn);
+        btn_dice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Dice.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 
     private void drawBoardGame() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -82,6 +88,8 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
+
+
 
 
 
