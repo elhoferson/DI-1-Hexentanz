@@ -2,6 +2,8 @@ package com.example.di_1_hexentanz;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.view.View;
 
 public class Witch {
 
@@ -27,6 +29,8 @@ public class Witch {
     public void putWitchOnGameboard(Activity activity) {
         currentField = player.getStartFeld();
         activity.addContentView(witchView, activity.findViewById(R.id.contraintLayout).getLayoutParams());
+        witchView.setVisibility(View.VISIBLE);
+
     }
 
     public void moveWitch(Feld destination) {

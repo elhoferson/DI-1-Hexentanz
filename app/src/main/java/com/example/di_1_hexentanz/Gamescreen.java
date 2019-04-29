@@ -31,8 +31,7 @@ public class Gamescreen extends AppCompatActivity {
 
         drawBoardGame();
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this, btn_dice);
-        surface.setColor(color);
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this, btn_dice, color);
         addContentView(surface,findViewById(R.id.contraintLayout).getLayoutParams());
 
 
