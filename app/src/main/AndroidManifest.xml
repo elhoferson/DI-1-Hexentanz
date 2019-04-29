@@ -28,6 +28,9 @@
 
         <activity android:name=".Dice"
             android:screenOrientation="landscape"/>
+
+        <activity android:name=".ColourChoosing"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

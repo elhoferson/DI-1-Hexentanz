@@ -14,6 +14,7 @@ public class TouchableSurface extends View {
     Activity activity;
     Witch selectedWitch;
     int result;
+    private PlayerColor color;
 
     public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
         super(context);
@@ -79,6 +80,15 @@ public class TouchableSurface extends View {
         return true;
 
 
+    }
+
+
+    public void setColor(PlayerColor color){
+        this.color = color;
+    }
+
+    public PlayerColor getColor(){
+        return this.color;
     }
 
 

@@ -30,7 +30,7 @@ public class Startscreen extends AppCompatActivity {
         BtnCreateGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                Intent intent = new Intent(getApplicationContext(), ColourChoosing.class);
                 startActivity(intent);
             }
         });

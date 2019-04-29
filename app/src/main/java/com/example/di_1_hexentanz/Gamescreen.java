@@ -14,7 +14,11 @@ public class Gamescreen extends AppCompatActivity {
     Feld[] felder = new Feld[36];
     int result;
     Witch selectedWitch;
+    private static PlayerColor color;
 
+    public static void setColor(PlayerColor color){
+        Gamescreen.color = color;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +35,32 @@ public class Gamescreen extends AppCompatActivity {
         rollDice();
 
         TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this);
+        surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
-        Witch testWitch = new Witch(0, new Player("name", PlayerColor.BLUE, 1, felder[0], felder[15]), getApplicationContext());
+        Witch testWitch;
+
+        switch(color){
+            case BLUE:
+                testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                break;
+
+            case GREEN:
+                testWitch = new Witch(0, new Player("name", PlayerColor.GREEN,2, felder[12], felder[11]),getApplicationContext());
+                break;
+
+            case YELLOW:
+                testWitch = new Witch(0, new Player("name", PlayerColor.YELLOW,3, felder[18], felder[17]),getApplicationContext());
+                break;
+
+            case RED:
+                testWitch = new Witch(0, new Player("name", PlayerColor.RED,4, felder[30], felder[29]),getApplicationContext());
+                break;
+
+            default:
+                testWitch = null;
+                break;
+        }
         testWitch.putWitchOnGameboard(this);
 
         surface.setSelectedWitch(testWitch);

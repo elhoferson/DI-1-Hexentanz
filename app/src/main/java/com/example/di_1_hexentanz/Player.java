@@ -16,6 +16,7 @@ public class Player {
         this.number = number;
         this.startFeld = startFeld;
         this.zielFeld = zielFeld;
+        this.witches = new ArrayList<>();
     }
 
     public void addWitch(Witch witch) {
