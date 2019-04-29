@@ -23,8 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CreateActivity"
+            android:name=".CreateGameActivity"
             android:label="@string/title_activity_create"
+            android:screenOrientation="landscape"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -32,8 +33,9 @@
                 android:value="com.example.di_1_hexentanz.MainActivity" />
         </activity>
         <activity
-            android:name=".JoinActivity"
+            android:name=".JoinGameActivity"
             android:label="@string/title_activity_join"
+            android:screenOrientation="landscape"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
