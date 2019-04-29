@@ -13,6 +13,7 @@ public class TouchableSurface extends View {
     Context context;
     Activity activity;
     Witch selectedWitch;
+    int result;
 
     public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
         super(context);
@@ -20,7 +21,6 @@ public class TouchableSurface extends View {
         this.context = context;
         this.activity = activity;
         this.setOnTouchListener(handleTouch);
-        //this.setOnClickListener(yourTurn);
     }
 
     public void setSelectedWitch(Witch selectedWitch) {
@@ -38,8 +38,9 @@ public class TouchableSurface extends View {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     for (int i = 0; i < felder.length; i++) {
-                        if (x < felder[i].getX()+45 && x > felder[i].getX()-45 && y < felder[i].getY()+45 && y > felder[i].getY()-45) {
+                        if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
                             selectedWitch.moveWitch(felder[i]);
+
                         }
                     }
                     return false;
@@ -49,7 +50,6 @@ public class TouchableSurface extends View {
             return true;
         }
     };
-
 
 
     private View.OnTouchListener yourTurn = new OnTouchListener() {
@@ -65,32 +65,12 @@ public class TouchableSurface extends View {
 
             }
 
-
             return false;
 
         }
 
-
     };
 
-
-
-
-
-    /*
-    public View.OnClickListener yourTurn = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getContext(), Dice.class);
-            intent.getAction();
-            performClick();
-
-
-        }
-    };
-
-    */
 
     @Override
     public boolean performClick() {
@@ -100,5 +80,6 @@ public class TouchableSurface extends View {
 
 
     }
+
 
 }

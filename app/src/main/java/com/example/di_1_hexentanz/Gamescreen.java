@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
+    int result;
+    Witch selectedWitch;
 
 
     @Override
@@ -45,7 +48,7 @@ public class Gamescreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Dice.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
     }
@@ -89,6 +92,22 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK) {
+                int result = data.getIntExtra("result", 0);
+                step2(result);
+
+            }
+        }
+    }
+
+
+    public void step2(int result) {
+        selectedWitch.moveWitch(felder[result]);
+    }
 
 
 

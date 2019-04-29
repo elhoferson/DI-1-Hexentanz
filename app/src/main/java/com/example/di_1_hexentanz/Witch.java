@@ -15,6 +15,7 @@ public class Witch {
     Player player;
     Feld currentField;
     WitchView witchView;
+    Dice dice;
 
     public Witch(int number, Player player, Context context) {
         this.number = number;
@@ -28,7 +29,10 @@ public class Witch {
     }
 
     public void moveWitch(Feld destination) {
-        witchView.moveView(destination.getX(), destination.getY());
-        currentField = destination;
+          witchView.moveView(destination.getX(), destination.getY());
+          currentField = destination;
+
+
+
     }
 }
