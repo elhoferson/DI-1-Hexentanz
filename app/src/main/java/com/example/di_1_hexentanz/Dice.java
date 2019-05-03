@@ -66,6 +66,8 @@ public class Dice extends AppCompatActivity {
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+            //not in use
+
         }
     };
 
@@ -87,9 +89,7 @@ public class Dice extends AppCompatActivity {
 
     public void rollDice() {
 
-        int randomNumber = getRandomNumber();
-
-        switch (randomNumber) {
+        switch (getRandomNumber()) {
             case 1:
                 dice.setImageResource(R.drawable.dice1);
                 backToGamescreen();

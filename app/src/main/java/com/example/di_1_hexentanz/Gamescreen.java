@@ -58,8 +58,7 @@ public class Gamescreen extends AppCompatActivity {
                 break;
 
             default:
-                testWitch = null;
-                break;
+                throw new RuntimeException("unreachable case");
         }
         testWitch.putWitchOnGameboard(this);
 
