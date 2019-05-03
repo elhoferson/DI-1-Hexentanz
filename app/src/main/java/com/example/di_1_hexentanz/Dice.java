@@ -21,7 +21,6 @@ public class Dice extends AppCompatActivity {
     ImageView dice;
     SensorManager shakingSensor;
     Sensor shakingAccelerometer;
-    Witch witch;
 
 
     private Random randomGenerator = new Random();

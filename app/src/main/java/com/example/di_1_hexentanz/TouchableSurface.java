@@ -13,7 +13,6 @@ public class TouchableSurface extends View {
     Context context;
     Activity activity;
     Witch selectedWitch;
-    int result;
     private PlayerColor color;
 
     public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
@@ -36,8 +35,7 @@ public class TouchableSurface extends View {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
                             selectedWitch.moveWitch(felder[i]);
@@ -58,8 +56,7 @@ public class TouchableSurface extends View {
         public boolean onTouch(View v, MotionEvent event) {
 
 
-            switch (v.getId()) {
-                case R.id.btnYourTurn:
+            if (v.getId() == R.id.btnYourTurn) {
                     Intent i = new Intent(getContext(), Dice.class);
                     i.getAction();
                     performClick();
