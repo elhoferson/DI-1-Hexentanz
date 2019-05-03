@@ -13,7 +13,7 @@ public class TouchableSurface extends View {
     Context context;
     Activity activity;
     Witch selectedWitch;
-    int result;
+    Dice dice;
     private PlayerColor color;
 
     public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
@@ -40,7 +40,50 @@ public class TouchableSurface extends View {
                 case MotionEvent.ACTION_DOWN:
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
-                            selectedWitch.moveWitch(felder[i]);
+
+                            //selectedWitch.moveWitch(felder[i]);
+
+                            int selected = selectedWitch.number;
+
+                            int temp;
+
+                            switch(dice.getRandomNumber()) {
+
+                                case 1:
+                                    temp = selected+1;
+                                    goOverStart(temp);
+                                    selectedWitch.moveWitch(felder[temp]);
+
+                                case 2:
+                                    temp = selected + 2;
+                                    goOverStart(temp);
+                                    selectedWitch.moveWitch(felder[temp]);
+
+                                case 3:
+                                    temp = selected + 3;
+                                    goOverStart(temp);
+                                    selectedWitch.moveWitch(felder[temp]);
+
+                                case 4:
+                                    temp = selected + 4;
+                                    goOverStart(temp);
+                                    selectedWitch.moveWitch(felder[temp]);
+
+                                case 5:
+                                    temp = selected + 5;
+                                    goOverStart(temp);
+                                    selectedWitch.moveWitch(felder[temp]);
+
+                                case 6:
+                                    temp = selected + 6;
+                                    goOverStart(temp);
+                                    selectedWitch.moveWitch(felder[temp]);
+
+                                default:
+                                    selectedWitch.moveWitch(felder[i]);
+                            }
+
+
 
                         }
                     }
@@ -52,20 +95,23 @@ public class TouchableSurface extends View {
         }
     };
 
+    private void goOverStart(int temp) {
+        if(temp >= 36) {
+            selectedWitch.moveWitch(felder[1]);
+        }
+    }
+
 
     private View.OnTouchListener yourTurn = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-
-            switch (v.getId()) {
-                case R.id.btnYourTurn:
-                    Intent i = new Intent(getContext(), Dice.class);
-                    i.getAction();
-                    performClick();
+            if (v.getId() == R.id.btnYourTurn) {
+                Intent i = new Intent(getContext(), Dice.class);
+                i.getAction();
+                performClick();
 
             }
-
             return false;
 
         }
@@ -83,13 +129,15 @@ public class TouchableSurface extends View {
     }
 
 
-    public void setColor(PlayerColor color){
+    public void setColor(PlayerColor color) {
         this.color = color;
     }
 
-    public PlayerColor getColor(){
+    public PlayerColor getColor() {
         return this.color;
     }
+
+
 
 
 }

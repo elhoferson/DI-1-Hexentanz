@@ -14,6 +14,7 @@ public class Gamescreen extends AppCompatActivity {
     Feld[] felder = new Feld[36];
     int result;
     Witch selectedWitch;
+    Dice dice;
     private static PlayerColor color;
 
     public static void setColor(PlayerColor color){
@@ -39,31 +40,62 @@ public class Gamescreen extends AppCompatActivity {
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
         Witch testWitch;
+        Witch witch0;
+        Witch witch1;
+        Witch witch2;
+        Witch witch3;
 
         switch(color){
             case BLUE:
-                testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch0 = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch1 = new Witch(1, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch2 = new Witch(2, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch3 = new Witch(3, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
                 break;
 
             case GREEN:
                 testWitch = new Witch(0, new Player("name", PlayerColor.GREEN,2, felder[12], felder[11]),getApplicationContext());
+                witch0 = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch1 = new Witch(1, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch2 = new Witch(2, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch3 = new Witch(3, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
                 break;
 
             case YELLOW:
                 testWitch = new Witch(0, new Player("name", PlayerColor.YELLOW,3, felder[18], felder[17]),getApplicationContext());
+                witch0 = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch1 = new Witch(1, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch2 = new Witch(2, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch3 = new Witch(3, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
                 break;
 
             case RED:
                 testWitch = new Witch(0, new Player("name", PlayerColor.RED,4, felder[30], felder[29]),getApplicationContext());
+                witch0 = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch1 = new Witch(1, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch2 = new Witch(2, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                witch3 = new Witch(3, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
                 break;
 
             default:
                 testWitch = null;
+                witch0 = null;
+                witch1 = null;
+                witch2  =null;
+                witch3 = null;
                 break;
         }
-        testWitch.putWitchOnGameboard(this);
 
-        surface.setSelectedWitch(testWitch);
+        witch0.putWitchOnGameboard(this);
+        witch1.putWitchOnGameboard(this);
+        witch2.putWitchOnGameboard(this);
+        witch3.putWitchOnGameboard(this);
+
+
+        surface.setSelectedWitch(witch0);
+        surface.setSelectedWitch(witch1);
+        surface.setSelectedWitch(witch2);
+        surface.setSelectedWitch(witch3);
     }
 
 

@@ -12,13 +12,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.Random;
 
 public class Dice extends AppCompatActivity {
 
-    ImageView dice;
+    ImageView mydice;
     SensorManager shakingSensor;
     Sensor shakingAccelerometer;
     Witch witch;
@@ -34,7 +33,7 @@ public class Dice extends AppCompatActivity {
 
 
 
-        dice = findViewById(R.id.dice);
+        mydice = findViewById(R.id.dice);
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);
         shakingAccelerometer = shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -67,6 +66,7 @@ public class Dice extends AppCompatActivity {
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+            //don't need it for our game
         }
     };
 
@@ -92,32 +92,32 @@ public class Dice extends AppCompatActivity {
 
         switch (randomNumber) {
             case 1:
-                dice.setImageResource(R.drawable.dice1);
+                mydice.setImageResource(R.drawable.dice1);
                 backToGamescreen();
                 break;
             case 2:
-                dice.setImageResource(R.drawable.dice2);
+                mydice.setImageResource(R.drawable.dice2);
                 backToGamescreen();
                 break;
             case 3:
-                dice.setImageResource(R.drawable.dice3);
+                mydice.setImageResource(R.drawable.dice3);
                 backToGamescreen();
                 break;
             case 4:
-                dice.setImageResource(R.drawable.dice4);
+                mydice.setImageResource(R.drawable.dice4);
                 backToGamescreen();
                 break;
             case 5:
-                dice.setImageResource(R.drawable.dice5);
+                mydice.setImageResource(R.drawable.dice5);
                 backToGamescreen();
                 break;
             case 6:
-                dice.setImageResource(R.drawable.dice6);
+                mydice.setImageResource(R.drawable.dice6);
                 rolledNumber6();
                 break;
 
             default:
-                throw new RuntimeException("wrong dice, unreachable");
+                throw new RuntimeException("wrong mydice, unreachable");
 
         }
 

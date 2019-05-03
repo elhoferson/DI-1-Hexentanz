@@ -33,7 +33,13 @@ public class Witch {
           witchView.moveView(destination.getX(), destination.getY());
           currentField = destination;
 
+    }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
+    public int getNumber() {
+        return number;
     }
 }

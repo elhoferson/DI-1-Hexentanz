@@ -13,6 +13,7 @@ class WitchView extends View {
     Witch witchInstance;
     Paint paint;
     PlayerColor color;
+    Dice dice;
 
     public WitchView(Context context, int x, int y, Witch witchInstance) {
         super(context);
