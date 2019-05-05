@@ -3,6 +3,7 @@ package com.example.di_1_hexentanz;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.di_1_hexentanz.wifi.p2p.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pClientBroadcastReceiver;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pIntentFilter;
@@ -40,7 +42,7 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
                 connect(selectedPeer);
             }
         });
-        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), this, deviceListAdapter);
+        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter);
         getManager().discoverPeers(getChannel(), new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -93,6 +95,7 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
             @Override
             public void onSuccess() {
                 Log.i(WIFI_P2P_TAG,"successful connected to "+ config.deviceAddress);
+
             }
 
             @Override

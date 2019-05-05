@@ -1,12 +1,16 @@
 package com.example.di_1_hexentanz;
 
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.di_1_hexentanz.wifi.p2p.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pIntentFilter;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pServerBroadcastReceiver;
@@ -28,6 +32,12 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
             @Override
             public void onSuccess() {
                 Log.i(WIFI_P2P_TAG, "succesful created group");
+                getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
+                    @Override
+                    public void onGroupInfoAvailable(final WifiP2pGroup group) {
+                        NetworkLogic.init(group.getOwner());
+                    }
+                });
             }
 
             @Override
@@ -38,7 +48,22 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         ListView peerList = findViewById(R.id.peerList);
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
-        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), this, peerListAdapter);
+        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter);
+    }
+
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.btn_startGame:
+                //if (NetworkLogic.getInstance().addPlayers(devices)) {
+                    // connect
+                //} else {
+                    // toast
+                //}
+                break;
+            default:
+                // nothing to do
+        }
     }
 
     @Override

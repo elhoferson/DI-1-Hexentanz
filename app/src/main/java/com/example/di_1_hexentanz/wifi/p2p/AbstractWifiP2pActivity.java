@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.p2p.obj.IWifiP2pConstants;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class AbstractWifiP2pActivity extends AppCompatActivity implements IWifiP2pConstants {
@@ -33,7 +33,7 @@ public abstract class AbstractWifiP2pActivity extends AppCompatActivity implemen
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
-        removeRememberedGroups();
+        NetworkLogic.close();
     }
 
     public WifiP2pManager getManager() {
@@ -42,18 +42,6 @@ public abstract class AbstractWifiP2pActivity extends AppCompatActivity implemen
 
     public WifiP2pManager.Channel getChannel() {
         return channel;
-    }
-
-    private void removeRememberedGroups() {
-        try {
-            Method deletePersistentGroupMethod = WifiP2pManager.class.getMethod("deletePersistentGroup", WifiP2pManager.Channel.class, int.class, WifiP2pManager.ActionListener.class);
-
-            for (int netid = 0; netid < 32; netid++) {
-                deletePersistentGroupMethod.invoke(this.manager, this.channel, netid, null);
-            }
-        } catch (Exception e) {
-            Log.e(WIFI_P2P_TAG, "removing remembered groups", e);
-        }
     }
 
     public void disconnect() {

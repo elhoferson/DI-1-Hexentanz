@@ -9,8 +9,8 @@ import com.example.di_1_hexentanz.wifi.p2p.obj.AbstractWifiP2pBroadcastReceiver;
 
 public class WifiP2pServerBroadcastReceiver extends AbstractWifiP2pBroadcastReceiver {
 
-    public WifiP2pServerBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, AppCompatActivity activity, WifiP2pDeviceAdapter deviceListAdapter) {
-        super(manager, channel, activity, deviceListAdapter);
+    public WifiP2pServerBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter) {
+        super(manager, channel, deviceListAdapter);
     }
 
     @Override
