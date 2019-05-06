@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.view.View;
 import android.widget.Toast;
 
+
 public class FeldView extends View {
     int number;
     int x, y;
