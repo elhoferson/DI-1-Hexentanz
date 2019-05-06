@@ -86,7 +86,7 @@ public class Gamescreen extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels/2)-80;
         int width = displayMetrics.widthPixels/2;
-        int radius = width/40;
+        int radius = width/24;
         int fieldwidth = 2*radius+10;
 
 
