@@ -15,6 +15,7 @@ public class Gamescreen extends AppCompatActivity {
     int result;
     Witch selectedWitch;
     private static PlayerColor color;
+    int witchradius;
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -43,19 +44,19 @@ public class Gamescreen extends AppCompatActivity {
 
         switch(color){
             case BLUE:
-                testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext(), witchradius);
                 break;
 
             case GREEN:
-                testWitch = new Witch(0, new Player("name", PlayerColor.GREEN,2, felder[12], felder[11]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.GREEN,2, felder[12], felder[11]),getApplicationContext(), witchradius);
                 break;
 
             case YELLOW:
-                testWitch = new Witch(0, new Player("name", PlayerColor.YELLOW,3, felder[18], felder[17]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.YELLOW,3, felder[18], felder[17]),getApplicationContext(), witchradius);
                 break;
 
             case RED:
-                testWitch = new Witch(0, new Player("name", PlayerColor.RED,4, felder[30], felder[29]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.RED,4, felder[30], felder[29]),getApplicationContext(), witchradius);
                 break;
 
             default:
@@ -65,9 +66,6 @@ public class Gamescreen extends AppCompatActivity {
 
         surface.setSelectedWitch(testWitch);
     }
-
-
-
 
     private void rollDice() {
         ImageButton btn_dice = findViewById(R.id.btnYourTurn);
@@ -86,8 +84,9 @@ public class Gamescreen extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels/2)-80;
         int width = displayMetrics.widthPixels/2;
-        int radius = width/24;
+        int radius = width/20;
         int fieldwidth = 2*radius+10;
+        witchradius = width/24;
 
 
         for (int i = 0; i < 13; i++) {

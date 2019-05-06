@@ -9,15 +9,18 @@ import android.graphics.Paint;
 import android.view.View;
 
 class WitchView extends View {
-    int x,y;
+    int x;
+    int y;
+    int radius;
     Witch witchInstance;
     Paint paint;
     PlayerColor color;
 
-    public WitchView(Context context, int x, int y, Witch witchInstance) {
+    public WitchView(Context context, int x, int y, int radius, Witch witchInstance) {
         super(context);
         this.x = x;
         this.y = y;
+        this.radius = radius;
         this.witchInstance = witchInstance;
         paint = new Paint();
 
@@ -25,7 +28,6 @@ class WitchView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int radius = 40;
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(getColorFromPlayerColor(this.color));
         canvas.drawCircle(x, y, radius, paint);
