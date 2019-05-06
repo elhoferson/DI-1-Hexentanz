@@ -30,6 +30,7 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 
+
         drawBoardGame();
 
         rollDice();
