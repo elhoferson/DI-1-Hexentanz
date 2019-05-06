@@ -14,12 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="android.max_aspect" android:value="1.78" />
+
 
 
 
         <activity android:name=".Startscreen"
 
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:maxAspectRatio="1.78">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

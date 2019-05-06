@@ -6,13 +6,15 @@ public class Feld {
     int number;
     int x;
     int y;
+    int radius;
     FeldView feldView;
 
-    public Feld(int number, int x, int y, Context context) {
+    public Feld(int number, int x, int y, int radius, Context context) {
         this.number = number;
         this.x = x;
         this.y = y;
-        feldView = new FeldView(context, x, y, this, number);
+        this.radius = radius;
+        feldView = new FeldView(context, x, y, radius, this, number);
     }
 
     public FeldView getFeldView() {

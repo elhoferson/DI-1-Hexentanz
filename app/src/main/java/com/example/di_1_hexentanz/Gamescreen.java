@@ -86,25 +86,27 @@ public class Gamescreen extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels/2)-80;
         int width = displayMetrics.widthPixels/2;
+        int radius = width/40;
+        int fieldwidth = 2*radius+10;
 
 
         for (int i = 0; i < 13; i++) {
-            felder[i] = new Feld(i, width-600+i*100, height+300, getApplicationContext());
+            felder[i] = new Feld(i, width-(6*fieldwidth)+i*fieldwidth, height+(3*fieldwidth), radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 13; i < 18; i++) {
-            felder[i] = new Feld(i, width+600, height-300-(i-18)*100, getApplicationContext());
+            felder[i] = new Feld(i, width+(6*fieldwidth), height-(3*fieldwidth)-(i-18)*fieldwidth, radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 18; i < 31; i++) {
-            felder[i] = new Feld(i, width+600-(i-18)*100, height-300, getApplicationContext());
+            felder[i] = new Feld(i, width+(6*fieldwidth)-(i-18)*fieldwidth, height-(3*fieldwidth), radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 31; i < 36; i++) {
-            felder[i] = new Feld(i, width-600, height-200+(i-31)*100, getApplicationContext());
+            felder[i] = new Feld(i, width-(6*fieldwidth), height-(2*fieldwidth)+(i-31)*fieldwidth, radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
     }
