@@ -36,7 +36,6 @@ public class Gamescreen extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
 
-
         drawBoardGame();
 
         //rollDice();
