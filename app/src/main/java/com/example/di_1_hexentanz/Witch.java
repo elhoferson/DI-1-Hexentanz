@@ -18,6 +18,10 @@ public class Witch {
     int size;
     Dice dice;
 
+    public Feld getCurrentField() {
+        return currentField;
+    }
+
     public Witch(int number, Player player, Context context, int size) {
         this.number = number;
         this.player = player;

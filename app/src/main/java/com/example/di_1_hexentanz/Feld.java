@@ -32,4 +32,12 @@ public class Feld {
     public int getNumber() {
         return number;
     }
+
+    public void highlight() {
+        feldView.highlight();
+    }
+
+    public void unhighlight() {
+        feldView.unhighlight();
+    }
 }

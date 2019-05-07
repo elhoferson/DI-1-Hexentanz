@@ -13,12 +13,11 @@ public class TouchableSurface extends View {
     Feld[] felder;
     Context context;
     Gamescreen activity;
-    Witch selectedWitch;
+    private Witch selectedWitch;
     private PlayerColor color;
     YourTurnButton ytb;
     YesButton yb;
     NoButton nb;
-    private boolean yourTurnButtonVisible;
 
     public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, YesButton yb, NoButton nb, Gamescreen activity) {
         super(context);
@@ -28,7 +27,6 @@ public class TouchableSurface extends View {
         this.ytb = ytb;
         this.yb = yb;
         this.nb = nb;
-        yourTurnButtonVisible = true;
         this.setOnTouchListener(handleTouch);
     }
 
@@ -57,8 +55,7 @@ public class TouchableSurface extends View {
                     if (x > ytb.getLeftPosition() &&
                             x < ytb.getLeftPosition()+ytb.getBitmapWidth() &&
                             y > ytb.getTopPosition() &&
-                            y < ytb.getTopPosition()+ytb.getBitMapHeight() &&
-                            yourTurnButtonVisible) {
+                            y < ytb.getTopPosition()+ytb.getBitMapHeight()) {
                         Intent i = new Intent(activity.getApplicationContext(), Dice.class);
                         activity.startActivityForResult(i, 1);
                     }
@@ -69,7 +66,13 @@ public class TouchableSurface extends View {
                             x < yb.getLeftPosition()+yb.getBitmapWidth() &&
                             y > yb.getTopPosition() &&
                             y < yb.getTopPosition()+yb.getBitMapHeight()) {
-
+                        selectedWitch.getCurrentField().unhighlight();
+                        selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+activity.getLastDiceResult())%35]);
+                        activity.setState(GameState.MyTurn);
+                        nb.setVisibility(INVISIBLE);
+                        yb.setVisibility(INVISIBLE);
+                        ytb.setVisibility(VISIBLE);
+                        activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
                     }
                     if (x > nb.getLeftPosition() &&
                             x < nb.getLeftPosition()+nb.getBitmapWidth() &&
@@ -133,15 +136,17 @@ public class TouchableSurface extends View {
 
     public void hideYourTurnButton() {
         ytb.setVisibility(INVISIBLE);
-        yourTurnButtonVisible = false;
     }
 
     public void showYourTurnButton() {
         ytb.setVisibility(VISIBLE);
-        yourTurnButtonVisible = true;
+    }
+
+    public Witch getSelectedWitch() {
+        return selectedWitch;
     }
 
     public boolean isYourTurnButtonVisible() {
-        return yourTurnButtonVisible;
+        return activity.getState() == GameState.MyTurn;
     }
 }

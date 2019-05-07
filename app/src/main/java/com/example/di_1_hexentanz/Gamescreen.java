@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class Gamescreen extends AppCompatActivity {
 
     Witch[] witches = new Witch[6];
-    Feld[] felder = new Feld[36];
+    private Feld[] felder = new Feld[36];
     Witch selectedWitch;
     private static PlayerColor color;
     int height;
@@ -24,6 +24,10 @@ public class Gamescreen extends AppCompatActivity {
     private GameState state;
     private int lastDiceResult;
     TouchableSurface surface;
+
+    public Feld[] getFelder() {
+        return felder;
+    }
 
     public int getLastDiceResult() {
         return lastDiceResult;
@@ -88,19 +92,6 @@ public class Gamescreen extends AppCompatActivity {
         surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, yb, nb, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
-
-        Button testButton = findViewById(R.id.button);
-        testButton.bringToFront();
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (surface.isYourTurnButtonVisible()) {
-                    surface.hideYourTurnButton();
-                } else {
-                    surface.showYourTurnButton();
-                }
-            }
-        });
 
         Button testButton1 = findViewById(R.id.button2);
         testButton1.bringToFront();
@@ -248,6 +239,7 @@ public void startDice() {
 
     public void returnToWitchSelection() {
         state = GameState.SelectWitch;
+        surface.getSelectedWitch().getCurrentField().unhighlight();
         surface.hideYourTurnButton();
         TextView output = findViewById(R.id.TestDisplay);
         String outputText = "Bewege eine Hexe um " + lastDiceResult + "Felder!";
@@ -266,6 +258,7 @@ public void startDice() {
 
     public void witchSelected(Witch witch, YesButton yb, NoButton nb) {
         setState(GameState.ConfirmSelection);
+        witch.getCurrentField().highlight();
         TextView outputtext = findViewById(R.id.TestDisplay);
         outputtext.setText("Diese Hexe bewegen?");
         yb.setVisibility(View.VISIBLE);
