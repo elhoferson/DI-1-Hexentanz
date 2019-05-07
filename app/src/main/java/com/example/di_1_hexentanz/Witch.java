@@ -15,12 +15,13 @@ public class Witch {
     Player player;
     Feld currentField;
     WitchView witchView;
+    int size;
     Dice dice;
 
-    public Witch(int number, Player player, Context context, int radius) {
+    public Witch(int number, Player player, Context context, int size) {
         this.number = number;
         this.player = player;
-        this.witchView = new WitchView(context, player.getStartFeld().getX(), player.getStartFeld().getY(), radius, this);
+        this.witchView = new WitchView(context, player.getStartFeld().getX(), player.getStartFeld().getY(), size, this);
         this.witchView.setColor(player.getColor());
     }
 

@@ -22,7 +22,6 @@ public class YourTurnButton extends View {
         super.onDraw(canvas);
         p=new Paint();
         Bitmap b= BitmapFactory.decodeResource(getResources(), R.drawable.btn_yourturn);
-        p.setColor(Color.RED);
         bitMapHeight = b.getHeight()/2;
         bitmapWidth = b.getWidth()/2;
         topPosition = metrics.heightPixels/2-bitMapHeight;
