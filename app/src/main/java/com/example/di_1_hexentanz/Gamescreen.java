@@ -7,21 +7,39 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Gamescreen extends AppCompatActivity {
 
-    Witch[] witches = new Witch[5];
+    Witch[] witches = new Witch[6];
     Feld[] felder = new Feld[36];
-    int result;
     Witch selectedWitch;
     private static PlayerColor color;
-    int witchradius;
     int height;
     int fieldRadius;
     int width;
     int fieldwidth;
     DisplayMetrics displayMetrics;
     boolean colorVisible = false;
+    private GameState state;
+    private int lastDiceResult;
+    TouchableSurface surface;
+
+    public int getLastDiceResult() {
+        return lastDiceResult;
+    }
+
+    public void setLastDiceResult(int lastDiceResult) {
+        this.lastDiceResult = lastDiceResult;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -39,6 +57,11 @@ public class Gamescreen extends AppCompatActivity {
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
+        //State to start with
+        state = GameState.MyTurn;
+
+        findViewById(R.id.TestDisplay).setVisibility(View.INVISIBLE);
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         height = (displayMetrics.heightPixels/2)-80;
@@ -53,9 +76,8 @@ public class Gamescreen extends AppCompatActivity {
 
         YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
         addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
-        yourTurnButton.setVisibility(View.INVISIBLE);
 
-        final TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
+        surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -91,10 +113,29 @@ public class Gamescreen extends AppCompatActivity {
             }
         });
 
-        for (int i = 0; i < witches.length; i++) {
-            witches[i] = new Witch(i, new Player("Player"+i, PlayerColor.BLUE,1, felder[2*i], felder[2*1]), getApplicationContext(), fieldRadius);
-            witches[i].putWitchOnGameboard(this);
-        }
+        Witch witch1 = new Witch(1, new Player("Player1", PlayerColor.BLUE,1, felder[0], felder[0]), getApplicationContext(), fieldRadius);
+        witch1.putWitchOnGameboard(this);
+        witches[0] = witch1;
+
+        Witch witch2 = new Witch(2, new Player("Player2", PlayerColor.RED,2, felder[3], felder[0]), getApplicationContext(), fieldRadius);
+        witch2.putWitchOnGameboard(this);
+        witches[1] = witch2;
+
+        Witch witch3 = new Witch(3, new Player("Player2", PlayerColor.YELLOW,3, felder[10], felder[0]), getApplicationContext(), fieldRadius);
+        witch3.putWitchOnGameboard(this);
+        witches[2] = witch3;
+
+        Witch witch4 = new Witch(4, new Player("Player2", PlayerColor.PINK,4, felder[33], felder[0]), getApplicationContext(), fieldRadius);
+        witch4.putWitchOnGameboard(this);
+        witches[3] = witch4;
+
+        Witch witch5 = new Witch(5, new Player("Player2", PlayerColor.GREEN,5, felder[27], felder[0]), getApplicationContext(), fieldRadius);
+        witch5.putWitchOnGameboard(this);
+        witches[4] = witch5;
+
+        Witch witch6 = new Witch(6, new Player("Player2", PlayerColor.ORANGE,6, felder[12], felder[0]), getApplicationContext(), fieldRadius);
+        witch6.putWitchOnGameboard(this);
+        witches[5] = witch6;
 
 
 
@@ -179,23 +220,36 @@ public void startDice() {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK) {
-                int result = data.getIntExtra("result", 0);
-                step2(result);
 
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                int result=data.getIntExtra("result", -1);
+                lastDiceResult = result;
+                state = GameState.SelectWitch;
+                surface.hideYourTurnButton();
+                TextView output = findViewById(R.id.TestDisplay);
+                String outputText = "Bewege eine Hexe um " + lastDiceResult + "Felder!";
+                output.setText(outputText);
+                output.setVisibility(View.VISIBLE);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
             }
         }
     }
 
+    public Witch[] getWitches() {
+        return witches;
+    }
 
     public void step2(int result) {
         selectedWitch.moveWitch(felder[result]);
     }
 
 
-
-
-
-
+    public void witchSelected(Witch witch) {
+        setState(GameState.ConfirmSelection);
+        TextView outputtext = findViewById(R.id.TestDisplay);
+        outputtext.setText("Diese Hexe bewegen?");
+    }
 }

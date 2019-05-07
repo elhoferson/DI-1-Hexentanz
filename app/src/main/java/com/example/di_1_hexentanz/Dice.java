@@ -21,6 +21,7 @@ public class Dice extends AppCompatActivity {
     ImageView dice;
     SensorManager shakingSensor;
     Sensor shakingAccelerometer;
+    int result;
 
 
     private Random randomGenerator = new Random();
@@ -41,6 +42,7 @@ public class Dice extends AppCompatActivity {
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 
 
     }
@@ -92,22 +94,27 @@ public class Dice extends AppCompatActivity {
         switch (getRandomNumber()) {
             case 1:
                 dice.setImageResource(R.drawable.dice1);
+                result = 1;
                 backToGamescreen();
                 break;
             case 2:
                 dice.setImageResource(R.drawable.dice2);
+                result = 2;
                 backToGamescreen();
                 break;
             case 3:
                 dice.setImageResource(R.drawable.dice3);
+                result = 3;
                 backToGamescreen();
                 break;
             case 4:
                 dice.setImageResource(R.drawable.dice4);
+                result = 4;
                 backToGamescreen();
                 break;
             case 5:
                 dice.setImageResource(R.drawable.dice5);
+                result = 5;
                 backToGamescreen();
                 break;
             case 6:
@@ -137,8 +144,12 @@ public class Dice extends AppCompatActivity {
         })
                 .setNegativeButton( "6 Felder gehen", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(getApplicationContext(), Gamescreen.class);
-                startActivity(i);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result",6);
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
+
+
             }
         })
         .setIcon(android.R.drawable.ic_dialog_info)
@@ -150,15 +161,22 @@ public class Dice extends AppCompatActivity {
 
     public void backToGamescreen() {
         AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
+        rolledNumber.setTitle("Du hast eine" + result + "gewürfelt!");
         rolledNumber.setPositiveButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(getApplicationContext(), Gamescreen.class);
-                startActivity(i);
+                goBackAndSendResult();
             }
         })
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
 
+    }
+
+    private void goBackAndSendResult() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result",result);
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
     }
 
 
