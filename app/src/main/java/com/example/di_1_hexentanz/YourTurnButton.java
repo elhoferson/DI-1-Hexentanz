@@ -51,4 +51,5 @@ public class YourTurnButton extends View {
     public int getTopPosition() {
         return topPosition;
     }
+
 }

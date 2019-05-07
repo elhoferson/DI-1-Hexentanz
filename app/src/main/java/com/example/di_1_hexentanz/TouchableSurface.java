@@ -15,6 +15,7 @@ public class TouchableSurface extends View {
     Witch selectedWitch;
     private PlayerColor color;
     YourTurnButton ytb;
+    private boolean yourTurnButtonVisible;
 
     public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, Activity activity) {
         super(context);
@@ -22,6 +23,7 @@ public class TouchableSurface extends View {
         this.context = context;
         this.activity = activity;
         this.ytb = ytb;
+        yourTurnButtonVisible = false;
         this.setOnTouchListener(handleTouch);
     }
 
@@ -48,7 +50,8 @@ public class TouchableSurface extends View {
                     if (x > ytb.getLeftPosition() &&
                             x < ytb.getLeftPosition()+ytb.getBitmapWidth() &&
                             y > ytb.getTopPosition() &&
-                            y < ytb.getTopPosition()+ytb.getBitMapHeight()) {
+                            y < ytb.getTopPosition()+ytb.getBitMapHeight() &&
+                            yourTurnButtonVisible) {
                         Intent i = new Intent(activity.getApplicationContext(), Dice.class);
                         activity.startActivity(i);
                     }
@@ -98,5 +101,17 @@ public class TouchableSurface extends View {
         return this.color;
     }
 
+    public void hideYourTurnButton() {
+        ytb.setVisibility(INVISIBLE);
+        yourTurnButtonVisible = false;
+    }
 
+    public void showYourTurnButton() {
+        ytb.setVisibility(VISIBLE);
+        yourTurnButtonVisible = true;
+    }
+
+    public boolean isYourTurnButtonVisible() {
+        return yourTurnButtonVisible;
+    }
 }

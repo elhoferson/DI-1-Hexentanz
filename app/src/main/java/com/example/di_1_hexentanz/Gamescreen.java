@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -43,9 +44,23 @@ public class Gamescreen extends AppCompatActivity {
         YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
         addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
+        final TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
+
+        Button testButton = findViewById(R.id.button);
+        testButton.bringToFront();
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (surface.isYourTurnButtonVisible()) {
+                    surface.hideYourTurnButton();
+                } else {
+                    surface.showYourTurnButton();
+                }
+            }
+        });
+
 
         Witch testWitch;
 
