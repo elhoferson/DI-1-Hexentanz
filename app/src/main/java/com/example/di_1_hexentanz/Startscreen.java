@@ -1,6 +1,7 @@
 package com.example.di_1_hexentanz;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Startscreen extends AppCompatActivity {
+
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class Startscreen extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bgsound);
+        mediaPlayer.start();
     }
 
 

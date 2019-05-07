@@ -67,7 +67,7 @@ public class TouchableSurface extends View {
                             y > yb.getTopPosition() &&
                             y < yb.getTopPosition()+yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
-                        selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+activity.getLastDiceResult())%35]);
+                        selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+activity.getLastDiceResult())%36]);
                         activity.setState(GameState.MyTurn);
                         nb.setVisibility(INVISIBLE);
                         yb.setVisibility(INVISIBLE);
