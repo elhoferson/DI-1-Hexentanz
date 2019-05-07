@@ -1,5 +1,8 @@
 package com.example.di_1_hexentanz;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -37,9 +40,25 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
         {
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
             {
-                WifiP2pDevice selectedPeer = devices.get(position);
-                //Toast.makeText(getApplicationContext(), "Peer Selected : "+selectedPeer.toString(),   Toast.LENGTH_LONG).show();
-                connect(selectedPeer);
+
+                final WifiP2pDevice selectedPeer = devices.get(position);
+                AlertDialog.Builder connectDialog = new AlertDialog.Builder(getApplicationContext());
+                connectDialog.setTitle("Willst du dem Spiel von "+selectedPeer.deviceName+" beitreten?");
+                connectDialog.setPositiveButton("Beitreten", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Toast.makeText(getApplicationContext(), "Peer Selected : "+selectedPeer.toString(),   Toast.LENGTH_LONG).show();
+                        connect(selectedPeer);
+                    }
+                })
+                        .setNegativeButton("Nicht beitreten", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
             }
         });
         receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter);

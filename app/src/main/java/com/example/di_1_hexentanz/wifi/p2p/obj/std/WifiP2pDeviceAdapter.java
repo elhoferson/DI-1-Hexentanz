@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.di_1_hexentanz.R;
+
 import java.util.List;
 
 public class WifiP2pDeviceAdapter extends ArrayAdapter<WifiP2pDevice> {
@@ -38,6 +40,9 @@ public class WifiP2pDeviceAdapter extends ArrayAdapter<WifiP2pDevice> {
         name.setText(devices.get(position).deviceName);
         summary.setText(devices.get(position).deviceAddress);
 
+        int white = context.getColor(android.R.color.white);
+        name.setTextColor(white);
+        summary.setTextColor(white);
         return convertView;
     }
 }

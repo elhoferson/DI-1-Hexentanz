@@ -35,6 +35,9 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
                 getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
                     @Override
                     public void onGroupInfoAvailable(final WifiP2pGroup group) {
+                        if (group == null) {
+                            return;
+                        }
                         NetworkLogic.init(group.getOwner());
                     }
                 });
