@@ -16,6 +16,7 @@ public class Gamescreen extends AppCompatActivity {
     Witch selectedWitch;
     private static PlayerColor color;
     int witchradius;
+    DisplayMetrics displayMetrics;
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -30,13 +31,19 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
 
 
         drawBoardGame();
 
-        rollDice();
+        //rollDice();
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this);
+        YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
+        addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
+
+        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -66,7 +73,7 @@ public class Gamescreen extends AppCompatActivity {
 
         surface.setSelectedWitch(testWitch);
     }
-
+/*
     private void rollDice() {
         ImageButton btn_dice = findViewById(R.id.btnYourTurn);
         btn_dice.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +83,11 @@ public class Gamescreen extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-    }
+    }*/
+
+public void startDice() {
+
+}
 
 
 

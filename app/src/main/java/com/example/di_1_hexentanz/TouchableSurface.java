@@ -14,12 +14,14 @@ public class TouchableSurface extends View {
     Activity activity;
     Witch selectedWitch;
     private PlayerColor color;
+    YourTurnButton ytb;
 
-    public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
+    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, Activity activity) {
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
+        this.ytb = ytb;
         this.setOnTouchListener(handleTouch);
     }
 
@@ -42,6 +44,14 @@ public class TouchableSurface extends View {
 
                         }
                     }
+
+                    if (x > ytb.getLeftPosition() &&
+                            x < ytb.getLeftPosition()+ytb.getBitmapWidth() &&
+                            y > ytb.getTopPosition() &&
+                            y < ytb.getTopPosition()+ytb.getBitMapHeight()) {
+                        Intent i = new Intent(activity.getApplicationContext(), Dice.class);
+                        activity.startActivity(i);
+                    }
                     return false;
             }
 
@@ -51,7 +61,7 @@ public class TouchableSurface extends View {
     };
 
 
-    private View.OnTouchListener yourTurn = new OnTouchListener() {
+    /*private View.OnTouchListener yourTurn = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
@@ -67,7 +77,7 @@ public class TouchableSurface extends View {
 
         }
 
-    };
+    };*/
 
 
     @Override
