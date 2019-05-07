@@ -7,15 +7,17 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Gamescreen extends AppCompatActivity {
 
     Feld[] felder = new Feld[36];
-    int result;
+
     Witch selectedWitch;
-    Dice dice;
+    ImageView dice;
     private static PlayerColor color;
+    int witchradius;
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -31,6 +33,7 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 
+
         drawBoardGame();
 
         rollDice();
@@ -42,24 +45,23 @@ public class Gamescreen extends AppCompatActivity {
         Witch testWitch;
         switch(color){
             case BLUE:
-                testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.BLUE,1, felder[0], felder[35]),getApplicationContext(), witchradius);
                 break;
 
             case GREEN:
-                testWitch = new Witch(0, new Player("name", PlayerColor.GREEN,2, felder[12], felder[11]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.GREEN,2, felder[12], felder[11]),getApplicationContext(), witchradius);
                 break;
 
             case YELLOW:
-                testWitch = new Witch(0, new Player("name", PlayerColor.YELLOW,3, felder[18], felder[17]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.YELLOW,3, felder[18], felder[17]),getApplicationContext(), witchradius);
                 break;
 
             case RED:
-                testWitch = new Witch(0, new Player("name", PlayerColor.RED,4, felder[30], felder[29]),getApplicationContext());
+                testWitch = new Witch(0, new Player("name", PlayerColor.RED,4, felder[30], felder[29]),getApplicationContext(), witchradius);
                 break;
 
             default:
-                testWitch = null;
-                break;
+                throw new RuntimeException("unreachable case");
         }
 
         testWitch.putWitchOnGameboard(this);
@@ -70,19 +72,17 @@ public class Gamescreen extends AppCompatActivity {
 
     }
 
-
-
-
     private void rollDice() {
         ImageButton btn_dice = findViewById(R.id.btnYourTurn);
         btn_dice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Dice.class);
+                Intent intent = new Intent(getApplicationContext(), DiceView.class);
                 startActivityForResult(intent, 1);
             }
         });
     }
+
 
 
     private void drawBoardGame() {
@@ -90,25 +90,28 @@ public class Gamescreen extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = (displayMetrics.heightPixels/2)-80;
         int width = displayMetrics.widthPixels/2;
+        int radius = width/20;
+        int fieldwidth = 2*radius+10;
+        witchradius = width/24;
 
 
         for (int i = 0; i < 13; i++) {
-            felder[i] = new Feld(i, width-600+i*100, height+300, getApplicationContext());
+            felder[i] = new Feld(i, width-(6*fieldwidth)+i*fieldwidth, height+(3*fieldwidth), radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 13; i < 18; i++) {
-            felder[i] = new Feld(i, width+600, height-300-(i-18)*100, getApplicationContext());
+            felder[i] = new Feld(i, width+(6*fieldwidth), height-(3*fieldwidth)-(i-18)*fieldwidth, radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 18; i < 31; i++) {
-            felder[i] = new Feld(i, width+600-(i-18)*100, height-300, getApplicationContext());
+            felder[i] = new Feld(i, width+(6*fieldwidth)-(i-18)*fieldwidth, height-(3*fieldwidth), radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
         for (int i = 31; i < 36; i++) {
-            felder[i] = new Feld(i, width-600, height-200+(i-31)*100, getApplicationContext());
+            felder[i] = new Feld(i, width-(6*fieldwidth), height-(2*fieldwidth)+(i-31)*fieldwidth, radius, getApplicationContext());
             addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
     }
