@@ -33,6 +33,7 @@ public class Startscreen extends AppCompatActivity {
         BtnCreateGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mediaPlayer.stop();
                 Intent intent = new Intent(getApplicationContext(), ColourChoosing.class);
                 startActivity(intent);
             }

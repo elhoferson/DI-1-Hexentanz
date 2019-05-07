@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 
 public class Witch {
 
@@ -17,6 +18,7 @@ public class Witch {
     WitchView witchView;
     int size;
     Dice dice;
+    MediaPlayer mediaPlayer;
 
     public Feld getCurrentField() {
         return currentField;
@@ -27,6 +29,7 @@ public class Witch {
         this.player = player;
         this.witchView = new WitchView(context, player.getStartFeld().getX(), player.getStartFeld().getY(), size, this);
         this.witchView.setColor(player.getColor());
+        mediaPlayer = MediaPlayer.create(context,R.raw.swoosh);
     }
 
     public void putWitchOnGameboard(Activity activity) {
@@ -35,6 +38,7 @@ public class Witch {
     }
 
     public void moveWitch(Feld destination) {
+        mediaPlayer.start();
           witchView.moveView(destination.getX(), destination.getY());
           currentField = destination;
 
