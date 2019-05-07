@@ -61,7 +61,6 @@ public class Gamescreen extends AppCompatActivity {
             }
         });
 
-
         Witch testWitch;
 
         switch(color){
