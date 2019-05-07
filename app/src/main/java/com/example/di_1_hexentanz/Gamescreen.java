@@ -79,6 +79,7 @@ public class Gamescreen extends AppCompatActivity {
     }
 
 
+
     private void drawBoardGame() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
