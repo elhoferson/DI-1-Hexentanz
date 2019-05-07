@@ -15,6 +15,11 @@
         android:name="android.permission.INTERNET"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,6 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
         <activity
             android:name=".CreateGameActivity"
             android:label="@string/title_activity_create"
@@ -48,6 +55,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+        <activity android:name=".Startscreen"
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -61,6 +70,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Gamescreen"
+            android:screenOrientation="landscape"></activity>
+
+        <activity android:name=".Dice"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".ColourChoosing"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
