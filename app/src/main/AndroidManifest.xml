@@ -15,10 +15,6 @@
         android:name="android.permission.INTERNET"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
 
     <application
         android:allowBackup="true"
@@ -32,37 +28,15 @@
         <activity
             android:name=".CreateGameActivity"
             android:label="@string/title_activity_create"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.di_1_hexentanz.MainActivity" />
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".JoinGameActivity"
             android:label="@string/title_activity_join"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.di_1_hexentanz.MainActivity" />
-        </activity>
-        <!--
-        <activity android:name=".StartActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        </activity>
 
         <activity android:name=".Startscreen"
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        -->
-        <activity
-            android:name=".MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,6 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
         <activity android:name=".Gamescreen"
             android:screenOrientation="landscape"></activity>
