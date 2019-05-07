@@ -88,9 +88,7 @@ public class Dice extends AppCompatActivity {
 
     public void rollDice() {
 
-        int randomNumber = getRandomNumber();
-
-        switch (randomNumber) {
+        switch (getRandomNumber()) {
             case 1:
                 mydice.setImageResource(R.drawable.dice1);
                 backToGamescreen();
@@ -151,7 +149,7 @@ public class Dice extends AppCompatActivity {
 
     public void backToGamescreen() {
         AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
-        rolledNumber.setPositiveButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
+        rolledNumber.setNeutralButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent i = new Intent(getApplicationContext(), Gamescreen.class);
                 startActivity(i);

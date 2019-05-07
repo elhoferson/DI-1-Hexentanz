@@ -1,15 +1,22 @@
 package com.example.di_1_hexentanz;
 
-import android.provider.ContactsContract;
-import android.widget.SimpleCursorAdapter;
+import android.app.AlertDialog;
+import android.app.Instrumentation;
+import android.widget.Button;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowView;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.robolectric.shadows.ShadowInstrumentation.getInstrumentation;
 
 
 public class DiceTest {
@@ -39,5 +46,18 @@ public class DiceTest {
     }
 
 
+    @Test
+    public void clickingPositiveButtonDismissesDialog() throws Exception {
+        AlertDialog alertDialog = new AlertDialog.Builder(testDice)
+                .setPositiveButton("Positive", null).create();
+        alertDialog.show();
+
+        assertTrue(alertDialog.isShowing());
+        ShadowView.clickOn(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
+        assertFalse(alertDialog.isShowing());
+
     }
+
+}
+
 

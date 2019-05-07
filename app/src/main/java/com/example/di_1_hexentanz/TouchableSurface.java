@@ -16,11 +16,12 @@ public class TouchableSurface extends View {
     Dice dice;
     private PlayerColor color;
 
-    public TouchableSurface(final Context context, Feld[] felder, Activity activity) {
+    public TouchableSurface(final Context context, Feld[] felder, Activity activity, Dice dice) {
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
+        this.dice = dice;
         this.setOnTouchListener(handleTouch);
     }
 
