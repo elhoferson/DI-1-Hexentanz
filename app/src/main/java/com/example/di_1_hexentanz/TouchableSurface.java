@@ -16,14 +16,18 @@ public class TouchableSurface extends View {
     Witch selectedWitch;
     private PlayerColor color;
     YourTurnButton ytb;
+    YesButton yb;
+    NoButton nb;
     private boolean yourTurnButtonVisible;
 
-    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, Gamescreen activity) {
+    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, YesButton yb, NoButton nb, Gamescreen activity) {
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
         this.ytb = ytb;
+        this.yb = yb;
+        this.nb = nb;
         yourTurnButtonVisible = true;
         this.setOnTouchListener(handleTouch);
     }
@@ -59,6 +63,23 @@ public class TouchableSurface extends View {
                         activity.startActivityForResult(i, 1);
                     }
                 }
+
+                if (activity.getState() == GameState.ConfirmSelection) {
+                    if (x > yb.getLeftPosition() &&
+                            x < yb.getLeftPosition()+yb.getBitmapWidth() &&
+                            y > yb.getTopPosition() &&
+                            y < yb.getTopPosition()+yb.getBitMapHeight()) {
+
+                    }
+                    if (x > nb.getLeftPosition() &&
+                            x < nb.getLeftPosition()+nb.getBitmapWidth() &&
+                            y > nb.getTopPosition() &&
+                            y < nb.getTopPosition()+nb.getBitMapHeight()) {
+                        yb.setVisibility(INVISIBLE);
+                        nb.setVisibility(INVISIBLE);
+                        activity.returnToWitchSelection();
+                    }
+                }
                 return false;
             }
 
@@ -69,7 +90,7 @@ public class TouchableSurface extends View {
 
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
-        activity.witchSelected(witch);
+        activity.witchSelected(witch, yb, nb);
     }
 
 

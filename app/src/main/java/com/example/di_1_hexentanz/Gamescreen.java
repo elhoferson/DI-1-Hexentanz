@@ -77,7 +77,15 @@ public class Gamescreen extends AppCompatActivity {
         YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
         addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
 
-        surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
+        YesButton yb = new YesButton(getApplicationContext(), displayMetrics);
+        addContentView(yb, findViewById(R.id.contraintLayout).getLayoutParams());
+        yb.setVisibility(View.INVISIBLE);
+
+        NoButton nb = new NoButton(getApplicationContext(), displayMetrics);
+        addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
+        nb.setVisibility(View.INVISIBLE);
+
+        surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, yb, nb, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -238,6 +246,15 @@ public void startDice() {
         }
     }
 
+    public void returnToWitchSelection() {
+        state = GameState.SelectWitch;
+        surface.hideYourTurnButton();
+        TextView output = findViewById(R.id.TestDisplay);
+        String outputText = "Bewege eine Hexe um " + lastDiceResult + "Felder!";
+        output.setText(outputText);
+        output.setVisibility(View.VISIBLE);
+    }
+
     public Witch[] getWitches() {
         return witches;
     }
@@ -247,9 +264,12 @@ public void startDice() {
     }
 
 
-    public void witchSelected(Witch witch) {
+    public void witchSelected(Witch witch, YesButton yb, NoButton nb) {
         setState(GameState.ConfirmSelection);
         TextView outputtext = findViewById(R.id.TestDisplay);
         outputtext.setText("Diese Hexe bewegen?");
+        yb.setVisibility(View.VISIBLE);
+        nb.setVisibility(View.VISIBLE);
+
     }
 }
