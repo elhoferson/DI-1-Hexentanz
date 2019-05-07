@@ -23,11 +23,11 @@ public class YourTurnButton extends View {
         p=new Paint();
         Bitmap b= BitmapFactory.decodeResource(getResources(), R.drawable.btn_yourturn);
         p.setColor(Color.RED);
-        bitMapHeight = b.getHeight();
-        bitmapWidth = b.getWidth();
+        bitMapHeight = b.getHeight()/2;
+        bitmapWidth = b.getWidth()/2;
         topPosition = metrics.heightPixels/2-bitMapHeight/2;
         leftPosition = metrics.widthPixels/2-bitmapWidth/4;
-        Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth/2,bitMapHeight/2, false);
+        Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth,bitMapHeight, false);
         canvas.drawBitmap(bResize, leftPosition, topPosition, p);
     }
 
