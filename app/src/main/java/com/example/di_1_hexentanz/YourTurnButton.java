@@ -25,8 +25,8 @@ public class YourTurnButton extends View {
         p.setColor(Color.RED);
         bitMapHeight = b.getHeight()/2;
         bitmapWidth = b.getWidth()/2;
-        topPosition = metrics.heightPixels/2-bitMapHeight/2;
-        leftPosition = metrics.widthPixels/2-bitmapWidth/4;
+        topPosition = metrics.heightPixels/2-bitMapHeight;
+        leftPosition = metrics.widthPixels/2-bitmapWidth/2;
         Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth,bitMapHeight, false);
         canvas.drawBitmap(bResize, leftPosition, topPosition, p);
     }
