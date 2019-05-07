@@ -43,6 +43,7 @@ public class Gamescreen extends AppCompatActivity {
 
         YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
         addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
+        yourTurnButton.setVisibility(View.INVISIBLE);
 
         final TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
         surface.setColor(color);
