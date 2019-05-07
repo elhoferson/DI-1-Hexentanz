@@ -10,6 +10,7 @@ import android.widget.Button;
 
 public class Gamescreen extends AppCompatActivity {
 
+    Witch[] witches = new Witch[5];
     Feld[] felder = new Feld[36];
     int result;
     Witch selectedWitch;
@@ -20,6 +21,7 @@ public class Gamescreen extends AppCompatActivity {
     int width;
     int fieldwidth;
     DisplayMetrics displayMetrics;
+    boolean colorVisible = false;
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -70,6 +72,33 @@ public class Gamescreen extends AppCompatActivity {
             }
         });
 
+        Button testButton1 = findViewById(R.id.button2);
+        testButton1.bringToFront();
+        testButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (colorVisible) {
+                    for (int i = 0; i < witches.length; i++) {
+                        witches[i].hideColor();
+                    }
+                    colorVisible = false;
+                } else {
+                    for (int i = 0; i < witches.length; i++) {
+                        witches[i].showColor();
+                    }
+                    colorVisible = true;
+                }
+            }
+        });
+
+        for (int i = 0; i < witches.length; i++) {
+            witches[i] = new Witch(i, new Player("Player"+i, PlayerColor.BLUE,1, felder[2*i], felder[2*1]), getApplicationContext(), fieldRadius);
+            witches[i].putWitchOnGameboard(this);
+        }
+
+
+
+        /*
         Witch testWitch;
 
         switch(color){
@@ -94,7 +123,7 @@ public class Gamescreen extends AppCompatActivity {
         }
         testWitch.putWitchOnGameboard(this);
 
-        surface.setSelectedWitch(testWitch);
+        surface.setSelectedWitch(testWitch);*/
     }
 /*
     private void rollDice() {

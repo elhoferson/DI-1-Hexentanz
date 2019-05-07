@@ -37,4 +37,12 @@ public class Witch {
 
 
     }
+
+    public void showColor() {
+        witchView.showColor();
+    }
+
+    public void hideColor() {
+        witchView.hideColor();
+    }
 }
