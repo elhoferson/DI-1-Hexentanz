@@ -1,11 +1,8 @@
 package com.example.di_1_hexentanz;
 
-import android.app.AlertDialog;
-import android.app.Instrumentation;
-import android.widget.Button;
+import com.example.di_1_hexentanz.Dice.RollDice;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 

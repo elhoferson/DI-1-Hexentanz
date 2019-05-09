@@ -1,5 +1,7 @@
 package com.example.di_1_hexentanz;
 
+import com.example.di_1_hexentanz.GameBoard.Feld;
+
 import java.util.ArrayList;
 
 public class Player {

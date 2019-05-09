@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.GameBoard;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,9 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import com.example.di_1_hexentanz.Player;
+import com.example.di_1_hexentanz.PlayerColor;
+import com.example.di_1_hexentanz.R;
+import com.example.di_1_hexentanz.Witch;
 
 public class Gamescreen extends AppCompatActivity {
 
@@ -18,6 +22,7 @@ public class Gamescreen extends AppCompatActivity {
     ImageView dice;
     private static PlayerColor color;
     int witchradius;
+    DisplayMetrics displayMetrics;
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -32,15 +37,37 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
 
         drawBoardGame();
 
-        rollDice();
+        //rollDice();
 
-        TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, this, dice);
+        YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
+        addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
+        yourTurnButton.setVisibility(View.INVISIBLE);
+
+
+        final TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
+
+
+        Button testButton = findViewById(R.id.button);
+        testButton.bringToFront();
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (surface.isYourTurnButtonVisible()) {
+                    surface.hideYourTurnButton();
+                } else {
+                    surface.showYourTurnButton();
+                }
+            }
+        });
+
 
         Witch testWitch;
         switch(color){
@@ -72,16 +99,26 @@ public class Gamescreen extends AppCompatActivity {
 
     }
 
+
+    /*
+
     private void rollDice() {
         ImageButton btn_dice = findViewById(R.id.btnYourTurn);
         btn_dice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DiceView.class);
+                Intent intent = new Intent(getApplicationContext(), DiceUI.class);
                 startActivityForResult(intent, 1);
             }
         });
     }
+
+    */
+
+
+public void startDice() {
+
+}
 
 
 

@@ -3,6 +3,8 @@ package com.example.di_1_hexentanz;
 import android.app.Activity;
 import android.content.Context;
 
+import com.example.di_1_hexentanz.GameBoard.Feld;
+
 public class Witch {
 
     /**

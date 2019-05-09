@@ -1,11 +1,14 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.GameBoard;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
+
+import com.example.di_1_hexentanz.Dice.DiceUI;
+import com.example.di_1_hexentanz.PlayerColor;
+import com.example.di_1_hexentanz.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
@@ -13,12 +16,18 @@ public class TouchableSurface extends View {
     Activity activity;
     Witch selectedWitch;
     private PlayerColor color;
+    YourTurnButton ytb;
+    private boolean yourTurnButtonVisible;
 
-    public TouchableSurface(final Context context, Feld[] felder, Activity activity, ImageView dice) {
+
+    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, Activity activity) {
+
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
+        this.ytb = ytb;
+        yourTurnButtonVisible = false;
         this.setOnTouchListener(handleTouch);
     }
 
@@ -86,6 +95,15 @@ public class TouchableSurface extends View {
 
                         }
                     }
+
+                    if (x > ytb.getLeftPosition() &&
+                            x < ytb.getLeftPosition()+ytb.getBitmapWidth() &&
+                            y > ytb.getTopPosition() &&
+                            y < ytb.getTopPosition()+ytb.getBitMapHeight() &&
+                            yourTurnButtonVisible) {
+                        Intent i = new Intent(activity.getApplicationContext(), DiceUI.class);
+                        activity.startActivity(i);
+                    }
                     return false;
             }
 
@@ -102,6 +120,8 @@ public class TouchableSurface extends View {
         }
     }
 
+/*
+    private View.OnTouchListener yourTurn = new OnTouchListener() {
 
     private View.OnTouchListener yourTurn = new OnTouchListener() {
         @Override
@@ -109,7 +129,7 @@ public class TouchableSurface extends View {
 
 
             if (v.getId() == R.id.btnYourTurn) {
-                Intent i = new Intent(getContext(), DiceView.class);
+                Intent i = new Intent(getContext(), DiceUI.class);
                 i.getAction();
                 performClick();
 
@@ -117,9 +137,7 @@ public class TouchableSurface extends View {
 
             return false;
         }
-
-
-    };
+    };*/
 
 
     @Override
@@ -140,7 +158,18 @@ public class TouchableSurface extends View {
         return this.color;
     }
 
+    public void hideYourTurnButton() {
+        ytb.setVisibility(INVISIBLE);
+        yourTurnButtonVisible = false;
+    }
 
+    public void showYourTurnButton() {
+        ytb.setVisibility(VISIBLE);
+        yourTurnButtonVisible = true;
+    }
 
+    public boolean isYourTurnButtonVisible() {
+        return yourTurnButtonVisible;
+    }
 
 }
