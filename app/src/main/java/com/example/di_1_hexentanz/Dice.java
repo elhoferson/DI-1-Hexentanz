@@ -122,6 +122,7 @@ public class Dice extends AppCompatActivity {
                 break;
             case 6:
                 dice.setImageResource(R.drawable.dice6);
+                result = 6;
                 rolledNumber6();
                 break;
 
@@ -138,7 +139,8 @@ public class Dice extends AppCompatActivity {
 
 
     public void rolledNumber6() {
-
+        //Pause if number has been generated
+        this.onPause();
         AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(this);
         if (allWitchesOnBoard) {
             popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
@@ -167,6 +169,8 @@ public class Dice extends AppCompatActivity {
     }
 
     public void backToGamescreen() {
+        //Pause if number has been generated
+        this.onPause();
         AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
         rolledNumber.setTitle("Du hast eine " + result + " gewürfelt!");
 
@@ -179,9 +183,14 @@ public class Dice extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .show();
         } else {
-            rolledNumber.setIcon(android.R.drawable.ic_dialog_info);
-            rolledNumber.show();
-            goBackAndSendResult();
+            rolledNumber.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    goBackAndSendResult();
+                }
+            })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
+
         }
 
     }
