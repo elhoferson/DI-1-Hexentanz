@@ -60,14 +60,21 @@ We used __git__ for versioning, and __Github__ for pull requests, reviews, hooks
 ## Authors
 * __Hofer Alexander__
   * Continous Integration 
+  * Network
 * __Hofmann Daniel__
-  * Player Class
+  * Cheating Function
 * __Hülser Matthias__
   * Board Game Design
+  * Interface design
 * __Isak Selina__
-  * Firebase integration
+  * Witches
 * __Szolderits Chiara__
-    * Sensor implementation
+    * Sensor Implementation
+    * Walking on Board Game
 * __Wiltschnig Kevin__
     * Game Logic
   
+
+## Acknowledgment
+Thank you [stackoverflow](https://stackoverflow.com), for answering many questions :)
+

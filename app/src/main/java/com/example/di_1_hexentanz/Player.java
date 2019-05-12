@@ -1,64 +1,83 @@
 package com.example.di_1_hexentanz;
 
-import android.graphics.Color;
+import java.util.ArrayList;
 
 public class Player {
+    private String name;
+    private PlayerColor color;
+    private int number;
+    private ArrayList<Witch> witches;
+    private Feld startFeld;
+    private Feld zielFeld;
+    private int witchesinGoal;
 
-        private int ID = 0;
-        private static int IDCounter = 0;
-        private String name;
-        //these variables could me modified to "cheat"
-        private Color color;
-        private int WitchesInHome;
-        private int WitchesInGoal;
-
-        public Player(String name, Color color) {
-            this.ID = IDCounter;
-            IDCounter++;
-            this.name = name;
-            this.color = color;
-
-            this.WitchesInHome = 4; // this will depend on the amount of players.
-            this.WitchesInGoal = 0;
-        }
-
-
-        // GETTER AND SETTER
-
-        public int getWitchesInHome() {
-            return WitchesInHome;
-        }
-
-        public void setWitchesInHome(int witchesInHome) {
-            this.WitchesInHome = witchesInHome;
-        }
-
-        public int getWitchesInGoal() {
-            return WitchesInGoal;
-        }
-
-        public void setWitchesInGoal(int witchesInGoal) {
-            this.WitchesInGoal = witchesInGoal;
-        }
-
-        public int getID() {
-            return ID;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Color getColor() {
-            return color;
-        }
-
-        public void setColor(Color color) {
-            this.color = color;
-        }
+    public Player(String name, PlayerColor color, int number, Feld startFeld, Feld zielFeld) {
+        this.name = name;
+        this.witchesinGoal = 0;
+        this.color = color;
+        this.number = number;
+        this.startFeld = startFeld;
+        this.zielFeld = zielFeld;
+        this.witches = new ArrayList<>();
     }
 
+    public void addWitch(Witch witch) {
+        witches.add(witch);
+    }
+
+    public PlayerColor getColor() {
+        return color;
+    }
+
+    public Feld getStartFeld() {
+        return startFeld;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(PlayerColor color) {
+        this.color = color;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public ArrayList<Witch> getWitches() {
+        return witches;
+    }
+
+    public void setWitches(ArrayList<Witch> witches) {
+        this.witches = witches;
+    }
+
+    public void setStartFeld(Feld startFeld) {
+        this.startFeld = startFeld;
+    }
+
+    public Feld getZielFeld() {
+        return zielFeld;
+    }
+
+    public void setZielFeld(Feld zielFeld) {
+        this.zielFeld = zielFeld;
+    }
+
+    public int getWitchesinGoal() {
+        return witchesinGoal;
+    }
+
+    public void setWitchesinGoal(int witchesinGoal) {
+        this.witchesinGoal = witchesinGoal;
+    }
+}
