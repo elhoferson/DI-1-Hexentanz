@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -22,6 +23,7 @@ public class Dice extends AppCompatActivity {
     SensorManager shakingSensor;
     Sensor shakingAccelerometer;
     int result;
+    private boolean allWitchesOnBoard;
 
 
     private Random randomGenerator = new Random();
@@ -32,8 +34,6 @@ public class Dice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice);
 
-
-
         dice = findViewById(R.id.dice);
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);
         shakingAccelerometer = shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -43,8 +43,11 @@ public class Dice extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            this.allWitchesOnBoard = extras.getBoolean("allWitchesOnBoard");
 
-
+        }
     }
 
 
@@ -135,47 +138,58 @@ public class Dice extends AppCompatActivity {
 
 
     public void rolledNumber6() {
+
         AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(this);
-        popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
-        popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                //show the colour of the witch
-            }
-        })
-                .setNegativeButton( "6 Felder gehen", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("result",6);
-                setResult(Activity.RESULT_OK,returnIntent);
-                finish();
+        if (allWitchesOnBoard) {
+            popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
+            popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //show the colour of the witch
+                }
+            })
+                    .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra("result", 6);
+                            setResult(Activity.RESULT_OK, returnIntent);
+                            finish();
 
 
-            }
-        })
-        .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
 
 
-
+        } else {
+            backToGamescreen();
+        }
     }
 
     public void backToGamescreen() {
         AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
-        rolledNumber.setTitle("Du hast eine" + result + "gewürfelt!");
-        rolledNumber.setPositiveButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                goBackAndSendResult();
-            }
-        })
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
+        rolledNumber.setTitle("Du hast eine " + result + " gewürfelt!");
+
+        if (allWitchesOnBoard) {
+            rolledNumber.setPositiveButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    goBackAndSendResult();
+                }
+            })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
+        } else {
+            rolledNumber.setIcon(android.R.drawable.ic_dialog_info);
+            rolledNumber.show();
+            goBackAndSendResult();
+        }
 
     }
 
     private void goBackAndSendResult() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result",result);
-        setResult(Activity.RESULT_OK,returnIntent);
+        returnIntent.putExtra("result", result);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
@@ -187,4 +201,5 @@ public class Dice extends AppCompatActivity {
         finish();
 
     }
+
 }

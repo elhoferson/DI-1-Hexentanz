@@ -32,8 +32,9 @@ public class Witch {
         mediaPlayer = MediaPlayer.create(context,R.raw.swoosh);
     }
 
-    public void putWitchOnGameboard(Activity activity) {
-        currentField = player.getStartFeld();
+    public void putWitchOnGameboard(Activity activity, Feld destination) {
+        currentField = destination;
+        witchView.moveView(destination.getX(), destination.getY());
         activity.addContentView(witchView, activity.findViewById(R.id.contraintLayout).getLayoutParams());
     }
 
@@ -41,9 +42,6 @@ public class Witch {
         mediaPlayer.start();
           witchView.moveView(destination.getX(), destination.getY());
           currentField = destination;
-
-
-
     }
 
     public void showColor() {
@@ -52,5 +50,9 @@ public class Witch {
 
     public void hideColor() {
         witchView.hideColor();
+    }
+
+    public Player getPlayer(){
+        return this.player;
     }
 }
