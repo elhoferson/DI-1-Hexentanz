@@ -221,6 +221,14 @@ public class Gamescreen extends AppCompatActivity {
                     lastDiceResult = result;
                     state = GameState.PutWitchOnBoard;
                     /**PERFORM TOUCH**/
+                    this.surface.dispatchTouchEvent(MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis()+100,
+                            MotionEvent.ACTION_DOWN,
+                            0F,
+                            0F,
+                            0
+                    ));
 
                 }
             }
