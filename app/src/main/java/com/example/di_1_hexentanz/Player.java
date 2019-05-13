@@ -2,8 +2,6 @@ package com.example.di_1_hexentanz;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-
 public class Player {
     private String name;
     private PlayerColor color;
