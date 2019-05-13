@@ -1,6 +1,5 @@
 package com.example.di_1_hexentanz;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
