@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -24,7 +25,9 @@ public class Winnerpop extends AppCompatActivity {
     }
 
     public void onClick(View view){
-        won.endGame();
+        Intent i = new Intent(getApplicationContext(),Startscreen.class);
+        startActivity(i);
+
     }
 
 

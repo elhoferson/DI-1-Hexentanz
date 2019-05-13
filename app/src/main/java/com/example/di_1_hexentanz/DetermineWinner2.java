@@ -27,12 +27,6 @@ public class DetermineWinner2 extends AppCompatActivity {
 
     }
 
-
-
-
-    public void endGame(){
-        Intent i = new Intent(getApplicationContext(),Startscreen.class);
-        startActivity(i);
-    }
+    
 
 }
