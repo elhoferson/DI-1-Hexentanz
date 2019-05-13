@@ -38,6 +38,9 @@ public class Gamescreen extends AppCompatActivity {
 
         drawBoardGame();
 
+
+
+
         //rollDice();
 
         YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
@@ -47,6 +50,7 @@ public class Gamescreen extends AppCompatActivity {
         final TouchableSurface surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, this);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
+
 
         Button testButton = findViewById(R.id.button);
         testButton.bringToFront();

@@ -18,6 +18,8 @@ public class TouchableSurface extends View {
     private boolean yourTurnButtonVisible;
     DetermineWinner2 goal = new DetermineWinner2();
 
+
+
     public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, Activity activity) {
         super(context);
         this.felder = felder;
@@ -27,7 +29,6 @@ public class TouchableSurface extends View {
         yourTurnButtonVisible = false;
         this.setOnTouchListener(handleTouch);
     }
-
     public void setSelectedWitch(Witch selectedWitch) {
         this.selectedWitch = selectedWitch;
     }
@@ -35,6 +36,8 @@ public class TouchableSurface extends View {
     public Witch getSelectedWitch() {
         return selectedWitch;
     }
+
+
 
     private View.OnTouchListener handleTouch = new OnTouchListener() {
 
@@ -50,6 +53,9 @@ public class TouchableSurface extends View {
                             selectedWitch.moveWitch(felder[i]);
                             if(getSelectedWitch().currentField.equals(getSelectedWitch().player.getZielFeld())){
                                 goal.isrightWitch(getSelectedWitch().player,getSelectedWitch());
+                            }if(goal.hasWon(selectedWitch.player)){
+                                Intent intent = new Intent(activity.getApplicationContext(),Winnerpop.class);
+                                activity.startActivity(intent);
                             }
 
                         }
