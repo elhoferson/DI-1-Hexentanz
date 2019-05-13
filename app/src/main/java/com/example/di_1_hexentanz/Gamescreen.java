@@ -1,16 +1,23 @@
 package com.example.di_1_hexentanz;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.TextView;
 
-public class Gamescreen extends AppCompatActivity {
+
+public class Gamescreen extends AppCompatActivity implements SensorEventListener {
 
     Feld[] felder = new Feld[36];
     int result;
@@ -18,6 +25,11 @@ public class Gamescreen extends AppCompatActivity {
     private static PlayerColor color;
     int witchradius;
     DisplayMetrics displayMetrics;
+
+    //Sensor variables:
+    TextView luminosity;
+    SensorManager sensorManager;
+    Sensor sensor;
 
     public static void setColor(PlayerColor color){
         Gamescreen.color = color;
@@ -34,6 +46,10 @@ public class Gamescreen extends AppCompatActivity {
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+
+        sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
 
         drawBoardGame();
@@ -145,6 +161,15 @@ public void startDice() {
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
     }
 
 
@@ -165,8 +190,50 @@ public void startDice() {
     }
 
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+            //Light Sensor action
+//            luminosity.setText("Luminosity: " + event.values[0]);
+
+            if (event.values[0] < 5) {
 
 
+                sensorManager.unregisterListener(this);
+
+                AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this, R.style.AlertDialogStyle);
+                a_builder.setMessage("It is dark and cloudy tonight. The New Moon is rising in the sky," +
+                        " but it is barely giving off light. This may be an opportunity for you! " +
+                        "You look around but you don't see anybody. Do you want to cheat?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //TODO:
+                                //YES I WANT TO CHEAT!
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //TODO:
+                                //I DONT WANT TO CHEAT!
+                            }
+                        });
+
+                AlertDialog alert = a_builder.create();
+                alert.show();
 
 
+                //for now register Listener again, so Sensor restarts after action
+                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
