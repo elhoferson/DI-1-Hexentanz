@@ -4,17 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:screenOrientation="landscape"
     android:background="@drawable/bg"
+    android:screenOrientation="landscape"
     tools:context=".JoinGameActivity">
 
     <ListView
         android:id="@+id/hostList"
-        android:layout_width="714dp"
-        android:layout_height="715dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="704dp"
+        android:layout_height="586dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="68dp"
         android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_mydevice"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginTop="28dp"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

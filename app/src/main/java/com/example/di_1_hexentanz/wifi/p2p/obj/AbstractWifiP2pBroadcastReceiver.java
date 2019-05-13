@@ -3,35 +3,31 @@ package com.example.di_1_hexentanz.wifi.p2p.obj;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.di_1_hexentanz.wifi.p2p.listener.std.WifiP2pConnectionInfoListener;
-import com.example.di_1_hexentanz.wifi.p2p.listener.std.WifiP2pPeerListListener;
 import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.SocketAddress;
+import java.net.InetAddress;
 
 public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver implements IWifiP2pConstants {
 
     private WifiP2pDeviceAdapter deviceListAdapter;
+    private TextView myDeviceView;
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
-    private WifiP2pConnectionInfoListener connectionInfo = new WifiP2pConnectionInfoListener();
 
-    public AbstractWifiP2pBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter) {
+    public AbstractWifiP2pBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter, TextView myDeviceView) {
         this.manager = manager;
         this.channel = channel;
         this.deviceListAdapter = deviceListAdapter;
-
+        this.myDeviceView = myDeviceView;
     }
 
     @Override
@@ -52,19 +48,44 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
             fillList(manager, channel, deviceListAdapter);
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+
+            if (manager == null) {
+                return;
+            }
             Log.i(WIFI_P2P_TAG, "WIFI P2p connection changed");
-            //manager.requestConnectionInfo(channel, connectionInfo);
-            manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
-                @Override
-                public void onConnectionInfoAvailable(WifiP2pInfo info) {
-                    Log.i(WIFI_P2P_TAG, "connection info: "+ info.toString());
-                }
-            });
+
+            NetworkInfo networkInfo = (NetworkInfo) intent
+                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            Log.i(WIFI_P2P_TAG, "Network info:" + networkInfo.toString());
+            if (networkInfo.isConnected()) {
+
+                // We are connected with the other device, request connection
+                // info to find group owner IP
+                //manager.requestConnectionInfo(channel, connectionInfo);
+                manager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
+                    @Override
+                    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+                        InetAddress groupOwnerAddress = info.groupOwnerAddress;
+                        Log.i(WIFI_P2P_TAG, info.toString());
+
+                        if (info.groupFormed && info.isGroupOwner) {
+                            NetworkLogic.init();
+                            Log.i(WIFI_P2P_TAG, "I'am the owner");
+                        } else if (info.groupFormed) {
+                            Log.i(WIFI_P2P_TAG, "I'am a client and will connect to the owner");
+                            NetworkLogic.initClient(groupOwnerAddress);
+                        }
+                    }
+                });
+            } else {
+                Log.i(WIFI_P2P_TAG, "disconnected");
+            }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
             WifiP2pDevice myDevice = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             Log.i(WIFI_P2P_TAG, "WIFI P2p device changed device: "+ myDevice.toString());
+            myDeviceView.setText(myDevice.deviceName + " - " + myDevice.deviceAddress);
 
 
         }

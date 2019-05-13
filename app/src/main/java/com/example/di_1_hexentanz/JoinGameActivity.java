@@ -2,20 +2,17 @@ package com.example.di_1_hexentanz;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.di_1_hexentanz.wifi.p2p.AbstractWifiP2pActivity;
-import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pClientBroadcastReceiver;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pIntentFilter;
@@ -42,7 +39,7 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
             {
 
                 final WifiP2pDevice selectedPeer = devices.get(position);
-                AlertDialog.Builder connectDialog = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder connectDialog = new AlertDialog.Builder(JoinGameActivity.this);
                 connectDialog.setTitle("Willst du dem Spiel von "+selectedPeer.deviceName+" beitreten?");
                 connectDialog.setPositiveButton("Beitreten", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -56,12 +53,12 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
                                 // do nothing
                             }
                         })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
 
             }
         });
-        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter);
+        TextView myDeviceView = findViewById(R.id.text_mydevice);
+        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter, myDeviceView);
         getManager().discoverPeers(getChannel(), new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -114,7 +111,6 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
             @Override
             public void onSuccess() {
                 Log.i(WIFI_P2P_TAG,"successful connected to "+ config.deviceAddress);
-
             }
 
             @Override

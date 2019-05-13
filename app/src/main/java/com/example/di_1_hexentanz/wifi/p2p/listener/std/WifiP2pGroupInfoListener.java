@@ -4,6 +4,7 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.p2p.obj.IWifiP2pConstants;
 import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
 
@@ -23,10 +24,9 @@ public class WifiP2pGroupInfoListener implements WifiP2pManager.GroupInfoListene
         } else {
             peerListAdapter.clear();
             peerListAdapter.addAll(group.getClientList());
-            if (peerListAdapter.getCount() >= 1) {
-                //TODO enable start game button
-                Log.i(WIFI_P2P_TAG, "game is ready to start");
-            }
+
+            //NetworkLogic.getInstance().addPlayers(group.getClientList());
+            Log.i(WIFI_P2P_TAG, "game is ready to start");
         }
         Log.i(WIFI_P2P_TAG, "Group: " + group.toString());
     }

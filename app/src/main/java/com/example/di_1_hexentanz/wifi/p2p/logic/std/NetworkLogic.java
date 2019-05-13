@@ -3,40 +3,65 @@ package com.example.di_1_hexentanz.wifi.p2p.logic.std;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.util.Log;
 
-import com.example.di_1_hexentanz.obj.std.HostPlayer;
-import com.example.di_1_hexentanz.obj.std.Player;
-
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkLogic {
 
     private static final String TAG = "NETWORK";
+    private static final int PORT = 9872;
     private static NetworkLogic instance = null;
     private Type usageType;
 
-    // if i'm the host host else it's null
-    private HostPlayer host;
+    private ServerSocket host;
+    private List<WifiP2pDevice> clients = new ArrayList<>();
 
-    // will be null if i'm the host
-    private Player me;
+    private Socket client;
 
-    private NetworkLogic (){
+
+    private NetworkLogic() {
 
     }
 
-    public static void init(WifiP2pDevice hostDevice) {
+    public static void init() {
         if (instance == null) {
-            instance = new NetworkLogic();
-            instance.setHost(new HostPlayer(hostDevice));
-            instance.setUsageType(Type.HOST);
+            try {
+
+                ServerSocket server = new ServerSocket(PORT);
+                instance = new NetworkLogic();
+                instance.setHost(server);
+                instance.setClient(server.accept());
+                instance.setUsageType(Type.HOST);
+            } catch (IOException e) {
+                Log.e(TAG, "error creating server socket", e);
+            }
+
         }
     }
 
-    public static void init(WifiP2pDevice hostDevice, WifiP2pDevice myDevice) {
+    public static void initClient(final InetAddress hostDevice) {
         if (instance == null) {
-            instance = new NetworkLogic();
-            instance.setUsageType(Type.CLIENT);
-            instance.setMe(new Player(myDevice, hostDevice));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Socket socket = new Socket(hostDevice, PORT);
+                        instance = new NetworkLogic();
+                        instance.setUsageType(Type.CLIENT);
+                        instance.setClient(socket);
+                    } catch (IOException e) {
+                        Log.e(TAG, "error creating server socket", e);
+                    }
+                }
+            }).start();
+
         }
     }
 
@@ -44,7 +69,7 @@ public class NetworkLogic {
         return instance;
     }
 
-    public Boolean addPlayers(WifiP2pDevice myDevice, List<WifiP2pDevice> devices) {
+    public Boolean addPlayers(List<WifiP2pDevice> devices) {
         if (getUsageType().equals(Type.CLIENT)) {
             Log.e(TAG, "Client not allowed to addPlayers");
             return false;
@@ -56,31 +81,50 @@ public class NetworkLogic {
         }
 
         for (WifiP2pDevice device : devices) {
-            Player newPlayer = new Player(device);
-            host.getClients().clear();
-            host.getClients().add(newPlayer);
+            clients.clear();
+            clients.add(device);
         }
         return true;
+    }
+
+    private class ServerThread extends Thread {
+
+        @Override
+        public void run() {
+            try {
+                ServerSocket server = new ServerSocket(PORT);
+                Socket mySocket = server.accept();
+                BufferedReader input = new BufferedReader(new InputStreamReader(new BufferedInputStream(mySocket.getInputStream())));
+                while(!Thread.currentThread().isInterrupted()) {
+                    String message = input.readLine();
+                    if (message.length() > 0) {
+                        Log.e(TAG, message);
+                    }
+                }
+            } catch(IOException e) {
+                Log.e(TAG, "error creating server socket", e);
+            }
+        }
     }
 
     public static void close() {
         instance = null;
     }
 
-    private void setHost(HostPlayer host) {
+    private void setHost(ServerSocket host) {
         this.host = host;
+    }
+
+    private void setClient(Socket client) {
+        this.client = client;
     }
 
     private void setUsageType(Type usageType) {
         this.usageType = usageType;
     }
 
-    private Type getUsageType() {
+    public Type getUsageType() {
         return usageType;
-    }
-
-    private void setMe(Player me) {
-        this.me = me;
     }
 
     private enum Type {

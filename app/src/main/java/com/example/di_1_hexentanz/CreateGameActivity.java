@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.di_1_hexentanz.wifi.p2p.AbstractWifiP2pActivity;
@@ -27,20 +28,11 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
-
+        TextView myDevice = findViewById(R.id.text_mydevice);
         getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
                 Log.i(WIFI_P2P_TAG, "succesful created group");
-                getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
-                    @Override
-                    public void onGroupInfoAvailable(final WifiP2pGroup group) {
-                        if (group == null) {
-                            return;
-                        }
-                        NetworkLogic.init(group.getOwner());
-                    }
-                });
             }
 
             @Override
@@ -51,7 +43,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         ListView peerList = findViewById(R.id.peerList);
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
-        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter);
+        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice);
     }
 
     public void onClick(View v) {

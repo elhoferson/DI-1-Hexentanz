@@ -22,37 +22,35 @@
 
             <ImageView
                 android:id="@+id/Btn_JoinGame"
-                android:layout_width="0dp"
+                android:layout_width="200dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="300dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="100dp"
                 android:layout_marginBottom="200dp"
+                android:background="@drawable/btn_joingame"
                 android:onClick="onClick"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/imgView_Title"
+                app:layout_constraintStart_toEndOf="@+id/Btn_CreateGame"
                 app:layout_constraintTop_toBottomOf="@+id/imgView_Title"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/btn_joingame" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/Btn_CreateGame"
-                android:layout_width="0dp"
+                android:layout_width="200dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="100dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="300dp"
                 android:layout_marginBottom="200dp"
+                android:background="@drawable/btn_creategame"
                 android:onClick="onClick"
                 android:padding="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/imgView_Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgView_Title"
-                app:layout_constraintVertical_bias="0.745"
-                app:srcCompat="@drawable/btn_creategame" />
+                app:layout_constraintVertical_bias="0.745" />
 
             <ImageView
                 android:id="@+id/imgView_Title"
