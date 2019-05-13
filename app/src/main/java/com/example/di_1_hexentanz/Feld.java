@@ -3,7 +3,7 @@ package com.example.di_1_hexentanz;
 import android.content.Context;
 
 public class Feld {
-    int number;
+    private int number;
     int x;
     int y;
     int radius;
@@ -29,6 +29,15 @@ public class Feld {
         return y;
     }
 
+    public int getNumber() {
+        return number;
+    }
 
+    public void highlight() {
+        feldView.highlight();
+    }
 
+    public void unhighlight() {
+        feldView.unhighlight();
+    }
 }
