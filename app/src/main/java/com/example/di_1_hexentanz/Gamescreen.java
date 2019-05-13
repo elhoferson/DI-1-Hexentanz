@@ -9,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.Image;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private Dice dice;
 
     //Sensor variables:
-    TextView luminosity;
+    ImageView luminosityIcon;
     SensorManager sensorManager;
     Sensor sensor;
 
@@ -83,6 +85,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        luminosityIcon = findViewById(R.id.luminosityView);
+
 
         this.dice = new Dice();
         displayMetrics = new DisplayMetrics();
@@ -318,19 +322,23 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
             if(event.values[0] > 100){
                 //bright
+                luminosityIcon.setImageResource(R.drawable.bright_transparent);
             }else if(event.values[0] < 100 && event.values[0] >= 50){
                 //cloudy
+                luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
             }else if(event.values[0] < 50 && event.values[0] >= 25){
                 //dusky
+                luminosityIcon.setImageResource(R.drawable.dusky_transparent);
             }else if(event.values[0] < 25 && event.values[0] >= 5){
                 //nearly_dark
+                luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
             }else if (event.values[0] < 5) {
                 //dark
-
+                luminosityIcon.setImageResource(R.drawable.dark_transparent);
                 //pause sensor
                 sensorManager.unregisterListener(this);
 
-                AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this, R.style.AlertDialogStyle);
+                AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
                 a_builder.setMessage("It is dark and cloudy tonight. The New Moon is rising in the sky," +
                         " but it is barely giving off light. This may be an opportunity for you! " +
                         "You look around but you don't see anybody. Do you want to cheat?")
