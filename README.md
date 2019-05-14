@@ -31,7 +31,7 @@ An __Hexentanz__ implementation, with custom cards and cheating functionality.
 * Custom game board
 * Cheating supported
 * Cheating detection supported
-* Shaking smartphone for rolling the dice supported
+* Shaking smartphone for rolling the diceOld supported
 * Multiplayer supported
 
 

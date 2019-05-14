@@ -1,6 +1,5 @@
 package com.example.di_1_hexentanz.GameBoard;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
@@ -8,31 +7,35 @@ import android.view.View;
 
 import com.example.di_1_hexentanz.Dice.DiceUI;
 import com.example.di_1_hexentanz.PlayerColor;
+import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
     Context context;
-    Activity activity;
-    Witch selectedWitch;
+    Gamescreen activity;
+    private Witch selectedWitch;
     private PlayerColor color;
     YourTurnButton ytb;
-    private boolean yourTurnButtonVisible;
+    YesButton yb;
+    NoButton nb;
+    //private Dice_old diceOld;
+    DiceUI diceOld;
 
+    private int next;
 
-    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, Activity activity) {
-
+    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, YesButton yb, NoButton nb, Gamescreen activity, DiceUI diceOld) {
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
+        this.diceOld = diceOld;
         this.ytb = ytb;
-        yourTurnButtonVisible = false;
+        this.yb = yb;
+        this.nb = nb;
         this.setOnTouchListener(handleTouch);
-    }
 
-    public void setSelectedWitch(Witch selectedWitch) {
-        this.selectedWitch = selectedWitch;
+        this.next = activity.getCurrentPlayer().getWitchesAtHome();
     }
 
     private View.OnTouchListener handleTouch = new OnTouchListener() {
@@ -43,68 +46,66 @@ public class TouchableSurface extends View {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
+
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                if (activity.getState() == GameState.MyTurn) {
+                    if (x > ytb.getLeftPosition() &&
+                            x < ytb.getLeftPosition() + ytb.getBitmapWidth() &&
+                            y > ytb.getTopPosition() &&
+                            y < ytb.getTopPosition() + ytb.getBitMapHeight()) {
+                        Intent i = new Intent(activity.getApplicationContext(), DiceUI.class);
+                        i.putExtra("allWitchesOnBoard", activity.allWitchesOnBoard());
+                        activity.startActivityForResult(i, 1);
+
+                    }
+
+                }
+
+                if (activity.getState() == GameState.PutWitchOnBoard) {
+                    activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
+                    next--;
+                    activity.getCurrentPlayer().setWitchesAtHome(activity.getCurrentPlayer().getWitchesAtHome() - 1);
+                    activity.updateTextAtHome(activity.getCurrentPlayer().getWitchesAtHome());
+                    activity.setState(GameState.MyTurn);
+                }
+
+
+                if (activity.getState() == GameState.SelectWitch) {
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
-
-                            selectedWitch.moveWitch(felder[i]);
-
-                            /*
-                            int selected = selectedWitch.number;
-
-                            int temp;
-
-                            switch(mydice.getRandomNumber()) {
-
-                                case 1:
-                                    temp = selected+1;
-                                    goOverStart(temp);
-                                    selectedWitch.moveWitch(felder[temp]);
-
-                                case 2:
-                                    temp = selected + 2;
-                                    goOverStart(temp);
-                                    selectedWitch.moveWitch(felder[temp]);
-
-                                case 3:
-                                    temp = selected + 3;
-                                    goOverStart(temp);
-                                    selectedWitch.moveWitch(felder[temp]);
-
-                                case 4:
-                                    temp = selected + 4;
-                                    goOverStart(temp);
-                                    selectedWitch.moveWitch(felder[temp]);
-
-                                case 5:
-                                    temp = selected + 5;
-                                    goOverStart(temp);
-                                    selectedWitch.moveWitch(felder[temp]);
-
-                                case 6:
-                                    temp = selected + 6;
-                                    goOverStart(temp);
-                                    selectedWitch.moveWitch(felder[temp]);
-
-                                default:
-                                    selectedWitch.moveWitch(felder[i]);
+                            for (int j = 0; j < activity.getWitches().size(); j++) {
+                                if (activity.getWitches().get(j).currentField.getNumber() == felder[i].getNumber()) {
+                                    selectWitch(activity.getWitches().get(j));
+                                }
                             }
-
-                            */
-
-
                         }
                     }
+                }
 
-                    if (x > ytb.getLeftPosition() &&
-                            x < ytb.getLeftPosition()+ytb.getBitmapWidth() &&
-                            y > ytb.getTopPosition() &&
-                            y < ytb.getTopPosition()+ytb.getBitMapHeight() &&
-                            yourTurnButtonVisible) {
-                        Intent i = new Intent(activity.getApplicationContext(), DiceUI.class);
-                        activity.startActivity(i);
+                if (activity.getState() == GameState.ConfirmSelection) {
+                    if (x > yb.getLeftPosition() &&
+                            x < yb.getLeftPosition() + yb.getBitmapWidth() &&
+                            y > yb.getTopPosition() &&
+                            y < yb.getTopPosition() + yb.getBitMapHeight()) {
+                        selectedWitch.getCurrentField().unhighlight();
+                        selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 36]);
+                        activity.setState(GameState.MyTurn);
+                        nb.setVisibility(INVISIBLE);
+                        yb.setVisibility(INVISIBLE);
+                        ytb.setVisibility(VISIBLE);
+                        activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
                     }
-                    return false;
+                    if (x > nb.getLeftPosition() &&
+                            x < nb.getLeftPosition() + nb.getBitmapWidth() &&
+                            y > nb.getTopPosition() &&
+                            y < nb.getTopPosition() + nb.getBitMapHeight()) {
+                        yb.setVisibility(INVISIBLE);
+                        nb.setVisibility(INVISIBLE);
+                        activity.returnToWitchSelection();
+                    }
+                }
+                return false;
             }
 
 
@@ -112,42 +113,11 @@ public class TouchableSurface extends View {
         }
     };
 
-
-
-    private void goOverStart(int temp) {
-        if(temp >= 36) {
-            selectedWitch.moveWitch(felder[1]);
-        }
+    private void selectWitch(Witch witch) {
+        selectedWitch = witch;
+        activity.witchSelected(witch, yb, nb);
     }
 
-/*
-    private View.OnTouchListener yourTurn = new OnTouchListener() {
-
-    private View.OnTouchListener yourTurn = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-
-            if (v.getId() == R.id.btnYourTurn) {
-                Intent i = new Intent(getContext(), DiceUI.class);
-                i.getAction();
-                performClick();
-
-            }
-
-            return false;
-        }
-    };*/
-
-
-    @Override
-    public boolean performClick() {
-        super.performClick();
-
-        return true;
-
-
-    }
 
 
     public void setColor(PlayerColor color) {
@@ -160,16 +130,17 @@ public class TouchableSurface extends View {
 
     public void hideYourTurnButton() {
         ytb.setVisibility(INVISIBLE);
-        yourTurnButtonVisible = false;
     }
 
     public void showYourTurnButton() {
         ytb.setVisibility(VISIBLE);
-        yourTurnButtonVisible = true;
+    }
+
+    public Witch getSelectedWitch() {
+        return selectedWitch;
     }
 
     public boolean isYourTurnButtonVisible() {
-        return yourTurnButtonVisible;
+        return activity.getState() == GameState.MyTurn;
     }
-
 }

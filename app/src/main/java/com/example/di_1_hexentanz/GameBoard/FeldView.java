@@ -14,6 +14,7 @@ public class FeldView extends View {
     int radius;
     Feld feldInstanz;
     Paint paint;
+    int color;
 
 
     public FeldView(final Context context, int x, int y, int radius, Feld feldInstanz, final int number) {
@@ -24,12 +25,25 @@ public class FeldView extends View {
         this.feldInstanz = feldInstanz;
         this.number = number;
         paint = new Paint();
+        color = Color.WHITE;
+        paint.setColor(color);
     }
 
     public void onDraw(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
+        paint.setColor(color);
         canvas.drawCircle(x, y, radius, paint);
     }
 
+    public void highlight() {
+        color = Color.LTGRAY;
+        radius = radius+15;
+        invalidate();
+    }
+
+    public void unhighlight() {
+        color = Color.WHITE;
+        radius = radius-15;
+        invalidate();
+    }
 }

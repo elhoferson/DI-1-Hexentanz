@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.example.di_1_hexentanz.R;
 
-public class YourTurnButton extends View {
+public class YesButton extends View {
     Paint p;
     DisplayMetrics metrics;
     int bitmapWidth;
@@ -22,16 +22,16 @@ public class YourTurnButton extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         p=new Paint();
-        Bitmap b= BitmapFactory.decodeResource(getResources(), R.drawable.btn_yourturn);
+        Bitmap b= BitmapFactory.decodeResource(getResources(), R.drawable.btn_yes);
         bitMapHeight = b.getHeight()/2;
         bitmapWidth = b.getWidth()/2;
         topPosition = metrics.heightPixels/2-bitMapHeight;
-        leftPosition = metrics.widthPixels/2-bitmapWidth/2;
+        leftPosition = metrics.widthPixels/2-bitmapWidth-10;
         Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth,bitMapHeight, false);
         canvas.drawBitmap(bResize, leftPosition, topPosition, p);
     }
 
-    public YourTurnButton(Context context, DisplayMetrics metrics) {
+    public YesButton(Context context, DisplayMetrics metrics) {
         super(context);
         this.metrics = metrics;
     }
@@ -51,5 +51,4 @@ public class YourTurnButton extends View {
     public int getTopPosition() {
         return topPosition;
     }
-
 }

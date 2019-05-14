@@ -2,9 +2,10 @@ package com.example.di_1_hexentanz.Dice;
 
 import android.app.Activity;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.di_1_hexentanz.R;
@@ -13,70 +14,65 @@ import java.util.Random;
 
 public class RollDice {
 
-    private ImageView mydice;
     RollDice dice;
-    private DiceUI diceView;
+    private DiceUI diceUI;
+    ImageView dicePic;
+    private int result;
 
-    
+    public void setDicePic(ImageView dicePic) {
+        this.dicePic = dicePic.findViewById(R.id.dice);
+    }
+
+
+    public ImageView getDicePic() {
+        return dicePic;
+    }
+
     private Random randomGenerator = new Random();
-    private static int SHAKE_THRESHOLD = 8;
 
 
 
-    private final SensorEventListener shakingListener = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
+    public void rollDice() {
 
-            float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
-
-
-            if (acceleration > SHAKE_THRESHOLD) {
-                rollDice();
-            }
-
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-            //not necessary for our game
-
-        }
-
-
-    };
-
-
-
-    private void rollDice() {
-            switch (getRandomNumber()) {
+        switch (getRandomNumber()) {
 
                 case 1:
-                    mydice.setImageResource(R.drawable.dice1);
-                    diceView.backToGamescreen();
+                    getDicePic().setImageResource(R.drawable.dice1);
+                    setResult(1);
+                    diceUI.backToGamescreen();
+                    break;
                 case 2:
-                    mydice.setImageResource(R.drawable.dice2);
-                    diceView.backToGamescreen();
+                    dicePic.setImageResource(R.drawable.dice2);
+                    setResult(2);
+                    diceUI.backToGamescreen();
+                    break;
                 case 3:
-                    mydice.setImageResource(R.drawable.dice3);
-                    diceView.backToGamescreen();
+                    dicePic.setImageResource(R.drawable.dice3);
+                    setResult(3);
+                    diceUI.backToGamescreen();
+                    break;
                 case 4:
-                    mydice.setImageResource(R.drawable.dice4);
-                    diceView.backToGamescreen();
+                    dicePic.setImageResource(R.drawable.dice4);
+                    setResult(4);
+                    diceUI.backToGamescreen();
+                    break;
                 case 5:
-                    mydice.setImageResource(R.drawable.dice5);
-                    diceView.backToGamescreen();
+                    dicePic.setImageResource(R.drawable.dice5);
+                    setResult(5);
+                    diceUI.backToGamescreen();
+                    break;
                 case 6:
-                    mydice.setImageResource(R.drawable.dice6);
-                    diceView.rolledNumber6();
+                    dicePic.setImageResource(R.drawable.dice6);
+                    setResult(6);
+                    diceUI.rolledNumber6();
+                    break;
 
                 default:
                     throw new RuntimeException("wrong mydice, unreachable");
 
             }
+
+
 
     }
 
@@ -84,8 +80,11 @@ public class RollDice {
         return randomGenerator.nextInt(6) + 1;
     }
 
-    public SensorEventListener getShakingListener() {
-        return shakingListener;
+    public int getResult() {
+        return result;
     }
 
+    private void setResult(int result) {
+        this.result = result;
+    }
 }

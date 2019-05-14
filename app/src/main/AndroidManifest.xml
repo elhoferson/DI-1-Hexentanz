@@ -7,9 +7,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/logo"
+        android:label="Hexentanz"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data android:name="android.max_aspect" android:value="1.78" />
@@ -36,7 +36,8 @@
 
         <activity android:name=".Dice.DiceUI"
             android:screenOrientation="landscape"/>
-        <activity android:name=".Dice.RollDice"
+
+        <activity android:name=".Dice.Dice_old"
             android:screenOrientation="landscape"/>
 
     </application>
