@@ -13,7 +13,6 @@ public class DiceTest {
 
     private DiceLogic testdice;
     private List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6);
-    private int result;
 
     @Before
     public void setTestdice() {
@@ -21,10 +20,10 @@ public class DiceTest {
     }
 
     @Test
-    public void testCorrectRandomNumberAlgorithm() {
+    public void testCorrectDice() {
         int i = 0;
         do {
-            if (range.contains(testdice.getRandomNumber())) {
+            if (range.contains(testdice.rollDice())) {
                 i++;
             } else throw new IllegalArgumentException("Dice number range is not from 1 to 6");
 
@@ -32,24 +31,6 @@ public class DiceTest {
 
     }
 
-
-    @Test
-    public void testCorrectResultForGamescreen() {
-        int i = testdice.getRandomNumber();
-        setResult(i);
-
-
-        // assertTrue(testdice.getResult(), result);
-    }
-
-
-    private void setResult(int result) {
-        this.result = result;
-    }
-
-    public int getResult() {
-        return result;
-    }
 }
 
 
