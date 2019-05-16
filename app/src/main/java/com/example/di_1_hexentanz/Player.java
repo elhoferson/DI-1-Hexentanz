@@ -32,6 +32,7 @@ public class Player {
     }
 
     public Witch[] getWitches(){ return this.witches; }
+
     public PlayerColor getColor() {
         return color;
     }
@@ -45,4 +46,14 @@ public class Player {
     public void setWitchesAtHome(int witchesAtHome){
         this.witchesAtHome = witchesAtHome;
     }
+
+    public int getNumber() {
+        return number;
+    }
+
+
+    public void setWitches(Witch[] witches) {
+        this.witches = witches;
+    }
+
 }

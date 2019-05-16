@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.Dice.DiceUI;
+import com.example.di_1_hexentanz.Player;
 import com.example.di_1_hexentanz.PlayerColor;
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.Witch;
@@ -19,17 +20,20 @@ public class TouchableSurface extends View {
     YourTurnButton ytb;
     YesButton yb;
     NoButton nb;
-    //private Dice_old diceOld;
-    DiceUI diceOld;
+    DiceUI dice;
+    Witch[] witches;
+    Player player;
+    Feld field;
 
     private int next;
 
-    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, YesButton yb, NoButton nb, Gamescreen activity, DiceUI diceOld) {
+    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, YesButton yb, NoButton nb, Gamescreen activity, DiceUI dice, Player player) {
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
-        this.diceOld = diceOld;
+        this.player = player;
+        this.dice = dice;
         this.ytb = ytb;
         this.yb = yb;
         this.nb = nb;
@@ -64,6 +68,10 @@ public class TouchableSurface extends View {
 
                 if (activity.getState() == GameState.PutWitchOnBoard) {
                     activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
+
+
+                    //checkIfWitchIsOnField();
+
                     next--;
                     activity.getCurrentPlayer().setWitchesAtHome(activity.getCurrentPlayer().getWitchesAtHome() - 1);
                     activity.updateTextAtHome(activity.getCurrentPlayer().getWitchesAtHome());
@@ -90,6 +98,9 @@ public class TouchableSurface extends View {
                             y < yb.getTopPosition() + yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
                         selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 36]);
+
+                        //checkIfWitchIsOnField();
+
                         activity.setState(GameState.MyTurn);
                         nb.setVisibility(INVISIBLE);
                         yb.setVisibility(INVISIBLE);
@@ -112,6 +123,15 @@ public class TouchableSurface extends View {
             return true;
         }
     };
+
+    private void checkIfWitchIsOnField() {
+        for(int i = 0; i < witches.length; i++) {
+
+           if(witches[i].getCurrentField() == selectedWitch.getCurrentField()) {
+               witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() - 4]);
+            }
+        }
+    }
 
     private void selectWitch(Witch witch) {
         selectedWitch = witch;

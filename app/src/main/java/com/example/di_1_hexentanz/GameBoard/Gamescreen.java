@@ -45,7 +45,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private int maxWitches;
     private Player currentPlayer;
     private TextView txtHome;
-    private DiceUI diceOld = new DiceUI();
+    private DiceUI dice = new DiceUI();
 
     //Sensor variables:
     ImageView luminosityIcon;
@@ -125,22 +125,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         Button testButton1 = findViewById(R.id.button2);
         testButton1.bringToFront();
-        testButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (colorVisible) {
-                    for (int i = 0; i < witches.size(); i++) {
-                        witches.get(i).hideColor();
-                    }
-                    colorVisible = false;
-                } else {
-                    for (int i = 0; i < witches.size(); i++) {
-                        witches.get(i).showColor();
-                    }
-                    colorVisible = true;
-                }
-            }
-        });
+        showWitchColours(testButton1);
 
 
         switch (color) {
@@ -167,19 +152,50 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         currentPlayer.initWitches(getApplicationContext(), fieldRadius);
 
         for (int i = 0; i < maxWitches; i++) {
-            //   currentPlayer.getWitches()[i].putWitchOnGameboard(this);
             this.witches.add(currentPlayer.getWitches()[i]);
         }
 
         txtHome = findViewById(R.id.txtHome);
         txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
 
-        surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, yb, nb, this, diceOld);
+        surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, yb, nb, this, dice, currentPlayer);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
     }
 
+    public void showWitchColours(Button testButton1) {
+        testButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (colorVisible) {
+                    for (int i = 0; i < witches.size(); i++) {
+                        witches.get(i).hideColor();
+                    }
+                    colorVisible = false;
+                } else {
+                    for (int i = 0; i < witches.size(); i++) {
+                        witches.get(i).showColor();
+                    }
+                    colorVisible = true;
+                }
+            }
+        });
+    }
+
+    public void showWitchColours() {
+        if (colorVisible) {
+            for (int i = 0; i < witches.size(); i++) {
+                witches.get(i).hideColor();
+            }
+            colorVisible = false;
+        } else {
+            for (int i = 0; i < witches.size(); i++) {
+                witches.get(i).showColor();
+            }
+            colorVisible = true;
+        }
+    }
 
 
     private void drawBoardGame() {
@@ -245,6 +261,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     int result = data.getIntExtra("result", -1);
                     lastDiceResult = result;
                     state = GameState.PutWitchOnBoard;
+
                     /**PERFORM TOUCH**/
                     this.surface.dispatchTouchEvent(MotionEvent.obtain(
                             SystemClock.uptimeMillis(),
@@ -257,9 +274,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
                 }
             }
+
             if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
+                throw new RuntimeException("wrong result");
             }
+
         }
     }
 

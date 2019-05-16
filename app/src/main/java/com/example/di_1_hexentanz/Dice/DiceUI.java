@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,17 +17,13 @@ import android.widget.ImageView;
 import com.example.di_1_hexentanz.R;
 
 
-public class DiceUI extends AppCompatActivity implements SensorEventListener {
+public class DiceUI extends AppCompatActivity {
 
-    DiceUI view;
-    ImageView dicePic;
-    RollDice dice;
+    private ImageView dicePic;
+    DiceLogic dice;
     private boolean allWitchesOnBoard;
-    int result;
     private static int SHAKE_THRESHOLD = 8;
-    SensorManager shakingSensor;
-    SensorEventListener shakingListener;
-    Sensor shakingAccelerometer;
+    private SensorManager shakingSensor;
 
 
     @Override
@@ -34,13 +31,11 @@ public class DiceUI extends AppCompatActivity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice);
 
-        dice = new RollDice();
         dicePic = findViewById(R.id.dice);
+        dice = new DiceLogic();
+        setDiceImg(diceImg);
 
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);
-        shakingAccelerometer = shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        shakingSensor.registerListener(this, shakingAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -57,42 +52,42 @@ public class DiceUI extends AppCompatActivity implements SensorEventListener {
 
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
+    private final SensorEventListener shakingListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
 
-        float x = event.values[0];
-        float y = event.values[1];
-        float z = event.values[2];
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
 
-        float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
+            float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
 
-        if (acceleration > SHAKE_THRESHOLD) {
-            dice.rollDice();
+            if (acceleration > SHAKE_THRESHOLD) {
+                if (dice.rollDice() == 6) {
+                    dicePic.setImageResource(diceImg[5]);
+                    rolledNumber6();
+                } else {
+                    dicePic.setImageResource(diceImg[dice.rollDice() - 1]);
+                    backToGamescreen();
+                }
+            }
+
         }
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            //not in use
 
-    }
-
-
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        //not necessary for our game
-
-    }
+        }
+    };
 
 
     @Override
     protected void onResume() {
 
         super.onResume();
-
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-        shakingSensor.registerListener(this, shakingAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        shakingSensor.registerListener(shakingListener,
+                shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
@@ -100,6 +95,7 @@ public class DiceUI extends AppCompatActivity implements SensorEventListener {
     protected void onPause() {
         shakingSensor.unregisterListener(shakingListener);
         super.onPause();
+
     }
 
 
@@ -166,6 +162,24 @@ public class DiceUI extends AppCompatActivity implements SensorEventListener {
         returnIntent.putExtra("result", dice.getResult());
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+
+    @DrawableRes
+    private int[] diceImg = new int[]{
+
+            R.drawable.dice1,
+            R.drawable.dice2,
+            R.drawable.dice3,
+            R.drawable.dice4,
+            R.drawable.dice5,
+            R.drawable.dice6,
+
+    };
+
+
+    public void setDiceImg(int[] diceImg) {
+        this.diceImg = diceImg;
     }
 
 

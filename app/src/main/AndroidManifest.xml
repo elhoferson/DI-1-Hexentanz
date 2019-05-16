@@ -37,9 +37,6 @@
         <activity android:name=".Dice.DiceUI"
             android:screenOrientation="landscape"/>
 
-        <activity android:name=".Dice.Dice_old"
-            android:screenOrientation="landscape"/>
-
     </application>
 
 </manifest>

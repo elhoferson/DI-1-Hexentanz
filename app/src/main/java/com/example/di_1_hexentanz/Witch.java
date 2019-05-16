@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 
-import com.example.di_1_hexentanz.Dice.Dice_old;
 import com.example.di_1_hexentanz.GameBoard.Feld;
 
 public class Witch {
@@ -19,8 +18,6 @@ public class Witch {
     Player player;
     public Feld currentField;
     WitchView witchView;
-    int size;
-    Dice_old diceOld;
     MediaPlayer mediaPlayer;
 
 
@@ -69,4 +66,5 @@ public class Witch {
         return this.player;
 
     }
+
 }
