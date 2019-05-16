@@ -13,7 +13,7 @@ public interface IButton {
     Bitmap getBitmap(BtnType typeBtn);
 
     enum BtnType{
-        YourTurnButton, YesButton, NoButton
+        YOUR_TURN_BTN, YES_BTN, NO_BTN
     }
 
 }

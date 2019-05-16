@@ -22,10 +22,10 @@ import android.widget.TextView;
 import com.example.di_1_hexentanz.Dice.DiceUI;
 import com.example.di_1_hexentanz.GameBoard.CustomButtons.IButton;
 import com.example.di_1_hexentanz.GameBoard.CustomButtons.CustomButton;
-import com.example.di_1_hexentanz.Player;
-import com.example.di_1_hexentanz.PlayerColor;
+import com.example.di_1_hexentanz.Player.Player;
+import com.example.di_1_hexentanz.Player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.Witch;
+import com.example.di_1_hexentanz.Player.Witch;
 
 import java.util.ArrayList;
 
@@ -97,13 +97,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         //State to start with
-        state = GameState.MyTurn;
+        state = GameState.MY_TURN;
 
         findViewById(R.id.TestDisplay).setVisibility(View.INVISIBLE);
 
         maxWitches = 4;
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
+        displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         height = (displayMetrics.heightPixels / 2) - 80;
         width = displayMetrics.widthPixels / 2;
@@ -114,14 +114,14 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         drawBoardGame();
 
 
-        CustomButton yourTurnButton = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.YourTurnButton);
+        CustomButton yourTurnButton = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.YOUR_TURN_BTN);
         addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
 
-        CustomButton yb = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.YesButton);
+        CustomButton yb = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.YES_BTN);
         addContentView(yb, findViewById(R.id.contraintLayout).getLayoutParams());
         yb.setVisibility(View.INVISIBLE);
 
-        CustomButton nb = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.NoButton);
+        CustomButton nb = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.NO_BTN);
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
         nb.setVisibility(View.INVISIBLE);
 
@@ -252,7 +252,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
                     int result = data.getIntExtra("result", -1);
                     lastDiceResult = result;
-                    state = GameState.SelectWitch;
+                    state = GameState.SELECT_WITCH;
                     surface.hideYourTurnButton();
                     TextView output = findViewById(R.id.TestDisplay);
                     String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
@@ -262,7 +262,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 } else {
                     int result = data.getIntExtra("result", -1);
                     lastDiceResult = result;
-                    state = GameState.PutWitchOnBoard;
+                    state = GameState.PUT_WITCH_ON_BOARD;
 
                     /**PERFORM TOUCH**/
                     this.surface.dispatchTouchEvent(MotionEvent.obtain(
@@ -285,7 +285,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     }
 
     public void returnToWitchSelection() {
-        state = GameState.SelectWitch;
+        state = GameState.SELECT_WITCH;
         surface.getSelectedWitch().getCurrentField().unhighlight();
         surface.hideYourTurnButton();
         TextView output = findViewById(R.id.TestDisplay);
@@ -301,7 +301,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
     public void witchSelected(final Witch witch, CustomButton yb, CustomButton nb) {
-        setState(GameState.ConfirmSelection);
+        setState(GameState.CONFIRM_SELECTION);
         witch.getCurrentField().highlight();
         TextView outputtext = findViewById(R.id.TestDisplay);
         outputtext.setText("Diese Hexe bewegen?");
@@ -386,6 +386,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //not in use
 
     }
 }

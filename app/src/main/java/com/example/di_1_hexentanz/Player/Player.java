@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.Player;
 
 import android.content.Context;
 

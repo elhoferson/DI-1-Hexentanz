@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.Player;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
+
+import com.example.di_1_hexentanz.R;
 
 class WitchView extends View {
     int x;
@@ -85,6 +87,9 @@ class WitchView extends View {
                 b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_gelb);
                 invalidate();
                 break;
+            default:
+                throw new IllegalArgumentException("colour doesn't exist");
+
         }
     }
 
