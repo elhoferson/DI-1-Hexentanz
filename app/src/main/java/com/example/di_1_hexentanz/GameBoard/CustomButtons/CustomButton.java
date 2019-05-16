@@ -29,35 +29,33 @@ public class CustomButton extends View implements IButton {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        p=new Paint();
+        p = new Paint();
         Bitmap b = getBitmap(typeBtn);
-        bitMapHeight = b.getHeight()/2;
-        bitmapWidth = b.getWidth()/2;
+        bitMapHeight = b.getHeight() / 2;
+        bitmapWidth = b.getWidth() / 2;
 
-        if(typeBtn == BtnType.NoButton) {
-            leftPosition = metrics.widthPixels/2+10;
+        if (typeBtn == BtnType.NoButton) {
+            leftPosition = metrics.widthPixels / 2 + 10;
+        } else if (typeBtn == BtnType.YesButton) {
+            leftPosition = metrics.widthPixels / 2 - bitmapWidth - 10;
+        } else if (typeBtn == BtnType.YourTurnButton) {
+            leftPosition = metrics.widthPixels / 2 - bitmapWidth / 2;
         }
-        else if(typeBtn == BtnType.YesButton) {
-            leftPosition = metrics.widthPixels/2-bitmapWidth-10;
-        }
-        else if(typeBtn == BtnType.YourTurnButton) {
-            leftPosition = metrics.widthPixels/2-bitmapWidth/2;
-        }
-        topPosition = metrics.heightPixels/2-bitMapHeight;
-        Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth,bitMapHeight, false);
+        topPosition = metrics.heightPixels / 2 - bitMapHeight;
+        Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth, bitMapHeight, false);
         canvas.drawBitmap(bResize, leftPosition, topPosition, p);
     }
 
     @Override
     public Bitmap getBitmap(BtnType typeBtn) {
         setTypeBtn(typeBtn);
-        if(typeBtn == BtnType.YourTurnButton) {
+        if (typeBtn == BtnType.YourTurnButton) {
             return BitmapFactory.decodeResource(getResources(), R.drawable.btn_yourturn);
-        }
-        else if(typeBtn == BtnType.NoButton) {
+
+        } else if (typeBtn == BtnType.NoButton) {
             return BitmapFactory.decodeResource(getResources(), R.drawable.btn_no);
         }
-            return BitmapFactory.decodeResource(getResources(), R.drawable.btn_yes);
+        return BitmapFactory.decodeResource(getResources(), R.drawable.btn_yes);
     }
 
 
