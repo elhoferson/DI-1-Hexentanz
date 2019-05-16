@@ -4,8 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
 
     <application
         android:allowBackup="true"
@@ -30,14 +28,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Gamescreen"
+        <activity android:name=".GameBoard.Gamescreen"
             android:screenOrientation="landscape"></activity>
-
-        <activity android:name=".Dice"
-            android:screenOrientation="landscape"/>
 
         <activity android:name=".ColourChoosing"
             android:screenOrientation="landscape"/>
+
+        <activity android:name=".Dice.DiceUI"
+            android:screenOrientation="landscape"/>
+
     </application>
 
 </manifest>

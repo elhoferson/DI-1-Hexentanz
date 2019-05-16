@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import com.example.di_1_hexentanz.GameBoard.Feld;
+
 public class Witch {
 
     /**
@@ -14,11 +16,10 @@ public class Witch {
 
     int number;
     Player player;
-    Feld currentField;
+    public Feld currentField;
     WitchView witchView;
-    int size;
-    Dice dice;
     MediaPlayer mediaPlayer;
+
 
     public Feld getCurrentField() {
         return currentField;
@@ -44,6 +45,15 @@ public class Witch {
           currentField = destination;
     }
 
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
     public void showColor() {
         witchView.showColor();
     }
@@ -54,5 +64,7 @@ public class Witch {
 
     public Player getPlayer(){
         return this.player;
+
     }
+
 }

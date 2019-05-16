@@ -1,13 +1,18 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.GameBoard;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.di_1_hexentanz.Dice.DiceUI;
+import com.example.di_1_hexentanz.GameBoard.Button.NoButton;
+import com.example.di_1_hexentanz.GameBoard.Button.YesIButton;
+import com.example.di_1_hexentanz.GameBoard.Button.YourTurnIButton;
+import com.example.di_1_hexentanz.Player;
+import com.example.di_1_hexentanz.PlayerColor;
+import com.example.di_1_hexentanz.R;
+import com.example.di_1_hexentanz.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
@@ -15,18 +20,21 @@ public class TouchableSurface extends View {
     Gamescreen activity;
     private Witch selectedWitch;
     private PlayerColor color;
-    YourTurnButton ytb;
-    YesButton yb;
+    YourTurnIButton ytb;
+    YesIButton yb;
     NoButton nb;
-    private Dice dice;
+    DiceUI dice;
+    Witch[] witches;
+    Player player;
 
     private int next;
 
-    public TouchableSurface(final Context context, Feld[] felder, YourTurnButton ytb, YesButton yb, NoButton nb, Gamescreen activity, Dice dice) {
+    public TouchableSurface(final Context context, Feld[] felder, YourTurnIButton ytb, YesIButton yb, NoButton nb, Gamescreen activity, DiceUI dice, Player player) {
         super(context);
         this.felder = felder;
         this.context = context;
         this.activity = activity;
+        this.player = player;
         this.dice = dice;
         this.ytb = ytb;
         this.yb = yb;
@@ -52,7 +60,7 @@ public class TouchableSurface extends View {
                             x < ytb.getLeftPosition() + ytb.getBitmapWidth() &&
                             y > ytb.getTopPosition() &&
                             y < ytb.getTopPosition() + ytb.getBitMapHeight()) {
-                        Intent i = new Intent(activity.getApplicationContext(), Dice.class);
+                        Intent i = new Intent(activity.getApplicationContext(), DiceUI.class);
                         i.putExtra("allWitchesOnBoard", activity.allWitchesOnBoard());
                         activity.startActivityForResult(i, 1);
 
@@ -62,6 +70,10 @@ public class TouchableSurface extends View {
 
                 if (activity.getState() == GameState.PutWitchOnBoard) {
                     activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
+
+
+                    //checkIfWitchIsOnField();
+
                     next--;
                     activity.getCurrentPlayer().setWitchesAtHome(activity.getCurrentPlayer().getWitchesAtHome() - 1);
                     activity.updateTextAtHome(activity.getCurrentPlayer().getWitchesAtHome());
@@ -88,6 +100,9 @@ public class TouchableSurface extends View {
                             y < yb.getTopPosition() + yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
                         selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 36]);
+
+                        //checkIfWitchIsOnField();
+
                         activity.setState(GameState.MyTurn);
                         nb.setVisibility(INVISIBLE);
                         yb.setVisibility(INVISIBLE);
@@ -111,39 +126,20 @@ public class TouchableSurface extends View {
         }
     };
 
+    private void checkIfWitchIsOnField() {
+        for(int i = 0; i < witches.length; i++) {
+
+           if(witches[i].getCurrentField() == selectedWitch.getCurrentField()) {
+               witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() - 4]);
+            }
+        }
+    }
+
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
         activity.witchSelected(witch, yb, nb);
     }
 
-
-    /*private View.OnTouchListener yourTurn = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-
-            if (v.getId() == R.id.btnYourTurn) {
-                    Intent i = new Intent(getContext(), Dice.class);
-                    i.getAction();
-                    performClick();
-
-            }
-
-            return false;
-
-        }
-
-    };*/
-
-
-    @Override
-    public boolean performClick() {
-        super.performClick();
-
-        return true;
-
-
-    }
 
 
     public void setColor(PlayerColor color) {

@@ -1,15 +1,16 @@
 package com.example.di_1_hexentanz;
 
+import com.example.di_1_hexentanz.GameBoard.Gamescreen;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class GamescreenTest {
 
 
     private Gamescreen testScreen;
+
 
 
     @Before

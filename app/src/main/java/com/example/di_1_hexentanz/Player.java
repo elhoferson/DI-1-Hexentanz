@@ -2,6 +2,9 @@ package com.example.di_1_hexentanz;
 
 import android.content.Context;
 
+import com.example.di_1_hexentanz.GameBoard.Feld;
+
+
 public class Player {
     private String name;
     private PlayerColor color;
@@ -29,6 +32,7 @@ public class Player {
     }
 
     public Witch[] getWitches(){ return this.witches; }
+
     public PlayerColor getColor() {
         return color;
     }
@@ -42,4 +46,14 @@ public class Player {
     public void setWitchesAtHome(int witchesAtHome){
         this.witchesAtHome = witchesAtHome;
     }
+
+    public int getNumber() {
+        return number;
+    }
+
+
+    public void setWitches(Witch[] witches) {
+        this.witches = witches;
+    }
+
 }

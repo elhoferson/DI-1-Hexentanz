@@ -1,8 +1,7 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.Dice;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -10,67 +9,72 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.util.Random;
+import com.example.di_1_hexentanz.R;
 
-public class Dice extends AppCompatActivity {
 
-    ImageView dice;
-    SensorManager shakingSensor;
-    Sensor shakingAccelerometer;
-    int result;
+public class DiceUI extends AppCompatActivity {
+
+    private ImageView dicePic;
+    DiceLogic dice;
     private boolean allWitchesOnBoard;
-
-
-    private Random randomGenerator = new Random();
     private static int SHAKE_THRESHOLD = 8;
+    private SensorManager shakingSensor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice);
 
-        dice = findViewById(R.id.dice);
+        dicePic = findViewById(R.id.dice);
+        dice = new DiceLogic();
+        setDiceImg(diceImg);
+
         shakingSensor = (SensorManager) getSystemService(SENSOR_SERVICE);
-        shakingAccelerometer = shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             this.allWitchesOnBoard = extras.getBoolean("allWitchesOnBoard");
 
         }
-    }
 
+
+    }
 
     private final SensorEventListener shakingListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
+
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
 
             float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
 
-
             if (acceleration > SHAKE_THRESHOLD) {
-                rollDice();
+                if (dice.rollDice() == 6) {
+                    dicePic.setImageResource(diceImg[5]);
+                    rolledNumber6();
+                } else {
+                    dicePic.setImageResource(diceImg[dice.rollDice() - 1]);
+                    backToGamescreen();
+                }
             }
 
-
         }
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
             //not in use
 
         }
@@ -79,67 +83,23 @@ public class Dice extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
         super.onResume();
         shakingSensor.registerListener(shakingListener,
                 shakingSensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+
     @Override
     protected void onPause() {
         shakingSensor.unregisterListener(shakingListener);
         super.onPause();
-    }
 
-
-    public void rollDice() {
-
-        switch (getRandomNumber()) {
-            case 1:
-                dice.setImageResource(R.drawable.dice1);
-                result = 1;
-                backToGamescreen();
-                break;
-            case 2:
-                dice.setImageResource(R.drawable.dice2);
-                result = 2;
-                backToGamescreen();
-                break;
-            case 3:
-                dice.setImageResource(R.drawable.dice3);
-                result = 3;
-                backToGamescreen();
-                break;
-            case 4:
-                dice.setImageResource(R.drawable.dice4);
-                result = 4;
-                backToGamescreen();
-                break;
-            case 5:
-                dice.setImageResource(R.drawable.dice5);
-                result = 5;
-                backToGamescreen();
-                break;
-            case 6:
-                dice.setImageResource(R.drawable.dice6);
-                result = 6;
-                rolledNumber6();
-                break;
-
-            default:
-                throw new RuntimeException("wrong dice, unreachable");
-
-        }
-
-    }
-
-    public int getRandomNumber() {
-        return randomGenerator.nextInt(6) + 1;
     }
 
 
     public void rolledNumber6() {
-        //Pause if number has been generated
         this.onPause();
         AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(this);
         if (allWitchesOnBoard) {
@@ -168,11 +128,12 @@ public class Dice extends AppCompatActivity {
         }
     }
 
+
     public void backToGamescreen() {
         //Pause if number has been generated
         this.onPause();
         AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
-        rolledNumber.setTitle("Du hast eine " + result + " gewürfelt!");
+        rolledNumber.setTitle("Du hast eine " + dice.getResult() + " gewürfelt!");
 
         if (allWitchesOnBoard) {
             rolledNumber.setPositiveButton("Hexe auswählen und bewegen", new DialogInterface.OnClickListener() {
@@ -195,20 +156,31 @@ public class Dice extends AppCompatActivity {
 
     }
 
+
     private void goBackAndSendResult() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", result);
+        returnIntent.putExtra("result", dice.getResult());
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
 
-    public void sendResult(View v) {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", getRandomNumber());
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+    @DrawableRes
+    private int[] diceImg = new int[]{
 
+            R.drawable.dice1,
+            R.drawable.dice2,
+            R.drawable.dice3,
+            R.drawable.dice4,
+            R.drawable.dice5,
+            R.drawable.dice6,
+
+    };
+
+
+    public void setDiceImg(int[] diceImg) {
+        this.diceImg = diceImg;
     }
+
 
 }

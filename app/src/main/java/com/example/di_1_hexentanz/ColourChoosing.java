@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.di_1_hexentanz.GameBoard.Gamescreen;
+
 public class ColourChoosing extends AppCompatActivity {
     private Button btnBlue;
     private Button btnGreen;
