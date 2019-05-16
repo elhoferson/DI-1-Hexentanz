@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.GameBoard.Button;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.example.di_1_hexentanz.R;
 
-public class NoButton extends View {
+public class YesIButton extends View implements IButton {
     Paint p;
     DisplayMetrics metrics;
     int bitmapWidth;
@@ -22,32 +22,41 @@ public class NoButton extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         p=new Paint();
-        Bitmap b= BitmapFactory.decodeResource(getResources(), R.drawable.btn_no);
+        Bitmap b = getBitmap();
         bitMapHeight = b.getHeight()/2;
         bitmapWidth = b.getWidth()/2;
         topPosition = metrics.heightPixels/2-bitMapHeight;
-        leftPosition = metrics.widthPixels/2+10;
+        leftPosition = metrics.widthPixels/2-bitmapWidth-10;
         Bitmap bResize = Bitmap.createScaledBitmap(b, bitmapWidth,bitMapHeight, false);
         canvas.drawBitmap(bResize, leftPosition, topPosition, p);
     }
 
-    public NoButton(Context context, DisplayMetrics metrics) {
+    @Override
+    public Bitmap getBitmap() {
+        return BitmapFactory.decodeResource(getResources(), R.drawable.btn_yes);
+    }
+
+    public YesIButton(Context context, DisplayMetrics metrics) {
         super(context);
         this.metrics = metrics;
     }
 
+    @Override
     public int getBitmapWidth() {
         return bitmapWidth;
     }
 
+    @Override
     public int getBitMapHeight() {
         return bitMapHeight;
     }
 
+    @Override
     public int getLeftPosition() {
         return leftPosition;
     }
 
+    @Override
     public int getTopPosition() {
         return topPosition;
     }

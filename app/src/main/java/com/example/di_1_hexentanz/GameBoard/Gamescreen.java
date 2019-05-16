@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.di_1_hexentanz.Dice.DiceUI;
+import com.example.di_1_hexentanz.GameBoard.Button.NoButton;
+import com.example.di_1_hexentanz.GameBoard.Button.YesIButton;
+import com.example.di_1_hexentanz.GameBoard.Button.YourTurnIButton;
 import com.example.di_1_hexentanz.Player;
 import com.example.di_1_hexentanz.PlayerColor;
 import com.example.di_1_hexentanz.R;
@@ -112,10 +115,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         drawBoardGame();
 
 
-        YourTurnButton yourTurnButton = new YourTurnButton(getApplicationContext(), displayMetrics);
+        YourTurnIButton yourTurnButton = new YourTurnIButton(getApplicationContext(), displayMetrics);
         addContentView(yourTurnButton, findViewById(R.id.contraintLayout).getLayoutParams());
 
-        YesButton yb = new YesButton(getApplicationContext(), displayMetrics);
+        YesIButton yb = new YesIButton(getApplicationContext(), displayMetrics);
         addContentView(yb, findViewById(R.id.contraintLayout).getLayoutParams());
         yb.setVisibility(View.INVISIBLE);
 
@@ -298,7 +301,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
 
-    public void witchSelected(final Witch witch, YesButton yb, NoButton nb) {
+    public void witchSelected(final Witch witch, YesIButton yb, NoButton nb) {
         setState(GameState.ConfirmSelection);
         witch.getCurrentField().highlight();
         TextView outputtext = findViewById(R.id.TestDisplay);
@@ -320,7 +323,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         this.txtHome.setText("At home: " + n);
     }
 
-    public void putWitchOnGameboard(Witch witch, YesButton yb, NoButton nb) {
+    public void putWitchOnGameboard(Witch witch, YesIButton yb, NoButton nb) {
         Feld destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult-1) % 36];
         witch.putWitchOnGameboard(this, destination);
         yb.setVisibility(View.INVISIBLE);
