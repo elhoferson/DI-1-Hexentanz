@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.wifi.p2p;
+package com.example.di_1_hexentanz.wifi.network;
 
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.p2p.obj.IWifiP2pConstants;
+import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.wifi.network.obj.IWifiP2pConstants;
 
 import java.lang.reflect.Method;
 

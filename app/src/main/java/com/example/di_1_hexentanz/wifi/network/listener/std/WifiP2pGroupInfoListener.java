@@ -1,12 +1,11 @@
-package com.example.di_1_hexentanz.wifi.p2p.listener.std;
+package com.example.di_1_hexentanz.wifi.network.listener.std;
 
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
-import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.p2p.obj.IWifiP2pConstants;
-import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
+import com.example.di_1_hexentanz.wifi.network.obj.IWifiP2pConstants;
+import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 
 public class WifiP2pGroupInfoListener implements WifiP2pManager.GroupInfoListener, IWifiP2pConstants {
 

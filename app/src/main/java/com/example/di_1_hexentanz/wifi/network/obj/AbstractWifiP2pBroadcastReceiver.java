@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.wifi.p2p.obj;
+package com.example.di_1_hexentanz.wifi.network.obj;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
+import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 
 import java.net.InetAddress;
 

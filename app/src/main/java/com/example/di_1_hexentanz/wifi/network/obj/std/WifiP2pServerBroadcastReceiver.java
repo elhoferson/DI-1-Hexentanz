@@ -1,12 +1,10 @@
-package com.example.di_1_hexentanz.wifi.p2p.obj.std;
+package com.example.di_1_hexentanz.wifi.network.obj.std;
 
 import android.net.wifi.p2p.WifiP2pManager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.wifi.p2p.listener.std.WifiP2pGroupInfoListener;
-import com.example.di_1_hexentanz.wifi.p2p.listener.std.WifiP2pPeerListListener;
-import com.example.di_1_hexentanz.wifi.p2p.obj.AbstractWifiP2pBroadcastReceiver;
+import com.example.di_1_hexentanz.wifi.network.listener.std.WifiP2pGroupInfoListener;
+import com.example.di_1_hexentanz.wifi.network.obj.AbstractWifiP2pBroadcastReceiver;
 
 public class WifiP2pServerBroadcastReceiver extends AbstractWifiP2pBroadcastReceiver {
 

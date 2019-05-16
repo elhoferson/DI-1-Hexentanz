@@ -2,12 +2,21 @@ package com.example.di_1_hexentanz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
+import com.example.di_1_hexentanz.threads.CommunicationThread;
+import com.example.di_1_hexentanz.util.JsonUtil;
+import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
+import com.example.di_1_hexentanz.wifi.network.messages.IMessage;
+import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
 
 public class Gamescreen extends AppCompatActivity {
 
@@ -20,6 +29,23 @@ public class Gamescreen extends AppCompatActivity {
         Gamescreen.color = color;
     }
 
+    private CommunicationThread comm;
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            String msgString = (String) msg.obj;
+            switch(msg.what) {
+                case IMessage.TEST_MESSAGE:
+                    TestMessage tst = JsonUtil.getMessage(msgString, TestMessage.class);
+                    Log.e("transfered msg",tst.getMsg());
+                    break;
+                default:
+                    super.handleMessage(msg);
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +55,8 @@ public class Gamescreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        comm = new CommunicationThread(handler);
+        comm.start();
 
         drawBoardGame();
 
@@ -130,6 +158,11 @@ public class Gamescreen extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        comm.interrupt();
+        super.onDestroy();
+    }
 
     public void step2(int result) {
         selectedWitch.moveWitch(felder[result]);

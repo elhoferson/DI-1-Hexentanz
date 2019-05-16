@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.wifi.p2p.obj.std;
+package com.example.di_1_hexentanz.wifi.network.obj.std;
 
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;

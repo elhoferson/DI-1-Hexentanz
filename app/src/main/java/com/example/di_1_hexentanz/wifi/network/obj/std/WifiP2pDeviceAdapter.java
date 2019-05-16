@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.wifi.p2p.obj.std;
+package com.example.di_1_hexentanz.wifi.network.obj.std;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import com.example.di_1_hexentanz.R;
 
 import java.util.List;
 

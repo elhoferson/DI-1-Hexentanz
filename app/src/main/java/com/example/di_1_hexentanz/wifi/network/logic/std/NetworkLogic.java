@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.wifi.p2p.logic.std;
+package com.example.di_1_hexentanz.wifi.network.logic.std;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.util.Log;
@@ -18,7 +18,7 @@ public class NetworkLogic {
     private static final String TAG = "NETWORK";
     private static final int PORT = 9872;
     private static NetworkLogic instance = null;
-    private Type usageType;
+    private UsageType usageType;
 
     private ServerSocket host;
     private List<WifiP2pDevice> clients = new ArrayList<>();
@@ -38,7 +38,7 @@ public class NetworkLogic {
                 instance = new NetworkLogic();
                 instance.setHost(server);
                 instance.setClient(server.accept());
-                instance.setUsageType(Type.HOST);
+                instance.setUsageType(UsageType.HOST);
             } catch (IOException e) {
                 Log.e(TAG, "error creating server socket", e);
             }
@@ -54,7 +54,7 @@ public class NetworkLogic {
                     try {
                         Socket socket = new Socket(hostDevice, PORT);
                         instance = new NetworkLogic();
-                        instance.setUsageType(Type.CLIENT);
+                        instance.setUsageType(UsageType.CLIENT);
                         instance.setClient(socket);
                     } catch (IOException e) {
                         Log.e(TAG, "error creating server socket", e);
@@ -70,7 +70,7 @@ public class NetworkLogic {
     }
 
     public Boolean addPlayers(List<WifiP2pDevice> devices) {
-        if (getUsageType().equals(Type.CLIENT)) {
+        if (getUsageType().equals(UsageType.CLIENT)) {
             Log.e(TAG, "Client not allowed to addPlayers");
             return false;
         }
@@ -119,15 +119,27 @@ public class NetworkLogic {
         this.client = client;
     }
 
-    private void setUsageType(Type usageType) {
+    public ServerSocket getHost() {
+        return host;
+    }
+
+    public Socket getClient() {
+        return client;
+    }
+
+    public List<WifiP2pDevice> getClients() {
+        return clients;
+    }
+
+    private void setUsageType(UsageType usageType) {
         this.usageType = usageType;
     }
 
-    public Type getUsageType() {
+    public UsageType getUsageType() {
         return usageType;
     }
 
-    private enum Type {
+    public enum UsageType {
         HOST,
         CLIENT
     }

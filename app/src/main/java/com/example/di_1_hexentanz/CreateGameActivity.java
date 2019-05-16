@@ -1,20 +1,17 @@
 package com.example.di_1_hexentanz;
 
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.di_1_hexentanz.wifi.p2p.AbstractWifiP2pActivity;
-import com.example.di_1_hexentanz.wifi.p2p.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pDeviceAdapter;
-import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pIntentFilter;
-import com.example.di_1_hexentanz.wifi.p2p.obj.std.WifiP2pServerBroadcastReceiver;
+import com.example.di_1_hexentanz.wifi.network.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
+import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pIntentFilter;
+import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pServerBroadcastReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
