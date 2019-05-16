@@ -6,20 +6,14 @@ import android.util.Log;
 import com.example.di_1_hexentanz.util.JsonUtil;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
-import com.example.di_1_hexentanz.wifi.network.messages.IMessage;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class CommunicationThread extends Thread {
@@ -45,7 +39,7 @@ public class CommunicationThread extends Thread {
             while (!this.isInterrupted()) {
                 String msg = input.readLine();
                 if (StringUtils.isNotBlank(msg)) {
-                    AbstractMessage abstractMessage = JsonUtil.getGson().fromJson(msg, AbstractMessage.class);
+                    AbstractMessage abstractMessage = JsonUtil.getMessage(msg, AbstractMessage.class);
                     handler.obtainMessage(abstractMessage.getTag(), msg).sendToTarget();
                 }
             }
@@ -55,7 +49,7 @@ public class CommunicationThread extends Thread {
     }
 
     public void write(AbstractMessage message) {
-        String json = JsonUtil.getGson().toJson(message);
+        String json = JsonUtil.toJson(message);
         try {
             output.write(json);
         } catch (IOException e) {

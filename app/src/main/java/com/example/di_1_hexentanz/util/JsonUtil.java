@@ -15,11 +15,15 @@ public final class JsonUtil {
         gson = new GsonBuilder().create();
     }
 
-    public static Gson getGson() {
+    private static Gson getGson() {
         return gson;
     }
 
     public static <T extends AbstractMessage> T getMessage(String msgString, Class<T> classMsg) {
         return getGson().fromJson(msgString, classMsg);
+    }
+
+    public static String toJson(AbstractMessage msg) {
+        return getGson().toJson(msg);
     }
 }
