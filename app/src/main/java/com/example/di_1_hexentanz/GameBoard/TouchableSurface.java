@@ -6,9 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.Dice.DiceUI;
-import com.example.di_1_hexentanz.GameBoard.Button.NoButton;
-import com.example.di_1_hexentanz.GameBoard.Button.YesIButton;
-import com.example.di_1_hexentanz.GameBoard.Button.YourTurnIButton;
+import com.example.di_1_hexentanz.GameBoard.CustomButtons.CustomButton;
 import com.example.di_1_hexentanz.Player;
 import com.example.di_1_hexentanz.PlayerColor;
 import com.example.di_1_hexentanz.R;
@@ -20,16 +18,16 @@ public class TouchableSurface extends View {
     Gamescreen activity;
     private Witch selectedWitch;
     private PlayerColor color;
-    YourTurnIButton ytb;
-    YesIButton yb;
-    NoButton nb;
+    CustomButton ytb;
+    CustomButton yb;
+    CustomButton nb;
     DiceUI dice;
     Witch[] witches;
     Player player;
 
     private int next;
 
-    public TouchableSurface(final Context context, Feld[] felder, YourTurnIButton ytb, YesIButton yb, NoButton nb, Gamescreen activity, DiceUI dice, Player player) {
+    public TouchableSurface(final Context context, Feld[] felder, CustomButton ytb, CustomButton yb, CustomButton nb, Gamescreen activity, DiceUI dice, Player player) {
         super(context);
         this.felder = felder;
         this.context = context;
