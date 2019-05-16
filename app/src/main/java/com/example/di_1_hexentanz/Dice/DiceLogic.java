@@ -8,18 +8,10 @@ public class DiceLogic {
     private Random randomGenerator = new Random();
 
 
-    /*
     public int rollDice() {
-        int i = getRandomNumber();
-        setResult(i);
-        return i;
-
-    }
-    */
-
-    public int rollDice() {
-       int randomnumber = randomGenerator.nextInt(6) + 1;
-       return randomnumber;
+       int result = randomGenerator.nextInt(6) + 1;
+       setResult(result);
+       return result;
     }
 
     public int getResult() {
