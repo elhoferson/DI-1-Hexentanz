@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+/*
+Placeholder class
+ */
+
 public class Winnerpop extends AppCompatActivity {
 
     DetermineWinner2 won;
