@@ -21,6 +21,7 @@ import com.example.di_1_hexentanz.R;
 
 public class DiceUI extends AppCompatActivity {
 
+    public static final String RESULT = "result";
     private ImageView dicePic;
     private DiceLogic dice;
     private boolean allWitchesOnBoard;
@@ -112,7 +113,7 @@ public class DiceUI extends AppCompatActivity {
                     Gamescreen screen = new Gamescreen();
                     screen.setState(GameState.SHOW_WITCH_COLOURS);
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result", 6);
+                    returnIntent.putExtra(RESULT, 6);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                     screen.showWitchColours();
@@ -122,7 +123,7 @@ public class DiceUI extends AppCompatActivity {
                     .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent returnIntent = new Intent();
-                            returnIntent.putExtra("result", 6);
+                            returnIntent.putExtra(RESULT, 6);
                             setResult(Activity.RESULT_OK, returnIntent);
                             finish();
 
@@ -169,7 +170,7 @@ public class DiceUI extends AppCompatActivity {
 
     private void goBackAndSendResult() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", dice.getResult());
+        returnIntent.putExtra(RESULT, dice.getResult());
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }

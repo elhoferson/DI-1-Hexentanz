@@ -11,8 +11,6 @@ import android.widget.Toast;
 public class Startscreen extends AppCompatActivity {
 
     MediaPlayer mediaPlayer;
-    boolean playMusic = false;
-    ImageView sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
