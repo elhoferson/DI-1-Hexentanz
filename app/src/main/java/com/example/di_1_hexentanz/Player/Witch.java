@@ -1,9 +1,9 @@
-package com.example.di_1_hexentanz.player;
+package com.example.di_1_hexentanz.Player;
 
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
-import com.example.di_1_hexentanz.gameboard.Feld;
+import com.example.di_1_hexentanz.GameBoard.Feld;
 import com.example.di_1_hexentanz.R;
 
 public class Witch {

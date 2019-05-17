@@ -1,8 +1,8 @@
-package com.example.di_1_hexentanz.player;
+package com.example.di_1_hexentanz.Player;
 
 import android.content.Context;
 
-import com.example.di_1_hexentanz.gameboard.Feld;
+import com.example.di_1_hexentanz.GameBoard.Feld;
 
 public class Player {
     private String name;

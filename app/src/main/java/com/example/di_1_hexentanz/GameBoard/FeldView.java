@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.gameboard;
+package com.example.di_1_hexentanz.GameBoard;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.player;
+package com.example.di_1_hexentanz.Player;
 
 import android.support.v7.app.AppCompatActivity;
 
@@ -44,6 +44,6 @@ public class DetermineWinner2 extends AppCompatActivity {
     } return false;
 
 
-    
+
 
 } }

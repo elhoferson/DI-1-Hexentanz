@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.dice;
+package com.example.di_1_hexentanz.Dice;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,8 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.di_1_hexentanz.gameboard.GameState;
-import com.example.di_1_hexentanz.gameboard.Gamescreen;
+import com.example.di_1_hexentanz.GameBoard.GameState;
+import com.example.di_1_hexentanz.GameBoard.Gamescreen;
 import com.example.di_1_hexentanz.R;
 
 

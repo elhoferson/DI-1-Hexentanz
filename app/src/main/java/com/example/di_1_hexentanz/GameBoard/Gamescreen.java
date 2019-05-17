@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.gameboard;
+package com.example.di_1_hexentanz.GameBoard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,13 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.dice.DiceUI;
-import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
-import com.example.di_1_hexentanz.gameboard.buttons.IButton;
-import com.example.di_1_hexentanz.player.Player;
-import com.example.di_1_hexentanz.player.PlayerColor;
+import com.example.di_1_hexentanz.Dice.DiceUI;
+import com.example.di_1_hexentanz.GameBoard.buttons.CustomButton;
+import com.example.di_1_hexentanz.GameBoard.buttons.IButton;
+import com.example.di_1_hexentanz.Player.Player;
+import com.example.di_1_hexentanz.Player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.player.Witch;
+import com.example.di_1_hexentanz.Player.Witch;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -34,7 +34,7 @@ import java.util.TimerTask;
 public class Gamescreen extends AppCompatActivity implements SensorEventListener {
 
     ArrayList<Witch> witches = new ArrayList<>();
-    private Feld[] felder = new Feld[40];
+    private Feld[] felder = new Feld[56];
     Witch selectedWitch;
     private static PlayerColor color;
     int height;
@@ -134,19 +134,19 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         switch (color) {
             case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[0], felder[35]);
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
                 break;
 
             case GREEN:
-                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[12], felder[11]);
+                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
                 break;
 
             case YELLOW:
-                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[18], felder[17]);
+                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
                 break;
 
             case RED:
-                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[30], felder[29]);
+                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
                 break;
             default:
                 throw new RuntimeException("unreachable case");
@@ -251,6 +251,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         felder[34] = new Feld(34, width-(6*fieldwidth)- 75, height - (3 * fieldwidth), fieldRadius, getApplicationContext());
         addContentView(felder[34].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
 
+        for (int i = 40; i <= 55; i++) {
+            felder[i] = new Feld(i, width - (6 * fieldwidth)*3, height - (2 * fieldwidth) + ((i-4) - 31) * fieldwidth * 3, fieldRadius, getApplicationContext());
+            addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
+        }
 
 
     }

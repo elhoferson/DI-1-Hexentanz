@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.player;
+package com.example.di_1_hexentanz.Player;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
