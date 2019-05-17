@@ -20,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.di_1_hexentanz.dice.DiceUI;
-import com.example.di_1_hexentanz.gameboard.CustomButtons.IButton;
-import com.example.di_1_hexentanz.gameboard.CustomButtons.CustomButton;
+import com.example.di_1_hexentanz.gameboard.custombuttons.IButton;
+import com.example.di_1_hexentanz.gameboard.custombuttons.CustomButton;
 import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
