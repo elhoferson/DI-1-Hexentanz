@@ -1,7 +1,6 @@
-package com.example.di_1_hexentanz.gameboard.custombuttons;
+package com.example.di_1_hexentanz.GameBoard.buttons;
 
 import android.graphics.Bitmap;
-
 
 public interface IButton {
 

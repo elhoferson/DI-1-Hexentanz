@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.player;
+package com.example.di_1_hexentanz.Player;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.example.di_1_hexentanz.R;
 
-class WitchView extends View {
+public class WitchView extends View {
     int x;
     int y;
     int radius;

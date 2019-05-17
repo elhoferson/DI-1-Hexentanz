@@ -1,9 +1,8 @@
-package com.example.di_1_hexentanz.player;
+package com.example.di_1_hexentanz.Player;
 
 import android.content.Context;
 
-import com.example.di_1_hexentanz.gameboard.Feld;
-
+import com.example.di_1_hexentanz.GameBoard.Feld;
 
 public class Player {
     private String name;
@@ -13,6 +12,7 @@ public class Player {
     private Feld startFeld;
     private Feld zielFeld;
     private int witchesAtHome;
+    private int witchesInGoal;
 
     public Player(String name, PlayerColor color, int number, int maxWitches, Feld startFeld, Feld zielFeld) {
         this.name = name;
@@ -22,6 +22,7 @@ public class Player {
         this.zielFeld = zielFeld;
         this.witches = new Witch[maxWitches];
         this.witchesAtHome = maxWitches;
+        this.witchesInGoal = 0;
 
     }
 
@@ -32,7 +33,6 @@ public class Player {
     }
 
     public Witch[] getWitches(){ return this.witches; }
-
     public PlayerColor getColor() {
         return color;
     }
@@ -51,9 +51,31 @@ public class Player {
         return number;
     }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public void setWitches(Witch[] witches) {
         this.witches = witches;
     }
 
+    public void setStartFeld(Feld startFeld) {
+        this.startFeld = startFeld;
+    }
+
+    public Feld getZielFeld() {
+        return zielFeld;
+    }
+
+    public void setZielFeld(Feld zielFeld) {
+        this.zielFeld = zielFeld;
+    }
+
+    public int getWitchesInGoal() {
+        return witchesInGoal;
+    }
+
+    public void setWitchesInGoal(int witchesInGoal) {
+        this.witchesInGoal = witchesInGoal;
+    }
 }
