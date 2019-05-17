@@ -28,13 +28,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".GameBoard.Gamescreen"
+        <activity android:name=".gameboard.Gamescreen"
             android:screenOrientation="landscape"></activity>
 
         <activity android:name=".ColourChoosing"
             android:screenOrientation="landscape"/>
 
-        <activity android:name=".Dice.DiceUI"
+        <activity android:name=".dice.DiceUI"
             android:screenOrientation="landscape"/>
 
     </application>

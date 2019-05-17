@@ -1,16 +1,16 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.gameboard;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.di_1_hexentanz.Dice.DiceUI;
-import com.example.di_1_hexentanz.GameBoard.CustomButtons.CustomButton;
-import com.example.di_1_hexentanz.Player.Player;
-import com.example.di_1_hexentanz.Player.PlayerColor;
+import com.example.di_1_hexentanz.dice.DiceUI;
+import com.example.di_1_hexentanz.gameboard.CustomButtons.CustomButton;
+import com.example.di_1_hexentanz.player.Player;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.Player.Witch;
+import com.example.di_1_hexentanz.player.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
@@ -76,6 +76,17 @@ public class TouchableSurface extends View {
                     activity.getCurrentPlayer().setWitchesAtHome(activity.getCurrentPlayer().getWitchesAtHome() - 1);
                     activity.updateTextAtHome(activity.getCurrentPlayer().getWitchesAtHome());
                     activity.setState(GameState.MY_TURN);
+                }
+
+                if(activity.getState() == GameState.SHOW_WITCH_COLOURS) {
+                    activity.showWitchColours();
+                    activity.setState(GameState.MY_TURN);
+                    nb.setVisibility(INVISIBLE);
+                    yb.setVisibility(INVISIBLE);
+                    btnYourTurn.setVisibility(VISIBLE);
+                    activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
+
+
                 }
 
 

@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.gameboard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,15 +19,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.Dice.DiceUI;
-import com.example.di_1_hexentanz.GameBoard.CustomButtons.IButton;
-import com.example.di_1_hexentanz.GameBoard.CustomButtons.CustomButton;
-import com.example.di_1_hexentanz.Player.Player;
-import com.example.di_1_hexentanz.Player.PlayerColor;
+import com.example.di_1_hexentanz.dice.DiceUI;
+import com.example.di_1_hexentanz.gameboard.CustomButtons.IButton;
+import com.example.di_1_hexentanz.gameboard.CustomButtons.CustomButton;
+import com.example.di_1_hexentanz.player.Player;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.Player.Witch;
+import com.example.di_1_hexentanz.player.Witch;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Gamescreen extends AppCompatActivity implements SensorEventListener {
 
@@ -166,6 +168,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     }
 
+
     public void showWitchColours(Button testButton1) {
         testButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,18 +188,30 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         });
     }
 
+
+    /**
+     * show witch colours, when rolling a 6 and clicking on positive button of alert dialog
+     */
     public void showWitchColours() {
-        if (colorVisible) {
-            for (int i = 0; i < witches.size(); i++) {
-                witches.get(i).hideColor();
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(!colorVisible) {
+                    for (int i = 0; i < witches.size(); i++) {
+                        witches.get(i).showColor();
+                    }
+                    colorVisible = true;
+                }
+                else {
+                        for (int i = 0; i < witches.size(); i++) {
+                            witches.get(i).hideColor();
+                        }
+                        colorVisible = false;
+                    }
             }
-            colorVisible = false;
-        } else {
-            for (int i = 0; i < witches.size(); i++) {
-                witches.get(i).showColor();
-            }
-            colorVisible = true;
-        }
+        }, 5000);
     }
 
 
@@ -248,7 +263,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                if (allWitchesOnBoard()) {
+
+
+                if(lastDiceResult == 6 && state == GameState.SHOW_WITCH_COLOURS) {
+                    state = GameState.SHOW_WITCH_COLOURS;
+                    surface.hideYourTurnButton();
+                }
+
+
+                else if (allWitchesOnBoard()) {
 
                     int result = data.getIntExtra("result", -1);
                     lastDiceResult = result;
@@ -259,13 +282,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     output.setText(outputText);
                     output.setVisibility(View.VISIBLE);
 
-                } else {
-                    int result = data.getIntExtra("result", -1);
-                    lastDiceResult = result;
-                    state = GameState.PUT_WITCH_ON_BOARD;
+                }
+                    else //(!(allWitchesOnBoard()))
+                     {
+                        int result = data.getIntExtra("result", -1);
+                        lastDiceResult = result;
+                        state = GameState.PUT_WITCH_ON_BOARD;
 
-                    /**PERFORM TOUCH**/
-                    this.surface.dispatchTouchEvent(MotionEvent.obtain(
+                        /**PERFORM TOUCH**/
+                        this.surface.dispatchTouchEvent(MotionEvent.obtain(
                             SystemClock.uptimeMillis(),
                             SystemClock.uptimeMillis()+100,
                             MotionEvent.ACTION_DOWN,

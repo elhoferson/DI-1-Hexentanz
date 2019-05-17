@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.Dice;
+package com.example.di_1_hexentanz.dice;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,7 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.di_1_hexentanz.GameBoard.Gamescreen;
+import com.example.di_1_hexentanz.gameboard.GameState;
+import com.example.di_1_hexentanz.gameboard.Gamescreen;
 import com.example.di_1_hexentanz.R;
 
 
@@ -25,9 +26,6 @@ public class DiceUI extends AppCompatActivity {
     private boolean allWitchesOnBoard;
     private static int SHAKE_THRESHOLD = 8;
     private SensorManager shakingSensor;
-    private Gamescreen gamescreen;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +109,13 @@ public class DiceUI extends AppCompatActivity {
             popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     //show the colour of the witch
-                    gamescreen = new Gamescreen();
-                    gamescreen.showWitchColours();
+                    Gamescreen screen = new Gamescreen();
+                    screen.setState(GameState.SHOW_WITCH_COLOURS);
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("result", 6);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                    screen.showWitchColours();
 
                 }
             })

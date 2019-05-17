@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.Dice;
+package com.example.di_1_hexentanz.dice;
 
 import java.util.Random;
 
@@ -18,7 +18,7 @@ public class DiceLogic {
         return result;
     }
 
-    private void setResult(int result) {
+    public void setResult(int result) {
         this.result = result;
     }
 

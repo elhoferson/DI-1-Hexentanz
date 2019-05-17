@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.Player;
+package com.example.di_1_hexentanz.player;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -105,24 +105,24 @@ class WitchView extends View {
 
     public int getColorFromPlayerColor(PlayerColor playerColor){
 
-        int color;
+        int colour;
         switch (playerColor){
             case BLUE:
-                color = Color.BLUE;
+                colour = Color.BLUE;
                 break;
             case GREEN:
-                color = Color.GREEN;
+                colour = Color.GREEN;
                 break;
             case YELLOW:
-                color = Color.YELLOW;
+                colour = Color.YELLOW;
                 break;
             case RED:
-                color = Color.RED;
+                colour = Color.RED;
                 break;
             default:
-                color = Color.BLACK;
+                colour = Color.BLACK;
                 break;
         }
-        return color;
+        return colour;
     }
 }
