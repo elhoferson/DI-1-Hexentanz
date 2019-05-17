@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz;
+package com.example.di_1_hexentanz.Player;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -9,7 +9,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-class WitchView extends View {
+import com.example.di_1_hexentanz.R;
+
+public class WitchView extends View {
     int x;
     int y;
     int radius;
@@ -85,6 +87,9 @@ class WitchView extends View {
                 b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_gelb);
                 invalidate();
                 break;
+            default:
+                throw new IllegalArgumentException("colour doesn't exist");
+
         }
     }
 
@@ -100,24 +105,24 @@ class WitchView extends View {
 
     public int getColorFromPlayerColor(PlayerColor playerColor){
 
-        int color;
+        int colour;
         switch (playerColor){
             case BLUE:
-                color = Color.BLUE;
+                colour = Color.BLUE;
                 break;
             case GREEN:
-                color = Color.GREEN;
+                colour = Color.GREEN;
                 break;
             case YELLOW:
-                color = Color.YELLOW;
+                colour = Color.YELLOW;
                 break;
             case RED:
-                color = Color.RED;
+                colour = Color.RED;
                 break;
             default:
-                color = Color.BLACK;
+                colour = Color.BLACK;
                 break;
         }
-        return color;
+        return colour;
     }
 }

@@ -11,6 +11,8 @@ import android.widget.Toast;
 public class Startscreen extends AppCompatActivity {
 
     MediaPlayer mediaPlayer;
+    boolean playMusic = false;
+    ImageView sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class Startscreen extends AppCompatActivity {
         BtnJoinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Join Game IButton", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Join Game Button", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -33,15 +35,35 @@ public class Startscreen extends AppCompatActivity {
         BtnCreateGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mediaPlayer.stop();
+                mediaPlayer.stop();
                 Intent intent = new Intent(getApplicationContext(), ColourChoosing.class);
                 startActivity(intent);
             }
         });
 
-        //mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bgsound);
-        //mediaPlayer.start();
 
+        mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bgsound);
+
+
+        final ImageView BtnSound = findViewById(R.id.sound);
+        BtnSound.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(!mediaPlayer.isPlaying()) {
+                    mediaPlayer.start();
+                    BtnSound.setImageResource(R.drawable.sound_on);
+                }
+                else {
+                    mediaPlayer.pause();
+                    BtnSound.setImageResource(R.drawable.sound_off);
+                }
+
+            }
+        });
+
+
+        mediaPlayer.start();
     }
 
 

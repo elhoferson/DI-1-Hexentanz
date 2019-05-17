@@ -8,6 +8,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 
 public class DiceTest {
 
@@ -29,6 +31,13 @@ public class DiceTest {
 
         } while (i < 1000);
 
+    }
+
+
+    @Test
+    public void testGetResult() {
+        testdice.setResult(1);
+        assertEquals(testdice.getResult(), 1);
     }
 
 }

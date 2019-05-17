@@ -7,12 +7,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.di_1_hexentanz.GameBoard.Gamescreen;
+import com.example.di_1_hexentanz.Player.PlayerColor;
 
 public class ColourChoosing extends AppCompatActivity {
-    private Button btnBlue;
-    private Button btnGreen;
-    private Button btnYellow;
-    private Button btnRed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +20,7 @@ public class ColourChoosing extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        btnBlue = findViewById(R.id.btnBlue);
+        Button btnBlue = findViewById(R.id.btnBlue);
         btnBlue.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -33,7 +30,7 @@ public class ColourChoosing extends AppCompatActivity {
             }
         });
 
-        btnGreen = findViewById(R.id.btnGreen);
+        Button btnGreen = findViewById(R.id.btnGreen);
         btnGreen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -43,7 +40,7 @@ public class ColourChoosing extends AppCompatActivity {
             }
         });
 
-        btnYellow = findViewById(R.id.btnYellow);
+        Button btnYellow = findViewById(R.id.btnYellow);
         btnYellow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -53,7 +50,7 @@ public class ColourChoosing extends AppCompatActivity {
             }
         });
 
-        btnRed = findViewById(R.id.btnRed);
+        Button btnRed = findViewById(R.id.btnRed);
         btnRed.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){

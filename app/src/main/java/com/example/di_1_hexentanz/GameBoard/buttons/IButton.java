@@ -1,7 +1,6 @@
-package com.example.di_1_hexentanz.GameBoard.CustomButtons;
+package com.example.di_1_hexentanz.GameBoard.buttons;
 
 import android.graphics.Bitmap;
-
 
 public interface IButton {
 
@@ -13,7 +12,7 @@ public interface IButton {
     Bitmap getBitmap(BtnType typeBtn);
 
     enum BtnType{
-        YourTurnButton, YesButton, NoButton
+        YOUR_TURN_BTN, YES_BTN, NO_BTN
     }
 
 }

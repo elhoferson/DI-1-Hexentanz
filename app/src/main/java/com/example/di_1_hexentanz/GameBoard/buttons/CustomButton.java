@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard.CustomButtons;
+package com.example.di_1_hexentanz.GameBoard.buttons;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,11 +34,11 @@ public class CustomButton extends View implements IButton {
         bitMapHeight = b.getHeight() / 2;
         bitmapWidth = b.getWidth() / 2;
 
-        if (typeBtn == BtnType.NoButton) {
+        if (typeBtn == BtnType.NO_BTN) {
             leftPosition = metrics.widthPixels / 2 + 10;
-        } else if (typeBtn == BtnType.YesButton) {
+        } else if (typeBtn == BtnType.YES_BTN) {
             leftPosition = metrics.widthPixels / 2 - bitmapWidth - 10;
-        } else if (typeBtn == BtnType.YourTurnButton) {
+        } else if (typeBtn == BtnType.YOUR_TURN_BTN) {
             leftPosition = metrics.widthPixels / 2 - bitmapWidth / 2;
         }
         topPosition = metrics.heightPixels / 2 - bitMapHeight;
@@ -49,10 +49,10 @@ public class CustomButton extends View implements IButton {
     @Override
     public Bitmap getBitmap(BtnType typeBtn) {
         setTypeBtn(typeBtn);
-        if (typeBtn == BtnType.YourTurnButton) {
+        if (typeBtn == BtnType.YOUR_TURN_BTN) {
             return BitmapFactory.decodeResource(getResources(), R.drawable.btn_yourturn);
 
-        } else if (typeBtn == BtnType.NoButton) {
+        } else if (typeBtn == BtnType.NO_BTN) {
             return BitmapFactory.decodeResource(getResources(), R.drawable.btn_no);
         }
         return BitmapFactory.decodeResource(getResources(), R.drawable.btn_yes);

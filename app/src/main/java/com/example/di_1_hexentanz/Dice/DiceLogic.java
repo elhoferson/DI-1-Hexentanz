@@ -18,7 +18,7 @@ public class DiceLogic {
         return result;
     }
 
-    private void setResult(int result) {
+    public void setResult(int result) {
         this.result = result;
     }
 

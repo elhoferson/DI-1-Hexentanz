@@ -36,6 +36,9 @@
 
         <activity android:name=".Dice.DiceUI"
             android:screenOrientation="landscape"/>
+        <activity
+            android:name=".Player.Winnerpop"
+            android:screenOrientation="landscape" />
 
     </application>
 

@@ -1,5 +1,5 @@
 package com.example.di_1_hexentanz.GameBoard;
 
 public enum GameState {
-    MyTurn, RollDice, SelectWitch, ConfirmSelection, NotMyTurn, PutWitchOnBoard
+    MY_TURN, ROLL_DICE, SELECT_WITCH, CONFIRM_SELECTION, NOT_MY_TURN, PUT_WITCH_ON_BOARD, SHOW_WITCH_COLOURS
 }
