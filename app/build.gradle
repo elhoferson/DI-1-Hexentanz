@@ -46,22 +46,3 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-
-android {
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
-}
-
-
-repositories { jcenter() }
-
-dependencies {
-    testImplementation 'org.robolectric:robolectric:4.2'
-    testImplementation 'org.mockito:mockito-core:1.9.5'
-    testImplementation 'org.powermock:powermock-api-mockito:1.6.6'
-    testImplementation 'org.powermock:powermock-module-junit4:1.6.6'
-}
-

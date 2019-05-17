@@ -27,7 +27,7 @@ public class Startscreen extends AppCompatActivity {
         BtnJoinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Join Game IButton", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Join Game Button", Toast.LENGTH_SHORT).show();
             }
         });
 

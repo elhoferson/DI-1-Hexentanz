@@ -34,11 +34,10 @@ public class DiceTest {
     }
 
 
-
     @Test
     public void testGetResult() {
         testdice.setResult(1);
-        assertEquals(testdice.getResult(),1);
+        assertEquals(testdice.getResult(), 1);
     }
 
 }
