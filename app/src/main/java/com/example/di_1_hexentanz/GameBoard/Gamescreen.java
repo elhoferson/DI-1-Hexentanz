@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.gameboard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,13 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.Dice.DiceUI;
-import com.example.di_1_hexentanz.GameBoard.buttons.CustomButton;
-import com.example.di_1_hexentanz.GameBoard.buttons.IButton;
-import com.example.di_1_hexentanz.Player.Player;
-import com.example.di_1_hexentanz.Player.PlayerColor;
+import com.example.di_1_hexentanz.dice.DiceUI;
+import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
+import com.example.di_1_hexentanz.gameboard.buttons.IButton;
+import com.example.di_1_hexentanz.player.Player;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.Player.Witch;
+import com.example.di_1_hexentanz.player.Witch;
 
 import java.util.ArrayList;
 import java.util.Timer;

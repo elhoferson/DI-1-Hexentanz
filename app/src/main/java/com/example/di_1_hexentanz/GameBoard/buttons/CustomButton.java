@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard.buttons;
+package com.example.di_1_hexentanz.gameboard.buttons;
 
 import android.content.Context;
 import android.graphics.Bitmap;

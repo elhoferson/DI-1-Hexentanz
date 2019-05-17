@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.gameboard;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,14 +7,14 @@ import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.di_1_hexentanz.GameBoard.buttons.CustomButton;
-import com.example.di_1_hexentanz.Player.DetermineWinner2;
-import com.example.di_1_hexentanz.Player.Winnerpop;
-import com.example.di_1_hexentanz.Dice.DiceUI;
-import com.example.di_1_hexentanz.Player.Player;
-import com.example.di_1_hexentanz.Player.PlayerColor;
+import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
+import com.example.di_1_hexentanz.player.DetermineWinner2;
+import com.example.di_1_hexentanz.player.Winnerpop;
+import com.example.di_1_hexentanz.dice.DiceUI;
+import com.example.di_1_hexentanz.player.Player;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.Player.Witch;
+import com.example.di_1_hexentanz.player.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
