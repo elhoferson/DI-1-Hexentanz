@@ -1,6 +1,6 @@
 package com.example.di_1_hexentanz;
 
-import com.example.di_1_hexentanz.dice.DiceLogic;
+import com.example.di_1_hexentanz.Dice.DiceLogic;
 
 import org.junit.Before;
 import org.junit.Test;
