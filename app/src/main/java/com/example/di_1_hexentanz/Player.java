@@ -1,30 +1,36 @@
 package com.example.di_1_hexentanz;
 
-import java.util.ArrayList;
+import android.content.Context;
 
 public class Player {
     private String name;
     private PlayerColor color;
     private int number;
-    private ArrayList<Witch> witches;
+    private Witch[]witches;
     private Feld startFeld;
     private Feld zielFeld;
-    private int witchesinGoal;
+    private int witchesAtHome;
+    private int witchesInGoal;
 
-    public Player(String name, PlayerColor color, int number, Feld startFeld, Feld zielFeld) {
+    public Player(String name, PlayerColor color, int number, int maxWitches, Feld startFeld, Feld zielFeld) {
         this.name = name;
-        this.witchesinGoal = 0;
         this.color = color;
         this.number = number;
         this.startFeld = startFeld;
         this.zielFeld = zielFeld;
-        this.witches = new ArrayList<>();
+        this.witches = new Witch[maxWitches];
+        this.witchesAtHome = maxWitches;
+        this.witchesInGoal = 0;
+
     }
 
-    public void addWitch(Witch witch) {
-        witches.add(witch);
+    public void initWitches(Context context, int size) {
+        for(int i = 0; i < witches.length; i++){
+            this.witches[i] = new Witch((i+1), this, context, size);
+        }
     }
 
+    public Witch[] getWitches(){ return this.witches; }
     public PlayerColor getColor() {
         return color;
     }
@@ -33,16 +39,10 @@ public class Player {
         return startFeld;
     }
 
-    public String getName() {
-        return name;
-    }
+    public int getWitchesAtHome(){ return this.witchesAtHome; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setColor(PlayerColor color) {
-        this.color = color;
+    public void setWitchesAtHome(int witchesAtHome){
+        this.witchesAtHome = witchesAtHome;
     }
 
     public int getNumber() {
@@ -53,11 +53,7 @@ public class Player {
         this.number = number;
     }
 
-    public ArrayList<Witch> getWitches() {
-        return witches;
-    }
-
-    public void setWitches(ArrayList<Witch> witches) {
+    public void setWitches(Witch[] witches) {
         this.witches = witches;
     }
 
@@ -73,11 +69,11 @@ public class Player {
         this.zielFeld = zielFeld;
     }
 
-    public int getWitchesinGoal() {
-        return witchesinGoal;
+    public int getWitchesInGoal() {
+        return witchesInGoal;
     }
 
-    public void setWitchesinGoal(int witchesinGoal) {
-        this.witchesinGoal = witchesinGoal;
+    public void setWitchesInGoal(int witchesInGoal) {
+        this.witchesInGoal = witchesInGoal;
     }
 }

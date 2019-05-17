@@ -1,32 +1,50 @@
 package com.example.di_1_hexentanz;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
+
 
 
 public class DetermineWinner2 extends AppCompatActivity {
 
 
 
-    public void isrightWitch(Player player, Witch witch) {
-        if(witch.player.getColor().equals(player.getColor())){
-            player.setWitchesinGoal(player.getWitchesinGoal()+1);
-        }
+    public boolean canGoInGoal( Witch witch, int lastDiceResult) {
+        for (int i = 1; i <= lastDiceResult; i++) {
+            if(witch.getCurrentField().getNumber()+i == witch.player.getZielFeld().getNumber()){
+               return true;
+            }
+
+    }
+    return false;
 
     }
 
-    public boolean hasWon(Player player){
+    public void goInGoal(Witch witch){
 
-        if(player.getWitchesinGoal() == 2){
-            return true;
-        }else return false;
-
+        witch.getPlayer().setWitchesInGoal(witch.getPlayer().getWitchesInGoal()+1);
     }
+
+    public boolean isWinner(Witch witch){
+       if( witch.getPlayer().getWitchesInGoal() == 4){
+           return true;
+       }else return false;
+    }
+
+    public boolean checkIfGoalInWay(Witch witch, int lastDiceResult) {
+       int witchFeld = witch.getCurrentField().getNumber();
+
+        for (int i = 1; i <= lastDiceResult; i++) {
+            if(witchFeld+i != witch.player.getZielFeld().getNumber() && (witchFeld+i)%40 == 0 ||
+                    witchFeld+i != witch.player.getZielFeld().getNumber() && witchFeld+i == 14||
+                    witchFeld+i != witch.player.getZielFeld().getNumber() && witchFeld+1 == 20||
+                    witchFeld+i != witch.player.getZielFeld().getNumber() && witchFeld+1 == 34){
+                return true;
+            }
+
+    } return false;
+
 
     
 
-}
+} }

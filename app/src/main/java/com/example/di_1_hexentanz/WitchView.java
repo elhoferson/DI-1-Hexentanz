@@ -1,8 +1,9 @@
 package com.example.di_1_hexentanz;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,6 +16,7 @@ class WitchView extends View {
     Witch witchInstance;
     Paint paint;
     PlayerColor color;
+    Bitmap b;
 
     public WitchView(Context context, int x, int y, int radius, Witch witchInstance) {
         super(context);
@@ -23,14 +25,13 @@ class WitchView extends View {
         this.radius = radius;
         this.witchInstance = witchInstance;
         paint = new Paint();
-
+        b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_default);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(getColorFromPlayerColor(this.color));
-        canvas.drawCircle(x, y, radius, paint);
+        Bitmap bResize = Bitmap.createScaledBitmap(b, 2*radius,2*radius, false);
+        canvas.drawBitmap(bResize, x-radius, y-radius, paint);
     }
 
     public void moveView(int destx, int desty) {
@@ -56,6 +57,40 @@ class WitchView extends View {
         });
         animatorx.start();
         animatory.start();
+    }
+
+    public void showColor() {
+        switch (color) {
+            case RED:
+                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_rot);
+                invalidate();
+                break;
+            case BLUE:
+                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_blau);
+                invalidate();
+                break;
+            case PINK:
+                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_lila);
+                invalidate();
+                break;
+            case GREEN:
+                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_gruen);
+                invalidate();
+                break;
+            case ORANGE:
+                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_orange);
+                invalidate();
+                break;
+            case YELLOW:
+                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_gelb);
+                invalidate();
+                break;
+        }
+    }
+
+    public void hideColor() {
+        b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_default);
+        invalidate();
     }
 
     public void setColor(PlayerColor color){
