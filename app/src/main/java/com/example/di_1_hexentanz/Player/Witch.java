@@ -3,6 +3,7 @@ package com.example.di_1_hexentanz.player;
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
+
 import com.example.di_1_hexentanz.gameboard.Feld;
 import com.example.di_1_hexentanz.R;
 
@@ -18,7 +19,7 @@ public class Witch {
     Player player;
     public Feld currentField;
     public WitchView witchView;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
     public Feld getCurrentField() {
         return currentField;
@@ -31,6 +32,7 @@ public class Witch {
         this.witchView.setColor(player.getColor());
         mediaPlayer = MediaPlayer.create(context, R.raw.swoosh);
     }
+
 
     public void putWitchOnGameboard(Activity activity, Feld destination) {
         currentField = destination;

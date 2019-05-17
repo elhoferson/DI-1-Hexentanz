@@ -134,19 +134,19 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         switch (color) {
             case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[0], felder[35]);
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[0]);
                 break;
 
             case GREEN:
-                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[12], felder[11]);
+                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
                 break;
 
             case YELLOW:
-                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[18], felder[17]);
+                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
                 break;
 
             case RED:
-                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[30], felder[29]);
+                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
                 break;
             default:
                 throw new RuntimeException("unreachable case");
@@ -216,6 +216,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
     private void drawBoardGame() {
+
 
         for (int i = 1; i < 14; i++) {
             felder[i] = new Feld(i, width - (6 * fieldwidth) + (i-1) * fieldwidth, height + (3 * fieldwidth), fieldRadius, getApplicationContext());

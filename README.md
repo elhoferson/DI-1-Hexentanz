@@ -27,7 +27,7 @@ It was created for the course _Software Engineering II_ on _Alpen-Adria-Universi
 ### Description
 An __Hexentanz__ implementation, with custom cards and cheating functionality.
 
-* Max supported players: 6
+* Max supported players: 4
 * Custom game board
 * Cheating supported
 * Cheating detection supported
@@ -36,7 +36,7 @@ An __Hexentanz__ implementation, with custom cards and cheating functionality.
 
 
 ### Cheating and detection
-Cheating is possible in a build in way. It is possible see the color of the witches, when covering the brightness sensor. So it's helpful for moving the right witch to the goal.
+It is possible see the color of the witches, when covering the brightness sensor. So it's helpful for moving the right witch to the goal.
 
 If you detect that a player has cheated, than you can blame him for cheating. If you are correct, the player has to miss a turn, if not, you have to miss a turn.
 
@@ -62,19 +62,16 @@ We used __git__ for versioning, and __Github__ for pull requests, reviews, hooks
   * Continous Integration 
   * Network
 * __Hofmann Daniel__
-  * Cheating Function
+  * Cheating Implementation
+  * Sensor Implementation
 * __Hülser Matthias__
   * Board Game Design
-  * Interface design
+  * Moving Witches
 * __Isak Selina__
   * Witches
+  * Player
 * __Szolderits Chiara__
     * Sensor Implementation
-    * Walking on Board Game
+    * Dice Implementation
 * __Wiltschnig Kevin__
     * Game Logic
-  
-
-## Acknowledgment
-Thank you [stackoverflow](https://stackoverflow.com), for answering many questions :)
-

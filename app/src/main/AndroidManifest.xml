@@ -31,7 +31,7 @@
         <activity android:name=".gameboard.Gamescreen"
             android:screenOrientation="landscape"></activity>
 
-        <activity android:name=".ColourChoosing"
+        <activity android:name=".player.ColourChoosing"
             android:screenOrientation="landscape"/>
 
         <activity android:name=".dice.DiceUI"

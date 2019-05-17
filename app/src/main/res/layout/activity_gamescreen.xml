@@ -38,9 +38,9 @@
     <TextView
         android:id="@+id/txtHome"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="41dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginBottom="36dp"
         android:text="At home: "
         android:textColor="@android:color/white"
         android:textSize="20sp"

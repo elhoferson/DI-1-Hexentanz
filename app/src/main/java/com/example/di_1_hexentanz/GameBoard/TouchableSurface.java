@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.di_1_hexentanz.R;
+import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.player.DetermineWinner2;
-import com.example.di_1_hexentanz.player.Winnerpop;
-import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
-import com.example.di_1_hexentanz.R;
+import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.player.Witch;
 
 public class TouchableSurface extends View {
@@ -83,7 +83,7 @@ public class TouchableSurface extends View {
                     activity.setState(GameState.MY_TURN);
                 }
 
-                if(activity.getState() == GameState.SHOW_WITCH_COLOURS) {
+                if (activity.getState() == GameState.SHOW_WITCH_COLOURS) {
                     activity.showWitchColours();
                     activity.setState(GameState.MY_TURN);
                     nb.setVisibility(INVISIBLE);
@@ -113,38 +113,39 @@ public class TouchableSurface extends View {
                             y > yb.getTopPosition() &&
                             y < yb.getTopPosition() + yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
-                        if(goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())){
+                        if (goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())) {
                             AlertDialog.Builder goInGoal = new AlertDialog.Builder(activity);
 
-                                goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
-                                goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        goal.goInGoal(selectedWitch);
-                                        if(goal.isWinner(selectedWitch)){
-                                            Intent gewonnen = new Intent(activity, Winnerpop.class);
-                                            activity.startActivity(gewonnen);
-                                        }
-                                        selectedWitch.witchView.moveView(-35,515);
+                            goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
+                            goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    goal.goInGoal(selectedWitch);
+                                    if (goal.isWinner(selectedWitch)) {
+                                        Intent gewonnen = new Intent(activity, Winnerpop.class);
+                                        activity.startActivity(gewonnen);
                                     }
-                                })
-                                        .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult()) % 40]);
+                                    selectedWitch.witchView.moveView(-35, 515);
+                                }
+                            })
+                                    .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + activity.getLastDiceResult()) % 40]);
 
 
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_info)
-                                        .show();
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .show();
 
 
-                        }else if(goal.checkIfGoalInWay(selectedWitch,activity.getLastDiceResult())){
+                        } else if (goal.checkIfGoalInWay(selectedWitch, activity.getLastDiceResult())) {
 
 
-                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult()) % 40]);
+                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + activity.getLastDiceResult()) % 40]);
 
 
-                        }else selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
+                        } else
+                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
 
 
                         //checkIfWitchIsOnField();
@@ -177,10 +178,10 @@ public class TouchableSurface extends View {
      * check if there is already a witch on the field
      */
     private void checkIfWitchIsOnField() {
-        for(int i = 0; i < witches.length; i++) {
+        for (int i = 0; i < witches.length; i++) {
 
-           if(witches[i].getCurrentField() == selectedWitch.getCurrentField()) {
-               witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %36- 4]);
+            if (witches[i].getCurrentField() == selectedWitch.getCurrentField()) {
+                witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() % 36 - 4]);
             }
         }
     }
@@ -189,7 +190,6 @@ public class TouchableSurface extends View {
         selectedWitch = witch;
         activity.witchSelected(witch, yb, nb);
     }
-
 
 
     public void setColor(PlayerColor color) {
