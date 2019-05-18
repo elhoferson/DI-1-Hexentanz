@@ -105,6 +105,7 @@ public class DiceUI extends AppCompatActivity {
     public void rolledNumber6() {
         this.onPause();
         AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(this);
+        popupNumber6.setCancelable(false);
         if (allWitchesOnBoard) {
             popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
             popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
@@ -113,7 +114,7 @@ public class DiceUI extends AppCompatActivity {
                     Gamescreen screen = new Gamescreen();
                     screen.setState(GameState.SHOW_WITCH_COLOURS);
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra(RESULT, 6);
+                    returnIntent.putExtra(RESULT, 0);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                     screen.showWitchColours();
@@ -144,6 +145,7 @@ public class DiceUI extends AppCompatActivity {
         //Pause if number has been generated
         this.onPause();
         AlertDialog.Builder rolledNumber = new AlertDialog.Builder(this);
+        rolledNumber.setCancelable(false);
         rolledNumber.setTitle("Du hast eine " + dice.getResult() + " gewürfelt!");
 
         if (allWitchesOnBoard) {

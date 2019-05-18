@@ -26,7 +26,7 @@ public class TouchableSurface extends View {
     CustomButton yb;
     CustomButton nb;
     DiceUI dice;
-    Witch[] witches;
+    Witch[] witches = new Witch[4];
     Player player;
     private DetermineWinner2 goal = new DetermineWinner2();
     int goalFeld = 41;
@@ -117,6 +117,7 @@ public class TouchableSurface extends View {
                         if(goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())){
                             AlertDialog.Builder goInGoal = new AlertDialog.Builder(activity);
 
+                                goInGoal.setCancelable(false);
                                 goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
                                 goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -179,14 +180,19 @@ public class TouchableSurface extends View {
     /**
      * check if there is already a witch on the field
      */
-    private void checkIfWitchIsOnField() {
-        for(int i = 0; i < witches.length; i++) {
+    /*
+    public boolean checkIfWitchIsOnField() {
+        for(int i = 0; i < player.getWitches().length; i++) {
 
-           if(witches[i].getCurrentField() == selectedWitch.getCurrentField()) {
-               witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %36- 4]);
+           if(player.getWitches()[i].currentField == selectedWitch.currentField) {
+               player.getWitches()[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %36- 4]);
+               return true;
+
             }
         }
+        return false;
     }
+    */
 
     private void selectWitch(Witch witch) {
         selectedWitch = witch;

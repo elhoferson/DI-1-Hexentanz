@@ -28,12 +28,6 @@ public class GamescreenTest {
     }
 
     @Test
-    public void testGetFelder() {
-        assertEquals(felder, testscreen.getFelder());
-
-    }
-
-    @Test
     public void testGetState() {
         testscreen.setState(GameState.SHOW_WITCH_COLOURS);
         assertEquals(testscreen.getState(), GameState.SHOW_WITCH_COLOURS);

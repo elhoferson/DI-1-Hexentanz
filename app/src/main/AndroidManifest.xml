@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
@@ -28,17 +27,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".GameBoard.Gamescreen"
+        <activity android:name=".gameboard.Gamescreen"
             android:screenOrientation="landscape"></activity>
 
-        <activity android:name=".ColourChoosing"
+        <activity android:name=".player.ColourChoosing"
             android:screenOrientation="landscape"/>
 
-        <activity android:name=".Dice.DiceUI"
+        <activity android:name=".dice.DiceUI"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".Player.Winnerpop"
+            android:name=".player.Winnerpop"
             android:screenOrientation="landscape" />
+
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
     </application>
 

@@ -285,25 +285,32 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             if (resultCode == Activity.RESULT_OK) {
 
 
-                if(lastDiceResult == 6 && state == GameState.SHOW_WITCH_COLOURS) {
-                    state = GameState.SHOW_WITCH_COLOURS;
-                    surface.hideYourTurnButton();
+                if (allWitchesOnBoard()) {
+
+
+                    /*
+                    if(surface.checkIfWitchIsOnField()) {
+                        return;
+                    }
+                    */
+
+                        int result = data.getIntExtra("result", -1);
+                        lastDiceResult = result;
+                        state = GameState.SELECT_WITCH;
+                        surface.hideYourTurnButton();
+                        TextView output = findViewById(R.id.TestDisplay);
+                        String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
+                        output.setText(outputText);
+                        output.setVisibility(View.VISIBLE);
+
+
+                        if (lastDiceResult == 6 || state == GameState.SHOW_WITCH_COLOURS) {
+                            state = GameState.SHOW_WITCH_COLOURS;
+                            surface.hideYourTurnButton();
+                        }
+
                 }
-
-
-                else if (allWitchesOnBoard()) {
-
-                    int result = data.getIntExtra("result", -1);
-                    lastDiceResult = result;
-                    state = GameState.SELECT_WITCH;
-                    surface.hideYourTurnButton();
-                    TextView output = findViewById(R.id.TestDisplay);
-                    String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
-                    output.setText(outputText);
-                    output.setVisibility(View.VISIBLE);
-
-                }
-                    else //(!(allWitchesOnBoard()))
+                    else
                      {
                         int result = data.getIntExtra("result", -1);
                         lastDiceResult = result;
