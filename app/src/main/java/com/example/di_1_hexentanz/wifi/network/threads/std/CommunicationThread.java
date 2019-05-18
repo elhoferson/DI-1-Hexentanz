@@ -1,9 +1,9 @@
-package com.example.di_1_hexentanz.threads;
+package com.example.di_1_hexentanz.wifi.network.threads.std;
 
 import android.os.Handler;
 import android.util.Log;
 
-import com.example.di_1_hexentanz.util.JsonUtil;
+import com.example.di_1_hexentanz.wifi.network.util.JsonUtil;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
 
@@ -24,8 +24,8 @@ public class CommunicationThread extends Thread {
     private BufferedReader input;
     private Handler handler;
 
-    public CommunicationThread(Handler handler) {
-        this.handler = handler;
+    public CommunicationThread() {
+
     }
 
     @Override
@@ -40,12 +40,20 @@ public class CommunicationThread extends Thread {
                 String msg = input.readLine();
                 if (StringUtils.isNotBlank(msg)) {
                     AbstractMessage abstractMessage = JsonUtil.getMessage(msg, AbstractMessage.class);
-                    handler.obtainMessage(abstractMessage.getTag(), msg).sendToTarget();
+                    if (handler == null) {
+                        Log.i(COMMUNICATION_TAG, "no handler registered");
+                    } else {
+                        handler.obtainMessage(abstractMessage.getTag(), msg).sendToTarget();
+                    }
                 }
             }
         } catch (IOException e) {
             Log.e(COMMUNICATION_TAG, "while reading input stream", e);
         }
+    }
+
+    public void registerHandler(Handler handler) {
+        this.handler = handler;
     }
 
     public void write(AbstractMessage message) {

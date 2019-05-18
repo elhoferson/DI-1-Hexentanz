@@ -1,7 +1,11 @@
 package com.example.di_1_hexentanz.wifi.network.logic.std;
 
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.os.Handler;
 import android.util.Log;
+
+import com.example.di_1_hexentanz.wifi.network.threads.std.CommunicationThread;
+import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -19,6 +23,7 @@ public class NetworkLogic {
     private static final int PORT = 9872;
     private static NetworkLogic instance = null;
     private UsageType usageType;
+    private CommunicationThread comm;
 
     private ServerSocket host;
     private List<WifiP2pDevice> clients = new ArrayList<>();
@@ -39,6 +44,7 @@ public class NetworkLogic {
                 instance.setHost(server);
                 instance.setClient(server.accept());
                 instance.setUsageType(UsageType.HOST);
+                instance.startCommunicationThread();
             } catch (IOException e) {
                 Log.e(TAG, "error creating server socket", e);
             }
@@ -56,6 +62,7 @@ public class NetworkLogic {
                         instance = new NetworkLogic();
                         instance.setUsageType(UsageType.CLIENT);
                         instance.setClient(socket);
+                        instance.startCommunicationThread();
                     } catch (IOException e) {
                         Log.e(TAG, "error creating server socket", e);
                     }
@@ -70,7 +77,7 @@ public class NetworkLogic {
     }
 
     public Boolean addPlayers(List<WifiP2pDevice> devices) {
-        if (getUsageType().equals(UsageType.CLIENT)) {
+        if (usageType.equals(UsageType.CLIENT)) {
             Log.e(TAG, "Client not allowed to addPlayers");
             return false;
         }
@@ -107,7 +114,8 @@ public class NetworkLogic {
         }
     }
 
-    public static void close() {
+    public void close() {
+        comm.interrupt();
         instance = null;
     }
 
@@ -119,7 +127,12 @@ public class NetworkLogic {
         this.client = client;
     }
 
-    public ServerSocket getHost() {
+    private void startCommunicationThread() {
+        this.comm = new CommunicationThread();
+        comm.start();
+    }
+
+    private ServerSocket getHost() {
         return host;
     }
 
@@ -131,12 +144,20 @@ public class NetworkLogic {
         return clients;
     }
 
+    public void registerCommunicationHandler(Handler handler) {
+        comm.registerHandler(handler);
+    }
+
+    public void writeMessage(AbstractMessage message) {
+        comm.write(message);
+    }
+
     private void setUsageType(UsageType usageType) {
         this.usageType = usageType;
     }
 
-    public UsageType getUsageType() {
-        return usageType;
+    public Boolean isHost() {
+        return usageType.equals(UsageType.HOST);
     }
 
     public enum UsageType {

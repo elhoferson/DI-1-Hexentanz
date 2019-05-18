@@ -33,7 +33,7 @@ public abstract class AbstractWifiP2pActivity extends AppCompatActivity implemen
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
-        NetworkLogic.close();
+        //NetworkLogic.getInstance().close();
     }
 
     public WifiP2pManager getManager() {

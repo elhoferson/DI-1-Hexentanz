@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.util;
+package com.example.di_1_hexentanz.wifi.network.util;
 
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
 import com.google.gson.Gson;

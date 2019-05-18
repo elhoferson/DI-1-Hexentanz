@@ -3,12 +3,19 @@ package com.example.di_1_hexentanz;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.di_1_hexentanz.wifi.network.util.JsonUtil;
 import com.example.di_1_hexentanz.wifi.network.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.wifi.network.messages.IMessage;
+import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pIntentFilter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pServerBroadcastReceiver;
@@ -41,7 +48,24 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
         receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice);
+        NetworkLogic.getInstance().registerCommunicationHandler(handler);
     }
+
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            String msgString = (String) msg.obj;
+            switch(msg.what) {
+                case IMessage.TEST_MESSAGE:
+                    TestMessage tst = JsonUtil.getMessage(msgString, TestMessage.class);
+                    Log.e("transfered msg",tst.getMsg());
+                    break;
+                default:
+                    super.handleMessage(msg);
+                    break;
+            }
+        }
+    };
 
     public void onClick(View v) {
 
