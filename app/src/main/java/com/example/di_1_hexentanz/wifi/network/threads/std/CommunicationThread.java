@@ -7,8 +7,6 @@ import com.example.di_1_hexentanz.wifi.network.util.JsonUtil;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -38,7 +36,7 @@ public class CommunicationThread extends Thread {
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
             while (!this.isInterrupted()) {
                 String msg = input.readLine();
-                if (StringUtils.isNotBlank(msg)) {
+                if (msg != null && msg.length() > 0) {
                     AbstractMessage abstractMessage = JsonUtil.getMessage(msg, AbstractMessage.class);
                     if (handler == null) {
                         Log.i(COMMUNICATION_TAG, "no handler registered");
