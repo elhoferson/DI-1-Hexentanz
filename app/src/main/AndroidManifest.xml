@@ -18,11 +18,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/logo"
+        android:label="Hexentanz"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="android.max_aspect" android:value="1.78" />
+
 
 
         <activity
@@ -37,7 +39,9 @@
         </activity>
 
         <activity android:name=".Startscreen"
-            android:screenOrientation="landscape">
+
+            android:screenOrientation="landscape"
+            android:maxAspectRatio="1.78">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,15 +49,23 @@
             </intent-filter>
         </activity>
 
-
-        <activity android:name=".Gamescreen"
+        <activity android:name=".gameboard.Gamescreen"
             android:screenOrientation="landscape"></activity>
 
-        <activity android:name=".Dice"
+        <activity android:name=".player.ColourChoosing"
             android:screenOrientation="landscape"/>
 
-        <activity android:name=".ColourChoosing"
+        <activity android:name=".dice.DiceUI"
             android:screenOrientation="landscape"/>
+        <activity
+            android:name=".player.Winnerpop"
+            android:screenOrientation="landscape" />
+
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
     </application>
 
 </manifest>

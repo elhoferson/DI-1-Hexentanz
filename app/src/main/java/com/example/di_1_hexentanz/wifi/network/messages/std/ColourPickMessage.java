@@ -1,6 +1,6 @@
 package com.example.di_1_hexentanz.wifi.network.messages.std;
 
-import com.example.di_1_hexentanz.PlayerColor;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
 
 public class ColourPickMessage extends AbstractMessage {

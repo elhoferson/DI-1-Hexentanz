@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/bg1"
     android:layout_height="match_parent"
-    tools:context="com.example.di_1_hexentanz.Dice">
+    tools:context="com.example.di_1_hexentanz.dice.DiceUI">
 
 
     <ImageView
