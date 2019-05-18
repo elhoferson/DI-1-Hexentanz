@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.Player;
+package com.example.di_1_hexentanz.player;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

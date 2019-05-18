@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.Dice;
+package com.example.di_1_hexentanz.dice;
 
 import java.util.Random;
 

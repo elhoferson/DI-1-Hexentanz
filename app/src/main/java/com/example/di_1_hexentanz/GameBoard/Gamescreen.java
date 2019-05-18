@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.gameboard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,13 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.Dice.DiceUI;
-import com.example.di_1_hexentanz.GameBoard.buttons.CustomButton;
-import com.example.di_1_hexentanz.GameBoard.buttons.IButton;
-import com.example.di_1_hexentanz.Player.Player;
-import com.example.di_1_hexentanz.Player.PlayerColor;
+import com.example.di_1_hexentanz.dice.DiceUI;
+import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
+import com.example.di_1_hexentanz.gameboard.buttons.IButton;
+import com.example.di_1_hexentanz.player.Player;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
-import com.example.di_1_hexentanz.Player.Witch;
+import com.example.di_1_hexentanz.player.Witch;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -285,25 +285,32 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             if (resultCode == Activity.RESULT_OK) {
 
 
-                if(lastDiceResult == 6 && state == GameState.SHOW_WITCH_COLOURS) {
-                    state = GameState.SHOW_WITCH_COLOURS;
-                    surface.hideYourTurnButton();
+                if (allWitchesOnBoard()) {
+
+
+                    /*
+                    if(surface.checkIfWitchIsOnField()) {
+                        return;
+                    }
+                    */
+
+                        int result = data.getIntExtra("result", -1);
+                        lastDiceResult = result;
+                        state = GameState.SELECT_WITCH;
+                        surface.hideYourTurnButton();
+                        TextView output = findViewById(R.id.TestDisplay);
+                        String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
+                        output.setText(outputText);
+                        output.setVisibility(View.VISIBLE);
+
+
+                        if (lastDiceResult == 6 || state == GameState.SHOW_WITCH_COLOURS) {
+                            state = GameState.SHOW_WITCH_COLOURS;
+                            surface.hideYourTurnButton();
+                        }
+
                 }
-
-
-                else if (allWitchesOnBoard()) {
-
-                    int result = data.getIntExtra("result", -1);
-                    lastDiceResult = result;
-                    state = GameState.SELECT_WITCH;
-                    surface.hideYourTurnButton();
-                    TextView output = findViewById(R.id.TestDisplay);
-                    String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
-                    output.setText(outputText);
-                    output.setVisibility(View.VISIBLE);
-
-                }
-                    else //(!(allWitchesOnBoard()))
+                    else
                      {
                         int result = data.getIntExtra("result", -1);
                         lastDiceResult = result;

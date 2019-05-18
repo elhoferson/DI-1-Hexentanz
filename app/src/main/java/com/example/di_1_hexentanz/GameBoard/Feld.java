@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.GameBoard;
+package com.example.di_1_hexentanz.gameboard;
 
 import android.content.Context;
 

@@ -1,6 +1,6 @@
 package com.example.di_1_hexentanz;
 
-import com.example.di_1_hexentanz.Dice.DiceLogic;
+import com.example.di_1_hexentanz.dice.DiceLogic;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class DiceTest {
     private List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6);
 
     @Before
-    public void setTestdice() {
+    public void setTestDice() {
         testdice = new DiceLogic();
     }
 

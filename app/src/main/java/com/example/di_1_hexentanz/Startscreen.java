@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.di_1_hexentanz.player.ColourChoosing;
+
 public class Startscreen extends AppCompatActivity {
 
     MediaPlayer mediaPlayer;
-    boolean playMusic = false;
-    ImageView sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
