@@ -73,10 +73,8 @@ public class TouchableSurface extends View {
                 }
 
                 if (activity.getState() == GameState.PUT_WITCH_ON_BOARD) {
-                    activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
-
-
                     //checkIfWitchIsOnField();
+                    activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
 
                     next--;
                     activity.getCurrentPlayer().setWitchesAtHome(activity.getCurrentPlayer().getWitchesAtHome() - 1);
@@ -180,19 +178,19 @@ public class TouchableSurface extends View {
     /**
      * check if there is already a witch on the field
      */
-    /*
-    public boolean checkIfWitchIsOnField() {
-        for(int i = 0; i < player.getWitches().length; i++) {
+/*
+    public void checkIfWitchIsOnField() {
+        for(int i = 0; i < activity.witches.size(); i++) {
 
-           if(player.getWitches()[i].currentField == selectedWitch.currentField) {
-               player.getWitches()[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %36- 4]);
-               return true;
-
-            }
+                if(witches[i].getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult() % 40) {
+                    witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
+                }
         }
-        return false;
     }
     */
+
+
+
 
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
