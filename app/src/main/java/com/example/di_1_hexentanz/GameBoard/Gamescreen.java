@@ -288,12 +288,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 if (allWitchesOnBoard()) {
 
 
-                    /*
-                    if(surface.checkIfWitchIsOnField()) {
-                        return;
-                    }
-                    */
-
                         int result = data.getIntExtra("result", -1);
                         lastDiceResult = result;
                         state = GameState.SELECT_WITCH;
@@ -304,17 +298,21 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                         output.setVisibility(View.VISIBLE);
 
 
+                        /*
                         if (lastDiceResult == 6 || state == GameState.SHOW_WITCH_COLOURS) {
                             state = GameState.SHOW_WITCH_COLOURS;
                             surface.hideYourTurnButton();
                         }
+                        */
 
                 }
                     else
                      {
+
                         int result = data.getIntExtra("result", -1);
                         lastDiceResult = result;
-                        state = GameState.PUT_WITCH_ON_BOARD;
+
+                         state = GameState.PUT_WITCH_ON_BOARD;
 
                         /**PERFORM TOUCH**/
                         this.surface.dispatchTouchEvent(MotionEvent.obtain(
@@ -326,6 +324,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                             0
                     ));
 
+
+                         //surface.checkIfWitchIsOnField();
                 }
             }
 
