@@ -20,6 +20,7 @@ public class Witch {
     public WitchView witchView;
     MediaPlayer mediaPlayer;
 
+
     public Feld getCurrentField() {
         return currentField;
     }
