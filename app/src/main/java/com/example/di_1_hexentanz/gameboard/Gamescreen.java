@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
+import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
@@ -34,7 +35,8 @@ import java.util.TimerTask;
 public class Gamescreen extends AppCompatActivity implements SensorEventListener {
 
     ArrayList<Witch> witches = new ArrayList<>();
-    private Feld[] felder = new Feld[56];
+    private Feld[] felder = new Feld[40];
+    private Feld[] goalfelder = new Feld[16];
     Witch selectedWitch;
     private static PlayerColor color;
     int height;
@@ -50,6 +52,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private Player currentPlayer;
     private TextView txtHome;
     private DiceUI dice = new DiceUI();
+    private Goal goal = new Goal();
 
     //Sensor variables:
     private float luminosity;
@@ -167,7 +170,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         txtHome = findViewById(R.id.txtHome);
         txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
 
-        surface = new TouchableSurface(getApplicationContext(), felder, yourTurnButton, yb, nb, this, dice, currentPlayer);
+        surface = new TouchableSurface(getApplicationContext(), felder,goalfelder, yourTurnButton, yb, nb, this, dice, currentPlayer);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -254,9 +257,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         felder[34] = new Feld(34, width - (6 * fieldwidth) - 75, height - (3 * fieldwidth), fieldRadius, getApplicationContext());
         addContentView(felder[34].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
 
-        for (int i = 40; i <= 55; i++) {
-            felder[i] = new Feld(i, width - (6 * fieldwidth) * 3, height - (2 * fieldwidth) + ((i - 4) - 31) * fieldwidth * 3, fieldRadius, getApplicationContext());
-            addContentView(felder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
+        for (int i = 0; i <= 15; i++) {
+            goalfelder[i] = new Feld(i, width - (6 * fieldwidth)*3, height - (2 * fieldwidth) + ((i-4) - 31) * fieldwidth * 3, fieldRadius, getApplicationContext());
+            addContentView(goalfelder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
 
@@ -375,7 +378,16 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     }
 
     public void putWitchOnGameboard(Witch witch, CustomButton yb, CustomButton nb) {
-        Feld destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult - 1) % 36];
+        Feld destination;
+
+        if (goal.checkIfGoalInWay(witch, lastDiceResult)) {
+
+            destination = felder[(witch.getPlayer().getStartFeld().getNumber()+1 + lastDiceResult-1) % 40];
+        }else destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult-1) % 40];
+
+
+
+
         witch.putWitchOnGameboard(this, destination);
         yb.setVisibility(View.INVISIBLE);
         nb.setVisibility(View.INVISIBLE);

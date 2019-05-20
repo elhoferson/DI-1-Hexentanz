@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
-import com.example.di_1_hexentanz.player.DetermineWinner2;
+import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.player.Player;
@@ -18,6 +18,7 @@ import com.example.di_1_hexentanz.player.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
+    Feld[] goalfelder;
     Context context;
     Gamescreen activity;
     Witch selectedWitch;
@@ -28,14 +29,15 @@ public class TouchableSurface extends View {
     DiceUI dice;
     Witch[] witches = new Witch[4];
     Player player;
-    private DetermineWinner2 goal = new DetermineWinner2();
-    int goalFeld = 41;
+    private Goal goal = new Goal();
+    int goalFeld = 0;
 
     private int next;
 
-    public TouchableSurface(final Context context, Feld[] felder, CustomButton ytb, CustomButton yb, CustomButton nb, Gamescreen activity, DiceUI dice, Player player) {
+    public TouchableSurface(final Context context, Feld[] felder,Feld[] goalfelder, CustomButton ytb, CustomButton yb, CustomButton nb, Gamescreen activity, DiceUI dice, Player player) {
         super(context);
         this.felder = felder;
+        this.goalfelder = goalfelder;
         this.context = context;
         this.activity = activity;
         this.player = player;
@@ -125,7 +127,7 @@ public class TouchableSurface extends View {
                                             activity.startActivity(gewonnen);
                                         }
                                         selectedWitch.witchView.moveView(-35,515);
-                                        selectedWitch.currentField = felder[goalFeld];
+                                        selectedWitch.moveWitch(goalfelder[goalFeld]);
                                         goalFeld++;
                                     }
                                 })
