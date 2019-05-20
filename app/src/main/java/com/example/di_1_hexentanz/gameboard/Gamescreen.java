@@ -37,8 +37,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     ArrayList<Witch> witches = new ArrayList<>();
     private Feld[] felder = new Feld[40];
     private Feld[] goalfelder = new Feld[16];
-    Witch selectedWitch;
-    private static PlayerColor color;
+    private PlayerColor color;
     int height;
     int fieldRadius;
     int width;
@@ -83,10 +82,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     }
 
 
-    public static void setColor(PlayerColor color) {
-        Gamescreen.color = color;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +91,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        //Get chosen colour from intent
+        color = (PlayerColor) getIntent().getExtras().get("color");
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
@@ -168,7 +165,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
 
         txtHome = findViewById(R.id.txtHome);
-        txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
+        txtHome.setText(String.format("At home: %d",currentPlayer.getWitchesAtHome()));
 
         surface = new TouchableSurface(getApplicationContext(), felder,goalfelder, yourTurnButton, yb, nb, this, dice, currentPlayer);
         surface.setColor(color);

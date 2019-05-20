@@ -25,8 +25,8 @@ public class ColourChoosing extends AppCompatActivity {
         btnBlue.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.BLUE);
                 Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                intent.putExtra("color", PlayerColor.BLUE);
                 startActivity(intent);
             }
         });
@@ -35,8 +35,8 @@ public class ColourChoosing extends AppCompatActivity {
         btnGreen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.GREEN);
                 Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                intent.putExtra("color", PlayerColor.GREEN);
                 startActivity(intent);
             }
         });
@@ -45,8 +45,8 @@ public class ColourChoosing extends AppCompatActivity {
         btnYellow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.YELLOW);
                 Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                intent.putExtra("color", PlayerColor.YELLOW);
                 startActivity(intent);
             }
         });
@@ -55,8 +55,8 @@ public class ColourChoosing extends AppCompatActivity {
         btnRed.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.RED);
                 Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                intent.putExtra("color", PlayerColor.RED);
                 startActivity(intent);
             }
         });
