@@ -399,76 +399,74 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        //only fire sensor action if Player hasn't cheated before
+        if(!currentPlayer.getHasCheated()) {
+            //needed for canceling if alert is showing
+            if (sensorActive) {
 
-        if (sensorActive) {
+                luminosity = event.values[0];
+                if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+                    //Light Sensor action
 
-            luminosity = event.values[0];
-            if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-                //Light Sensor action
+                    if (event.values[0] > 100) {
+                        //bright
+                        luminosityIcon.setImageResource(R.drawable.bright_transparent);
+                        luminosityState = "bright";
 
-                if (event.values[0] > 100) {
-                    //bright
-                    luminosityIcon.setImageResource(R.drawable.bright_transparent);
-                    luminosityState = "bright";
+                    } else if (luminosity < 100 && luminosity >= 50) {
+                        //cloudy
+                        luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
+                        luminosityState = "cloudy";
 
-                } else if (luminosity < 100 && luminosity >= 50) {
-                    //cloudy
-                    luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
-                    luminosityState = "cloudy";
+                    } else if (luminosity < 50 && luminosity >= 25) {
+                        //dusky
+                        luminosityIcon.setImageResource(R.drawable.dusky_transparent);
+                        luminosityState = "dusky";
 
-                } else if (luminosity < 50 && luminosity >= 25) {
-                    //dusky
-                    luminosityIcon.setImageResource(R.drawable.dusky_transparent);
-                    luminosityState = "dusky";
+                    } else if (luminosity < 25 && luminosity >= 5) {
+                        //nearly_dark
+                        luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
+                        luminosityState = "nearly_dark";
 
-                } else if (luminosity < 25 && luminosity >= 5) {
-                    //nearly_dark
-                    luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
-                    luminosityState = "nearly_dark";
-
-                } else if (luminosity < 5) {
-                    //dark
-                    luminosityIcon.setImageResource(R.drawable.dark_transparent);
-                    luminosityState = "dark";
+                    } else if (luminosity < 5) {
+                        //dark
+                        luminosityIcon.setImageResource(R.drawable.dark_transparent);
+                        luminosityState = "dark";
 
 
-                    //pause sensor
-                    sensorActive = false;
-                    sensorManager.unregisterListener(this);
+                        //pause sensor
+                        sensorActive = false;
 
-                    AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-                    a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
-                            "You look around, but you don't see anybody. Do you want to cheat?")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //YES I WANT TO CHEAT!
-                                    showWitchColours();
-                                    try {
-                                        Thread.sleep(2000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
+                        //build and show Alert Dialog
+                        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+                        a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+                                "You look around, but you don't see anybody. Do you want to cheat?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //YES I WANT TO CHEAT!
+                                        currentPlayer.setHasCheated(true);
+                                        showWitchColours();
+                                        try {
+                                            Thread.sleep(3000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        showWitchColours();
                                     }
-                                    showWitchColours();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //I DONT WANT TO CHEAT!
-                                    sensorActive = true;
-                                }
-                            });
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //I DONT WANT TO CHEAT!
+                                        sensorActive = true;
+                                    }
+                                });
 
-                    AlertDialog alert = a_builder.create();
-                    alert.show();
-
-
-                    //for now register Listener again, so Sensor restarts after action
-                    sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-                    //sensorActive=true;
-
+                        AlertDialog alert = a_builder.create();
+                        alert.show();
+                    }
                 }
             }
         }
