@@ -449,4 +449,12 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //not in use
 
     }
+
+    public ImageView getLuminosityIcon() {
+        return luminosityIcon;
+    }
+
+    public String getLuminosityState() {
+        return luminosityState;
+    }
 }
