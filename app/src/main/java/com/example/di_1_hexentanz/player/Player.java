@@ -13,7 +13,7 @@ public class Player {
     private Feld zielFeld;
     private int witchesAtHome;
     private int witchesInGoal;
-    private boolean cheated;
+    private boolean hasCheated;
 
     public Player(String name, PlayerColor color, int number, int maxWitches, Feld startFeld, Feld zielFeld) {
         this.name = name;
@@ -24,7 +24,7 @@ public class Player {
         this.witches = new Witch[maxWitches];
         this.witchesAtHome = maxWitches;
         this.witchesInGoal = 0;
-        this.cheated = false;
+        this.hasCheated = false;
 
     }
 
@@ -81,11 +81,11 @@ public class Player {
         this.witchesInGoal = witchesInGoal;
     }
 
-    public boolean isCheated() {
-        return cheated;
+    public boolean getHasCheated() {
+        return hasCheated;
     }
 
-    public void setCheated(boolean cheated) {
-        this.cheated = cheated;
+    public void setHasCheated(boolean hasCheated) {
+        this.hasCheated = hasCheated;
     }
 }
