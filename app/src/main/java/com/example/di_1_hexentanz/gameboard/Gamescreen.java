@@ -52,6 +52,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private DiceUI dice = new DiceUI();
 
     //Sensor variables:
+    private float luminosity;
     private ImageView luminosityIcon;
     private SensorManager sensorManager;
     private Sensor sensor;
@@ -385,6 +386,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        luminosity = event.values[0];
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
             //Light Sensor action
 
@@ -392,6 +394,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 //bright
                 luminosityIcon.setImageResource(R.drawable.bright_transparent);
                 luminosityState = "bright";
+
+
             }else if(event.values[0] < 100 && event.values[0] >= 50){
                 //cloudy
                 luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
@@ -457,4 +461,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     public String getLuminosityState() {
         return luminosityState;
     }
+
+    public float getLuminosity() {
+        return luminosity;
+    }
+
 }

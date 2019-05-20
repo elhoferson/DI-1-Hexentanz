@@ -44,5 +44,5 @@ public class GamescreenTest {
         assertTrue(testPlayer.getColor() == PlayerColor.BLUE);
     }
 
-}
+   }
 
