@@ -1,14 +1,16 @@
 package com.example.di_1_hexentanz.wifi.network.messages;
 
-public class AbstractMessage implements IMessage {
+import java.io.Serializable;
 
-    private int tag;
+public class AbstractMessage implements Serializable {
 
-    public AbstractMessage(int tag) {
+    private MessageTag tag;
+
+    public AbstractMessage(MessageTag tag) {
         this.tag = tag;
     }
 
-    public int getTag() {
+    public MessageTag getTag() {
         return tag;
     }
 }

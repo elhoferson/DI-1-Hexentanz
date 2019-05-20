@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 
 import java.net.InetAddress;
@@ -69,11 +70,11 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
                         Log.i(WIFI_P2P_TAG, info.toString());
 
                         if (info.groupFormed && info.isGroupOwner) {
-                            NetworkLogic.init();
                             Log.i(WIFI_P2P_TAG, "I'am the owner");
                         } else if (info.groupFormed) {
                             Log.i(WIFI_P2P_TAG, "I'am a client and will connect to the owner");
                             NetworkLogic.initClient(groupOwnerAddress);
+                            NetworkLogic.getInstance().sendMessageToHost(new TestMessage());
                         }
                     }
                 });

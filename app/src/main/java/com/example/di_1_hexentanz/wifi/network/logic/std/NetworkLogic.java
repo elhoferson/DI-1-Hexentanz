@@ -1,35 +1,25 @@
 package com.example.di_1_hexentanz.wifi.network.logic.std;
 
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.os.Handler;
 import android.util.Log;
 
-import com.example.di_1_hexentanz.wifi.network.threads.std.CommunicationThread;
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.UnknownHostException;
 
 public class NetworkLogic {
 
     private static final String TAG = "NETWORK";
     private static final int PORT = 9872;
+    private static final int CLIENT_LIMIT = 6;
     private static NetworkLogic instance = null;
     private UsageType usageType;
-    private CommunicationThread comm;
+    // only if usage type host
+    private Server host;
 
-    private ServerSocket host;
-    private List<WifiP2pDevice> clients = new ArrayList<>();
-
-    private Socket client;
-
+    private Client client;
 
     private NetworkLogic() {
 
@@ -37,38 +27,59 @@ public class NetworkLogic {
 
     public static void init() {
         if (instance == null) {
-            try {
+            runInThread(new Runnable() {
+                @Override
+                public void run() {
+                    instance = new NetworkLogic();
+                    Server server = new Server(PORT);
+                    server.setClientLimit(CLIENT_LIMIT);
+                    server.start();
+                    instance.setHost(server);
+                    instance.setUsageType(UsageType.HOST);
 
-                ServerSocket server = new ServerSocket(PORT);
-                instance = new NetworkLogic();
-                instance.setHost(server);
-                instance.setClient(server.accept());
-                instance.setUsageType(UsageType.HOST);
-                instance.startCommunicationThread();
-            } catch (IOException e) {
-                Log.e(TAG, "error creating server socket", e);
-            }
-
+                    // the host is also a client
+                    try {
+                        InetAddress hostAddress = InetAddress.getLocalHost();
+                        innerInitClient(hostAddress);
+                    } catch (UnknownHostException e) {
+                        Log.e(TAG, "unknown host ", e);
+                    }
+                }
+            });
         }
+    }
+
+    private static void runInThread(Runnable r) {
+        runInThread(r, true);
+    }
+    private static void runInThread(Runnable r, Boolean join) {
+        Thread t = new Thread(r);
+        t.start();
+        if (join) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                Log.e(TAG, "interrupted", e);
+            }
+        }
+    }
+
+    private static void innerInitClient(InetAddress hostDevice) {
+        Client client = new Client(hostDevice.getHostAddress(), PORT);
+        client.start();
+        instance.setClient(client);
     }
 
     public static void initClient(final InetAddress hostDevice) {
         if (instance == null) {
-            new Thread(new Runnable() {
+            runInThread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        Socket socket = new Socket(hostDevice, PORT);
-                        instance = new NetworkLogic();
-                        instance.setUsageType(UsageType.CLIENT);
-                        instance.setClient(socket);
-                        instance.startCommunicationThread();
-                    } catch (IOException e) {
-                        Log.e(TAG, "error creating server socket", e);
-                    }
+                    instance = new NetworkLogic();
+                    innerInitClient(hostDevice);
+                    instance.setUsageType(UsageType.CLIENT);
                 }
-            }).start();
-
+            });
         }
     }
 
@@ -76,88 +87,49 @@ public class NetworkLogic {
         return instance;
     }
 
-    public Boolean addPlayers(List<WifiP2pDevice> devices) {
-        if (usageType.equals(UsageType.CLIENT)) {
-            Log.e(TAG, "Client not allowed to addPlayers");
-            return false;
-        }
-
-        if (devices == null || devices.isEmpty()) {
-            Log.e(TAG, "No devices");
-            return false;
-        }
-
-        for (WifiP2pDevice device : devices) {
-            clients.clear();
-            clients.add(device);
-        }
-        return true;
-    }
-
-    private class ServerThread extends Thread {
-
-        @Override
-        public void run() {
-            try {
-                ServerSocket server = new ServerSocket(PORT);
-                Socket mySocket = server.accept();
-                BufferedReader input = new BufferedReader(new InputStreamReader(new BufferedInputStream(mySocket.getInputStream())));
-                while(!Thread.currentThread().isInterrupted()) {
-                    String message = input.readLine();
-                    if (message.length() > 0) {
-                        Log.e(TAG, message);
-                    }
-                }
-            } catch(IOException e) {
-                Log.e(TAG, "error creating server socket", e);
-            }
-        }
-    }
-
     public void close() {
-        comm.interrupt();
+        runInThread(new Runnable() {
+            @Override
+            public void run() {
+                if (host != null) {
+                    host.shutDown();
+                }
+
+                if (client != null) {
+                    client.shutDown();
+                }
+            }
+        });
         instance = null;
     }
 
-    private void setHost(ServerSocket host) {
+    private void setHost(Server host) {
         this.host = host;
     }
 
-    private void setClient(Socket client) {
+    private void setClient(Client client) {
         this.client = client;
     }
 
-    private void startCommunicationThread() {
-        this.comm = new CommunicationThread();
-        comm.start();
-    }
-
-    private ServerSocket getHost() {
+    public Server getHost() {
         return host;
     }
 
-    public Socket getClient() {
+    private Client getClient() {
         return client;
     }
 
-    public List<WifiP2pDevice> getClients() {
-        return clients;
-    }
-
-    public void registerCommunicationHandler(Handler handler) {
-        comm.registerHandler(handler);
-    }
-
-    public void writeMessage(AbstractMessage message) {
-        comm.write(message);
+    public void sendMessageToHost(final AbstractMessage msg) {
+        runInThread(new Runnable() {
+            @Override
+            public void run() {
+                getClient().send(msg);
+            }
+        }, false);
     }
 
     private void setUsageType(UsageType usageType) {
         this.usageType = usageType;
-    }
-
-    public Boolean isHost() {
-        return usageType.equals(UsageType.HOST);
     }
 
     public enum UsageType {
