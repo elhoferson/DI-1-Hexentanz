@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.example.di_1_hexentanz.wifi.network.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
+import com.example.di_1_hexentanz.wifi.network.messages.std.ColorPickMessage;
 import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
 import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.wifi.network.mordechaim_server.ServerAdapter;
@@ -34,9 +36,18 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         NetworkLogic.getInstance().getHost().addServerListener(new ServerAdapter() {
             @Override
             public void messageReceived(Server server, Server.ConnectionToClient client, Object msg) {
-                if (msg instanceof TestMessage) {
-                    TestMessage tm = (TestMessage) msg;
-                    Log.e("MSG", tm.getMsg());
+                AbstractMessage myMsg = (AbstractMessage) msg;
+                switch(myMsg.getTag()) {
+                    case TEST:
+                        TestMessage tm = (TestMessage) myMsg;
+                        Log.e("MSG", tm.getMsg());
+                        break;
+                    case PICK_COLOR:
+                        ColorPickMessage pm = (ColorPickMessage) myMsg;
+                        break;
+                    default:
+                        Log.i("MSG", myMsg.getTag() +" not handled here");
+                        break;
                 }
             }
         });

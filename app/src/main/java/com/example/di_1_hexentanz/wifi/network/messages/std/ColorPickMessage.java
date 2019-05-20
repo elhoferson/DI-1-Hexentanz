@@ -4,10 +4,10 @@ import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractColorMessage;
 import com.example.di_1_hexentanz.wifi.network.messages.MessageTag;
 
-public class ColourPickMessage extends AbstractColorMessage {
+public class ColorPickMessage extends AbstractColorMessage {
 
 
-    public ColourPickMessage(PlayerColor playerColor) {
+    public ColorPickMessage(PlayerColor playerColor) {
         super(MessageTag.PICK_COLOR, playerColor);
     }
 }
