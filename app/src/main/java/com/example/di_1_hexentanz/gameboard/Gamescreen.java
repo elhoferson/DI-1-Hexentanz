@@ -443,7 +443,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                             .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //TODO:
                                     //YES I WANT TO CHEAT!
                                     showWitchColours();
                                     try {
