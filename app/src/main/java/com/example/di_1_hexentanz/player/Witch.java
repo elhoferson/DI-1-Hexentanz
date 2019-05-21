@@ -8,11 +8,6 @@ import com.example.di_1_hexentanz.R;
 
 public class Witch {
 
-    /**
-     * int currentField:
-     * -1 ... Witch is at Home
-     * 36 ... Witch is at finish
-     */
 
     int number;
     Player player;

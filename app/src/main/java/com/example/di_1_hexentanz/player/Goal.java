@@ -18,14 +18,14 @@ public class Goal extends AppCompatActivity {
 
     }
 
-    public void goInGoal(Witch witch){
+    public void goInGoal(Player player){
 
-        witch.getPlayer().setWitchesInGoal(witch.getPlayer().getWitchesInGoal()+1);
-        witch.witchView.hideColor();
+        player.setWitchesInGoal(player.getWitchesInGoal()+1);
+
     }
 
-    public boolean isWinner(Witch witch){
-       if( witch.getPlayer().getWitchesInGoal() == 4){
+    public boolean isWinner(Player player){
+       if( player.getWitchesInGoal() == 4){
            return true;
        }else return false;
     }
@@ -41,8 +41,6 @@ public class Goal extends AppCompatActivity {
        }
 
        return loop(witch,lastDiceResult,witchFeld);
-
-
 
 
 }

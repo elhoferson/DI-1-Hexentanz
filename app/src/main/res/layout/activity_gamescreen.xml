@@ -48,6 +48,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
+    <TextView
+        android:id="@+id/txtGoal"
+        android:layout_width="94dp"
+        android:layout_height="49dp"
+        android:layout_marginLeft="16dp"
+        android:text="At goal: "
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
     <ImageView
         android:id="@+id/luminosityView"
         android:layout_width="70dp"

@@ -51,6 +51,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private int maxWitches;
     private Player currentPlayer;
     private TextView txtHome;
+    private TextView txtGoal;
     private DiceUI dice = new DiceUI();
     private Goal goal = new Goal();
 
@@ -170,6 +171,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         txtHome = findViewById(R.id.txtHome);
         txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
 
+        txtGoal = findViewById(R.id.txtGoal);
+        txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
+
         surface = new TouchableSurface(getApplicationContext(), felder,goalfelder, yourTurnButton, yb, nb, this, dice, currentPlayer);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
@@ -258,7 +262,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(felder[34].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
 
         for (int i = 0; i <= 15; i++) {
-            goalfelder[i] = new Feld(i, width - (6 * fieldwidth)*3, height - (2 * fieldwidth) + ((i-4) - 31) * fieldwidth * 3, fieldRadius, getApplicationContext());
+            goalfelder[i] = new Feld(i, width + (6 * fieldwidth)*3, height + (2 * fieldwidth) + ((i-4) - 31) * fieldwidth+50, fieldRadius, getApplicationContext());
             addContentView(goalfelder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
@@ -375,6 +379,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     public void updateTextAtHome(int n) {
         this.txtHome.setText("At home: " + n);
+    }
+
+    public void updateTextInGoal(int number){
+        this.txtGoal.setText("At goal: " + number);
     }
 
     public void putWitchOnGameboard(Witch witch, CustomButton yb, CustomButton nb) {
