@@ -53,6 +53,7 @@ Its written completely non-blocking, so a easy usability is given.
 * [Jacoco](https://www.eclemma.org/jacoco) - test coverage
 * [Travis](https://travis.com) - build service
 * [Gradle](https://gradle.org) - package manager
+* [Network Socket API](https://github.com/mordechaim/javax.server) - network and message handling adapted to our needs
 
 ## Versioning
 We used __git__ for versioning, and __Github__ for pull requests, reviews, hooks etc. 
