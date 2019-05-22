@@ -10,11 +10,7 @@ import android.widget.TextView;
 
 import com.example.di_1_hexentanz.wifi.network.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
-import com.example.di_1_hexentanz.wifi.network.messages.std.ColorPickMessage;
-import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
-import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
-import com.example.di_1_hexentanz.wifi.network.mordechaim_server.ServerAdapter;
+import com.example.di_1_hexentanz.wifi.network.messages.listener.std.TestMessageListener;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pIntentFilter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pServerBroadcastReceiver;
@@ -33,24 +29,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         setContentView(R.layout.activity_create_game);
         TextView myDevice = findViewById(R.id.text_mydevice);
         NetworkLogic.init();
-        NetworkLogic.getInstance().getHost().addServerListener(new ServerAdapter() {
-            @Override
-            public void messageReceived(Server server, Server.ConnectionToClient client, Object msg) {
-                AbstractMessage myMsg = (AbstractMessage) msg;
-                switch(myMsg.getTag()) {
-                    case TEST:
-                        TestMessage tm = (TestMessage) myMsg;
-                        Log.e("MSG", tm.getMsg());
-                        break;
-                    case PICK_COLOR:
-                        ColorPickMessage pm = (ColorPickMessage) myMsg;
-                        break;
-                    default:
-                        Log.i("MSG", myMsg.getTag() +" not handled here");
-                        break;
-                }
-            }
-        });
+        NetworkLogic.getInstance().getHost().addServerListener(new TestMessageListener());
         getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
