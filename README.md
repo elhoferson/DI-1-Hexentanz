@@ -38,7 +38,7 @@ An __Hexentanz__ implementation, with custom cards and cheating functionality.
 ### Cheating and detection
 Cheating is possible in a build in way. It is possible see the color of the witches, when covering the brightness sensor. So it's helpful for moving the right witch to the goal.
 
-If you detect that a player has cheated, than you can blame him for cheating. If you are correct, the player has to miss a turn, if not, you have to miss a turn.
+If you detect that a player has hasCheated, than you can blame him for cheating. If you are correct, the player has to miss a turn, if not, you have to miss a turn.
 
 ### Networking
 The networking component is completely own-written, and is based on tcp sockets.

@@ -80,8 +80,11 @@ public class CustomButton extends View implements IButton {
     }
 
 
-    private void setTypeBtn(BtnType btnType) {
+    public void setTypeBtn(BtnType btnType) {
         this.typeBtn = btnType;
     }
 
+    public BtnType getTypeBtn() {
+        return typeBtn;
+    }
 }

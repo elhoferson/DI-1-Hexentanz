@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
-import com.example.di_1_hexentanz.player.DetermineWinner2;
+import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.player.Player;
@@ -18,6 +18,7 @@ import com.example.di_1_hexentanz.player.Witch;
 
 public class TouchableSurface extends View {
     Feld[] felder;
+    Feld[] goalfelder;
     Context context;
     Gamescreen activity;
     Witch selectedWitch;
@@ -28,14 +29,15 @@ public class TouchableSurface extends View {
     DiceUI dice;
     Witch[] witches = new Witch[4];
     Player player;
-    private DetermineWinner2 goal = new DetermineWinner2();
-    int goalFeld = 41;
+    private Goal goal = new Goal();
+    int goalFeld = 0;
 
     private int next;
 
-    public TouchableSurface(final Context context, Feld[] felder, CustomButton ytb, CustomButton yb, CustomButton nb, Gamescreen activity, DiceUI dice, Player player) {
+    public TouchableSurface(final Context context, Feld[] felder,Feld[] goalfelder, CustomButton ytb, CustomButton yb, CustomButton nb, Gamescreen activity, DiceUI dice, Player player) {
         super(context);
         this.felder = felder;
+        this.goalfelder = goalfelder;
         this.context = context;
         this.activity = activity;
         this.player = player;
@@ -73,10 +75,8 @@ public class TouchableSurface extends View {
                 }
 
                 if (activity.getState() == GameState.PUT_WITCH_ON_BOARD) {
-                    activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
-
-
                     //checkIfWitchIsOnField();
+                    activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
 
                     next--;
                     activity.getCurrentPlayer().setWitchesAtHome(activity.getCurrentPlayer().getWitchesAtHome() - 1);
@@ -121,14 +121,15 @@ public class TouchableSurface extends View {
                                 goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
                                 goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        goal.goInGoal(selectedWitch);
-                                        if(goal.isWinner(selectedWitch)){
+                                        goal.goInGoal(selectedWitch.getPlayer());
+                                        if(goal.isWinner(selectedWitch.getPlayer())){
                                             Intent gewonnen = new Intent(activity, Winnerpop.class);
                                             activity.startActivity(gewonnen);
                                         }
-                                        selectedWitch.witchView.moveView(-35,515);
-                                        selectedWitch.currentField = felder[goalFeld];
+
+                                        selectedWitch.moveWitch(goalfelder[goalFeld]);
                                         goalFeld++;
+                                        activity.updateTextInGoal(activity.getCurrentPlayer().getWitchesInGoal());
                                     }
                                 })
                                         .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
@@ -180,19 +181,19 @@ public class TouchableSurface extends View {
     /**
      * check if there is already a witch on the field
      */
-    /*
-    public boolean checkIfWitchIsOnField() {
-        for(int i = 0; i < player.getWitches().length; i++) {
+/*
+    public void checkIfWitchIsOnField() {
+        for(int i = 0; i < activity.witches.size(); i++) {
 
-           if(player.getWitches()[i].currentField == selectedWitch.currentField) {
-               player.getWitches()[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %36- 4]);
-               return true;
-
-            }
+                if(witches[i].getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult() % 40) {
+                    witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
+                }
         }
-        return false;
     }
     */
+
+
+
 
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
