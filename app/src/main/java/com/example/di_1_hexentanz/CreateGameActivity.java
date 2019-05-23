@@ -8,14 +8,14 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.wifi.network.AbstractWifiP2pActivity;
-import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.network.messages.listener.AbstractHostMessageReceivedListener;
-import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
-import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
-import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
-import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pIntentFilter;
-import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pServerBroadcastReceiver;
+import com.example.di_1_hexentanz.network.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.TestMessage;
+import com.example.di_1_hexentanz.network.mordechaim_server.Server;
+import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
+import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
+import com.example.di_1_hexentanz.network.obj.std.WifiP2pServerBroadcastReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
