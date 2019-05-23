@@ -1,27 +1,29 @@
 package com.example.di_1_hexentanz.wifi.network.messages.listener;
 
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
-import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
-import com.example.di_1_hexentanz.wifi.network.mordechaim_server.ServerAdapter;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.ClientAdapter;
 
 import java.lang.reflect.ParameterizedType;
 
-public abstract class AbstractMessageReceivedListener<M extends AbstractMessage> extends ServerAdapter {
+public abstract class AbstractClientMessageReceivedListener<M extends AbstractMessage> extends ClientAdapter {
 
     @Override
-    public void messageReceived(Server server, Server.ConnectionToClient client, Object msg) {
+    public void messageReceived(Client client, Object msg) {
         Class<M> clazz = getGenericClass();
         if (isInstanceOf(msg.getClass(), clazz)) {
             M myMsg = ((M) msg);
-            handleReceivedMessage(server, client, myMsg);
+            handleReceivedMessage(client, myMsg);
         }
     }
+
+
 
     private Class<M> getGenericClass() {
         return ((Class)((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
-    public abstract void handleReceivedMessage(Server server, Server.ConnectionToClient client, M msg);
+    public abstract void handleReceivedMessage(Client client, M msg);
 
     private <T> boolean isInstanceOf(Class<T> clazz, Class<M> targetClass) {
         return clazz.isInstance(targetClass);

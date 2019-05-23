@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.example.di_1_hexentanz.wifi.network.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.wifi.network.messages.listener.std.TestMessageListener;
+import com.example.di_1_hexentanz.wifi.network.messages.listener.AbstractHostMessageReceivedListener;
+import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pIntentFilter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pServerBroadcastReceiver;
@@ -29,7 +31,12 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         setContentView(R.layout.activity_create_game);
         TextView myDevice = findViewById(R.id.text_mydevice);
         NetworkLogic.init();
-        NetworkLogic.getInstance().getHost().addServerListener(new TestMessageListener());
+        NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<TestMessage>() {
+            @Override
+            public void handleReceivedMessage(Server server, Server.ConnectionToClient client, TestMessage msg) {
+                Log.e("MSG", "Client: " +client.getClientId() + ", Msg: "+ msg.getMsg());
+            }
+        });
         getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
