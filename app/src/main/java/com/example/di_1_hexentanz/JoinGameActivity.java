@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.network.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.network.activity.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pClientBroadcastReceiver;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;

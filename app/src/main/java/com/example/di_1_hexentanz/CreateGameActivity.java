@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.di_1_hexentanz.network.AbstractWifiP2pActivity;
+import com.example.di_1_hexentanz.network.activity.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.TestMessage;

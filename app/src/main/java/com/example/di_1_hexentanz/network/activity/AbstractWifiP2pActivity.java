@@ -1,4 +1,4 @@
-package com.example.di_1_hexentanz.network;
+package com.example.di_1_hexentanz.network.activity;
 
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
