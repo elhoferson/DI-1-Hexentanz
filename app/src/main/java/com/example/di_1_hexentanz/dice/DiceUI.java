@@ -110,14 +110,15 @@ public class DiceUI extends AppCompatActivity {
             popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
             popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    //show the colour of the witch
-                    //Gamescreen screen = new Gamescreen();
-                    //screen.setState(GameState.SHOW_WITCH_COLOURS);
+                    Gamescreen screen = new Gamescreen();
+                    screen.showWitchColours();
+                    screen.setState(GameState.SHOW_WITCH_COLOURS);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra(RESULT, 0);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                     //screen.showWitchColours();
+
 
                 }
             })

@@ -83,7 +83,13 @@ public class TouchableSurface extends View {
                 }
 
                 if(activity.getState() == GameState.SHOW_WITCH_COLOURS) {
-                    activity.showWitchColours();
+
+                    try {
+                        activity.showWitchColours();
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     activity.setState(GameState.MY_TURN);
                     nb.setVisibility(INVISIBLE);
                     yb.setVisibility(INVISIBLE);
