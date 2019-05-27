@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class GameConfig {
 
@@ -36,10 +35,18 @@ public class GameConfig {
         }
     }
 
+    public List<Integer> getTurnOrder() {
+        return turnOrder;
+    }
+
+    public Map<Integer, PlayerColor> getPlayerColors() {
+        return playerColors;
+    }
+
     public void calculateTurnOrder() {
         if (turnOrder == null) {
             turnOrder = new ArrayList<>(playerColors.keySet());
-            Collections.shuffle(turnOrder, new Random(playerColors.size()));
+            Collections.shuffle(turnOrder);
         }
     }
 
