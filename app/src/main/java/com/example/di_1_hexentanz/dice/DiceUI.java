@@ -52,7 +52,6 @@ public class DiceUI extends AppCompatActivity {
 
         }
 
-
     }
 
     private final SensorEventListener shakingListener = new SensorEventListener() {
