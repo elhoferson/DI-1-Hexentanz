@@ -8,6 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.AbstractMessage;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
@@ -154,10 +157,10 @@ public class TouchableSurface extends View {
 
                         //checkIfWitchIsOnField();
 
-                        activity.setState(GameState.MY_TURN);
+                        activity.setState(GameState.NOT_MY_TURN);
                         nb.setVisibility(INVISIBLE);
                         yb.setVisibility(INVISIBLE);
-                        btnYourTurn.setVisibility(VISIBLE);
+                        NetworkLogic.getInstance().sendMessageToHost(new AbstractMessage(MessageTag.END_TURN));
                         activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
                     }
                     if (x > nb.getLeftPosition() &&
