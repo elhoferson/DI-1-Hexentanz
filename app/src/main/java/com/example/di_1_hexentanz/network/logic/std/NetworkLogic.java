@@ -120,7 +120,7 @@ public class NetworkLogic {
         return host;
     }
 
-    private Client getClient() {
+    public Client getClient() {
         return client;
     }
 
