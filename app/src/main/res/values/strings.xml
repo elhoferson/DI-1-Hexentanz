@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DI-1-Hexentanz</string>
+    <string name="title_activity_join">JoinActivity</string>
+    <string name="title_activity_create">CreateActivity</string>
+    <string name="btn_create_game">Spiel starten</string>
+    <string name="btn_join_game">Spiel beitreten</string>
 </resources>

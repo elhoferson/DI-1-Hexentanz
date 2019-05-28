@@ -8,17 +8,13 @@ import com.example.di_1_hexentanz.R;
 
 public class Witch {
 
-    /**
-     * int currentField:
-     * -1 ... Witch is at Home
-     * 36 ... Witch is at finish
-     */
 
     int number;
     Player player;
     public Feld currentField;
     public WitchView witchView;
     MediaPlayer mediaPlayer;
+
 
     public Feld getCurrentField() {
         return currentField;
