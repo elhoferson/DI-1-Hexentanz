@@ -56,7 +56,7 @@ public class Startscreen extends AppCompatActivity {
 
 
 
-        final ImageView BtnSound = findViewById(R.id.btn_sound);
+        final ImageView BtnSound = findViewById(R.id.sound);
         BtnSound.setOnClickListener(new View.OnClickListener() {
 
             @Override
