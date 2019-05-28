@@ -4,5 +4,6 @@ public enum MessageTag {
     TEST,
     PICK_COLOR,
     MOVE_WITCH,
+    END_TURN,
     TURN;
 }

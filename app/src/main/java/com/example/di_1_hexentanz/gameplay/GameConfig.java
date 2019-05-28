@@ -50,5 +50,19 @@ public class GameConfig {
         }
     }
 
+    public Integer getNextClient(Integer clientId) {
+        Integer nextClient = null;
+        for (Integer client : turnOrder) {
+            if (clientId == client) {
+                //TODO ermittle nexten client
+            }
+        }
+        return nextClient;
+    }
+
+    public void reset() {
+        instance = new GameConfig();
+    }
+
 
 }
