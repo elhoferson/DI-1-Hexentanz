@@ -155,6 +155,10 @@ public class NetworkLogic {
         this.usageType = usageType;
     }
 
+    public UsageType getUsageType() {
+        return usageType;
+    }
+
     public enum UsageType {
         HOST,
         CLIENT

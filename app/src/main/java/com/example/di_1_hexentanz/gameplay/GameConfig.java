@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class GameConfig {
 
@@ -36,11 +35,32 @@ public class GameConfig {
         }
     }
 
+    public List<Integer> getTurnOrder() {
+        return turnOrder;
+    }
+
+    public Map<Integer, PlayerColor> getPlayerColors() {
+        return playerColors;
+    }
+
     public void calculateTurnOrder() {
         if (turnOrder == null) {
             turnOrder = new ArrayList<>(playerColors.keySet());
-            Collections.shuffle(turnOrder, new Random(playerColors.size()));
+            Collections.shuffle(turnOrder);
         }
+    }
+
+    public Integer getNextClient(Integer clientId) {
+        // get next client in turnorder if last on is current take the first one in order
+        int index = getTurnOrder().indexOf(clientId) + 1;
+        if (index >= getTurnOrder().size()) {
+            index = 0;
+        }
+        return getTurnOrder().get(index);
+    }
+
+    public void reset() {
+        instance = new GameConfig();
     }
 
 

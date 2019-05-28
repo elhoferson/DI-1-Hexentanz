@@ -9,9 +9,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,17 +20,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
+
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TestMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.gameplay.GameConfig;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
+import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
+import com.example.di_1_hexentanz.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
-import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.player.Witch;
 
 import java.util.ArrayList;
@@ -136,6 +146,33 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         width = displayMetrics.widthPixels / 2;
         fieldRadius = width / 20;
         fieldwidth = 2 * fieldRadius + 10;
+
+        if (NetworkLogic.getInstance().getUsageType().equals(NetworkLogic.UsageType.HOST)) {
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
+                    Integer nextClient = GameConfig.getInstance().getNextClient(client.getClientId());
+                    NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
+                }
+            });
+        } else {
+
+        }
+        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<TurnMessage>() {
+
+            @Override
+            public void handleReceivedMessage(Client client, TurnMessage msg) {
+
+            }
+        });
+
+        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<MoveMessage>() {
+            @Override
+            public void handleReceivedMessage(Client client, MoveMessage msg) {
+                NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+
+            }
+        });
 
 
         drawBoardGame();

@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
