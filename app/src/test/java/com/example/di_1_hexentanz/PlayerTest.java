@@ -92,4 +92,15 @@ public class PlayerTest {
 
     }
 
+    @Test
+    public void testHasCheatedTrue() {
+        testplayer.setHasCheated(true);
+        assertEquals(testplayer.getHasCheated(), true);
+    }
+
+    @Test
+    public void testHasCheatedDefault() {
+        assertEquals(testplayer.getHasCheated(), false);
+    }
+
 }

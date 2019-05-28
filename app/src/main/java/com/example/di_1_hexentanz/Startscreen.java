@@ -74,11 +74,11 @@ public class Startscreen extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
         View decorView = getWindow().getDecorView();
+        mediaPlayer.start();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
