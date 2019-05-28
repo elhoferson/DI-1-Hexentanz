@@ -78,7 +78,6 @@ public class Startscreen extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
