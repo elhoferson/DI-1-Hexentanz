@@ -52,10 +52,6 @@ public class Startscreen extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bgsound);
 
 
-
-
-
-
         final ImageView BtnSound = findViewById(R.id.sound);
         BtnSound.setOnClickListener(new View.OnClickListener() {
 
