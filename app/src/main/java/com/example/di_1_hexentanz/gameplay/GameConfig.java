@@ -51,13 +51,12 @@ public class GameConfig {
     }
 
     public Integer getNextClient(Integer clientId) {
-        Integer nextClient = null;
-        for (Integer client : turnOrder) {
-            if (clientId == client) {
-                //TODO ermittle nexten client
-            }
+        // get next client in turnorder if last on is current take the first one in order
+        int index = getTurnOrder().indexOf(clientId) + 1;
+        if (index >= getTurnOrder().size()) {
+            index = 0;
         }
-        return nextClient;
+        return getTurnOrder().get(index);
     }
 
     public void reset() {
