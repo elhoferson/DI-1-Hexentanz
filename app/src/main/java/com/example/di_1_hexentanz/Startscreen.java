@@ -15,6 +15,12 @@ public class Startscreen extends AppCompatActivity {
     MediaPlayer mediaPlayer;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.stop();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startscreen);
@@ -76,5 +82,6 @@ public class Startscreen extends AppCompatActivity {
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        mediaPlayer.start();
     }
 }
