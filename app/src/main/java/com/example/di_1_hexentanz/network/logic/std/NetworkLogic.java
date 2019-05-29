@@ -155,7 +155,11 @@ public class NetworkLogic {
         this.usageType = usageType;
     }
 
-    public UsageType getUsageType() {
+    public Boolean isHost() {
+        return getUsageType().equals(UsageType.HOST);
+    }
+
+    private UsageType getUsageType() {
         return usageType;
     }
 
