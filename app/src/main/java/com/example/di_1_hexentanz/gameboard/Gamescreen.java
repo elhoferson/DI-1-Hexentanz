@@ -209,7 +209,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
-            public void run() {
+           public void run() {
                 if (!colorVisible) {
                     for (int i = 0; i < witches.size(); i++) {
                         witches.get(i).showColor();
@@ -222,8 +222,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     colorVisible = false;
                 }
             }
-        }, 10000);
+            }, 2000);
     }
+
 
 
     private void drawBoardGame() {
@@ -348,13 +349,24 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     }
 
     public void returnToWitchSelection() {
-        state = GameState.SELECT_WITCH_MOVE;
-        surface.getSelectedWitch().getCurrentField().unhighlight();
-        surface.hideYourTurnButton();
-        TextView output = findViewById(R.id.TestDisplay);
-        String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
-        output.setText(outputText);
-        output.setVisibility(View.VISIBLE);
+        if(lastDiceResult == 7) {
+            state = GameState.SELECT_WITCH_COLOR;
+            surface.getSelectedWitch().getCurrentField().unhighlight();
+            surface.hideYourTurnButton();
+            TextView output = findViewById(R.id.TestDisplay);
+            String outputText = "Wähle eine Hexe zum Aufdecken";
+            output.setText(outputText);
+            output.setVisibility(View.VISIBLE);
+        }
+        else {
+            state = GameState.SELECT_WITCH_MOVE;
+            surface.getSelectedWitch().getCurrentField().unhighlight();
+            surface.hideYourTurnButton();
+            TextView output = findViewById(R.id.TestDisplay);
+            String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
+            output.setText(outputText);
+            output.setVisibility(View.VISIBLE);
+        }
     }
 
     public ArrayList<Witch> getWitches() {
@@ -363,12 +375,22 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
     public void witchSelected(final Witch witch, CustomButton yb, CustomButton nb) {
-        setState(GameState.CONFIRM_WITCH_MOVE);
-        witch.getCurrentField().highlight();
-        TextView outputtext = findViewById(R.id.TestDisplay);
-        outputtext.setText("Diese Hexe bewegen?");
-        yb.setVisibility(View.VISIBLE);
-        nb.setVisibility(View.VISIBLE);
+        if(lastDiceResult == 7) {
+            setState(GameState.CONFIRM_WITCH_COLOR);
+            witch.getCurrentField().highlight();
+            TextView outputtext = findViewById(R.id.TestDisplay);
+            outputtext.setText("Diese Hexe aufdecken?");
+            yb.setVisibility(View.VISIBLE);
+            nb.setVisibility(View.VISIBLE);
+        }
+        else {
+            setState(GameState.CONFIRM_WITCH_MOVE);
+            witch.getCurrentField().highlight();
+            TextView outputtext = findViewById(R.id.TestDisplay);
+            outputtext.setText("Diese Hexe bewegen?");
+            yb.setVisibility(View.VISIBLE);
+            nb.setVisibility(View.VISIBLE);
+        }
 
     }
 

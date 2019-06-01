@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
-import com.example.di_1_hexentanz.player.DetermineWinner2;
+import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.player.Player;
@@ -16,8 +16,12 @@ import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.player.Witch;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class TouchableSurface extends View {
     Feld[] felder;
+    Feld[] goalfelder;
     Context context;
     Gamescreen activity;
     Witch selectedWitch;
@@ -84,6 +88,7 @@ public class TouchableSurface extends View {
                 }
 
 
+
                 /**
                  * if rolled number 6 and want to show color of one witch
                  */
@@ -98,40 +103,50 @@ public class TouchableSurface extends View {
                             }
                         }
                     }
+                }
 
+
+                /**
+                 * witch, where color is shown
+                 */
+                if(activity.getState() == GameState.CONFIRM_WITCH_COLOR) {
                     if (x > yb.getLeftPosition() &&
                             x < yb.getLeftPosition() + yb.getBitmapWidth() &&
                             y > yb.getTopPosition() &&
                             y < yb.getTopPosition() + yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
 
-                        yb.setVisibility(View.VISIBLE);
-                        nb.setVisibility(View.VISIBLE);
+
+                        try {
+                            Thread.sleep(2000);
+                            selectedWitch.showColor();
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        activity.colorVisible = false;
+
+                        activity.setState(GameState.MY_TURN);
+                        nb.setVisibility(INVISIBLE);
+                        yb.setVisibility(INVISIBLE);
+                        btnYourTurn.setVisibility(VISIBLE);
+                        activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
+
+
                     }
 
-
-                }
-
-                if(activity.getState() == GameState.CONFIRM_WITCH_COLOR) {
-                    activity.showWitchColours();
-
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (x > nb.getLeftPosition() &&
+                            x < nb.getLeftPosition() + nb.getBitmapWidth() &&
+                            y > nb.getTopPosition() &&
+                            y < nb.getTopPosition() + nb.getBitMapHeight()) {
+                        yb.setVisibility(INVISIBLE);
+                        nb.setVisibility(INVISIBLE);
+                        activity.returnToWitchSelection();
                     }
-                    activity.showWitchColours();
-
-
-
-                    activity.setState(GameState.MY_TURN);
-                    nb.setVisibility(INVISIBLE);
-                    yb.setVisibility(INVISIBLE);
-                    btnYourTurn.setVisibility(VISIBLE);
-                    activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
-
-
                 }
+
 
 
                 /**
@@ -230,16 +245,15 @@ public class TouchableSurface extends View {
     /**
      * check if there is already a witch on the field
      */
-/*
     public void checkIfWitchIsOnField() {
-        for(int i = 0; i < activity.witches.size(); i++) {
+        for(int i = 1; i < witches.length; i++) {
 
-                if(witches[i].getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult() % 40) {
-                    witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
+                if(witches[i].currentField.getNumber() == selectedWitch.currentField.getNumber()) {
+                    selectedWitch.moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
                 }
         }
     }
-    */
+
 
 
 
