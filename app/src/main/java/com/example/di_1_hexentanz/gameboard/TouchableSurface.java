@@ -16,9 +16,6 @@ import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.player.Witch;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class TouchableSurface extends View {
     Feld[] felder;
     Feld[] goalfelder;
@@ -65,6 +62,11 @@ public class TouchableSurface extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
                 if (activity.getState() == GameState.MY_TURN) {
+
+                    if(activity.colorVisible) {
+                        activity.showWitchColours();
+                    }
+
                     if (x > btnYourTurn.getLeftPosition() &&
                             x < btnYourTurn.getLeftPosition() + btnYourTurn.getBitmapWidth() &&
                             y > btnYourTurn.getTopPosition() &&
@@ -77,8 +79,11 @@ public class TouchableSurface extends View {
 
                 }
 
+                /**
+                 * put all witches on game board
+                 */
                 if (activity.getState() == GameState.PUT_WITCH_ON_BOARD) {
-                    //checkIfWitchIsOnField();
+
                     activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
 
                     next--;
@@ -126,14 +131,13 @@ public class TouchableSurface extends View {
                         }
 
 
-                        activity.colorVisible = false;
+                        activity.colorVisible = true;
 
                         activity.setState(GameState.MY_TURN);
                         nb.setVisibility(INVISIBLE);
                         yb.setVisibility(INVISIBLE);
                         btnYourTurn.setVisibility(VISIBLE);
                         activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
-
 
                     }
 
@@ -246,10 +250,10 @@ public class TouchableSurface extends View {
      * check if there is already a witch on the field
      */
     public void checkIfWitchIsOnField() {
-        for(int i = 1; i < witches.length; i++) {
+        for(int i = 1; i < activity.witches.size(); i++) {
 
-                if(witches[i].currentField.getNumber() == selectedWitch.currentField.getNumber()) {
-                    selectedWitch.moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
+                if(witches[i].getCurrentField().getFeldView().number == selectedWitch.getCurrentField().getFeldView().number) {
+                    witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
                 }
         }
     }

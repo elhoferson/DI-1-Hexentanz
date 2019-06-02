@@ -136,9 +136,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
         nb.setVisibility(View.INVISIBLE);
 
+        /*
         Button testButton1 = findViewById(R.id.button2);
         testButton1.bringToFront();
         showWitchColours(testButton1);
+        */
 
 
         switch (color) {
@@ -180,6 +182,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     }
 
+    /*
 
     public void showWitchColours(Button testButton1) {
         testButton1.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +202,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             }
         });
     }
+
+    */
 
 
     /**
@@ -416,9 +421,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         if (goal.checkIfGoalInWay(witch, lastDiceResult)) {
 
             destination = felder[(witch.getPlayer().getStartFeld().getNumber()+1 + lastDiceResult-1) % 40];
-        }else destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult-1) % 40];
-
-
+        }else
+            destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult-1) % 40];
 
 
         witch.putWitchOnGameboard(this, destination);

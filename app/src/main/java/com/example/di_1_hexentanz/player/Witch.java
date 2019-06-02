@@ -35,7 +35,7 @@ public class Witch {
     }
 
     public void moveWitch(Feld destination) {
-        //mediaPlayer.start();
+        mediaPlayer.start();
         witchView.moveView(destination.getX(), destination.getY());
         currentField = destination;
     }
