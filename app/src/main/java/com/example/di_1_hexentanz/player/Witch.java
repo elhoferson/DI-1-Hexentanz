@@ -5,6 +5,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import com.example.di_1_hexentanz.gameboard.Feld;
 import com.example.di_1_hexentanz.R;
+import com.example.di_1_hexentanz.gameboard.Gamescreen;
 
 public class Witch {
 
@@ -38,6 +39,7 @@ public class Witch {
         mediaPlayer.start();
           witchView.moveView(destination.getX(), destination.getY());
           currentField = destination;
+          //Gamescreen.askForCheated();
     }
 
     public void showColor() {
@@ -51,5 +53,7 @@ public class Witch {
     public Player getPlayer(){
         return this.player;
     }
+
+
 
 }

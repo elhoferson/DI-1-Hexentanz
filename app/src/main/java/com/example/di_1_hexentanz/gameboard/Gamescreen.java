@@ -63,6 +63,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private String luminosityState;
     private boolean sensorActive;
 
+
+
     public Feld[] getFelder() {
         return felder;
     }
@@ -407,6 +409,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        updateSensor(event);
+    }
+
+    private void updateSensor(SensorEvent event) {
         //only fire sensor action if Player hasn't cheated before
         if(!currentPlayer.getHasCheated()) {
             //needed for canceling if alert is showing
@@ -478,6 +484,33 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 }
             }
         }
+    }
+
+    public void askForCheated() {
+        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+        a_builder.setMessage("Did the current Player cheat?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(currentPlayer.getHasCheated()){
+                            //TRUE
+                            //Cheater muss zwei Runden aussetzen
+                        }else {
+                            //FALSE
+                            //Petze muss eine Runde aussetzen
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do nothing
+                    }
+                });
+
+        AlertDialog alert = a_builder.create();
+        alert.show();
     }
 
     @Override
