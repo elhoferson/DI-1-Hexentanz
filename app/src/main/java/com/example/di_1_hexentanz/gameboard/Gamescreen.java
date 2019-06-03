@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
@@ -63,7 +64,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private String luminosityState;
     private boolean sensorActive;
     private Button askForCheated;
-
+    boolean firedSensorThisRound;
 
 
     public Feld[] getFelder() {
@@ -113,6 +114,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 askForCheated();
             }
         });
+        firedSensorThisRound = false;
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -184,7 +186,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         txtGoal = findViewById(R.id.txtGoal);
         txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
 
-        surface = new TouchableSurface(getApplicationContext(), felder,goalfelder, yourTurnButton, yb, nb, this, dice, currentPlayer);
+        surface = new TouchableSurface(getApplicationContext(), felder, goalfelder, yourTurnButton, yb, nb, this, dice, currentPlayer);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -272,7 +274,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(felder[34].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
 
         for (int i = 0; i <= 15; i++) {
-            goalfelder[i] = new Feld(i, width + (6 * fieldwidth)*3, height + (2 * fieldwidth) + ((i-4) - 31) * fieldwidth+50, fieldRadius, getApplicationContext());
+            goalfelder[i] = new Feld(i, width + (6 * fieldwidth) * 3, height + (2 * fieldwidth) + ((i - 4) - 31) * fieldwidth + 50, fieldRadius, getApplicationContext());
             addContentView(goalfelder[i].getFeldView(), findViewById(R.id.contraintLayout).getLayoutParams());
         }
 
@@ -391,7 +393,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         this.txtHome.setText("At home: " + n);
     }
 
-    public void updateTextInGoal(int number){
+    public void updateTextInGoal(int number) {
         this.txtGoal.setText("At goal: " + number);
     }
 
@@ -400,10 +402,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         if (goal.checkIfGoalInWay(witch, lastDiceResult)) {
 
-            destination = felder[(witch.getPlayer().getStartFeld().getNumber()+1 + lastDiceResult-1) % 40];
-        }else destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult-1) % 40];
-
-
+            destination = felder[(witch.getPlayer().getStartFeld().getNumber() + 1 + lastDiceResult - 1) % 40];
+        } else
+            destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult - 1) % 40];
 
 
         witch.putWitchOnGameboard(this, destination);
@@ -422,74 +423,75 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     private void updateSensor(SensorEvent event) {
         //only fire sensor action if Player hasn't cheated before
-        if(!currentPlayer.getHasCheated()) {
+        if (!currentPlayer.getHasCheated() && sensorActive && !firedSensorThisRound) {
             //needed for canceling if alert is showing
-            if (sensorActive) {
-
-                luminosity = event.values[0];
-                if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-                    //Light Sensor action
-
-                    if (event.values[0] > 100) {
-                        //bright
-                        luminosityIcon.setImageResource(R.drawable.bright_transparent);
-                        luminosityState = "bright";
-
-                    } else if (luminosity < 100 && luminosity >= 50) {
-                        //cloudy
-                        luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
-                        luminosityState = "cloudy";
-
-                    } else if (luminosity < 50 && luminosity >= 25) {
-                        //dusky
-                        luminosityIcon.setImageResource(R.drawable.dusky_transparent);
-                        luminosityState = "dusky";
-
-                    } else if (luminosity < 25 && luminosity >= 5) {
-                        //nearly_dark
-                        luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
-                        luminosityState = "nearly_dark";
-
-                    } else if (luminosity < 5) {
-                        //dark
-                        luminosityIcon.setImageResource(R.drawable.dark_transparent);
-                        luminosityState = "dark";
 
 
-                        //pause sensor
-                        sensorActive = false;
+            luminosity = event.values[0];
+            if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+                //Light Sensor action
 
-                        //build and show Alert Dialog
-                        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-                        a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
-                                "You look around, but you don't see anybody. Do you want to cheat?")
-                                .setCancelable(false)
-                                .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //YES I WANT TO CHEAT!
-                                        currentPlayer.setHasCheated(true);
-                                        showWitchColours();
-                                        try {
-                                            Thread.sleep(3000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                        showWitchColours();
+                if (event.values[0] > 100) {
+                    //bright
+                    luminosityIcon.setImageResource(R.drawable.bright_transparent);
+                    luminosityState = "bright";
+
+                } else if (luminosity < 100 && luminosity >= 50) {
+                    //cloudy
+                    luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
+                    luminosityState = "cloudy";
+
+                } else if (luminosity < 50 && luminosity >= 25) {
+                    //dusky
+                    luminosityIcon.setImageResource(R.drawable.dusky_transparent);
+                    luminosityState = "dusky";
+
+                } else if (luminosity < 25 && luminosity >= 5) {
+                    //nearly_dark
+                    luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
+                    luminosityState = "nearly_dark";
+
+                } else if (luminosity < 5) {
+                    //dark
+                    luminosityIcon.setImageResource(R.drawable.dark_transparent);
+                    luminosityState = "dark";
+
+
+                    //pause sensor
+                    sensorActive = false;
+                    firedSensorThisRound = true;
+
+                    //build and show Alert Dialog
+                    AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+                    a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+                            "You look around, but you don't see anybody. Do you want to cheat?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //YES I WANT TO CHEAT!
+                                    currentPlayer.setHasCheated(true);
+                                    showWitchColours();
+                                    try {
+                                        Thread.sleep(3000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //I DONT WANT TO CHEAT!
-                                        sensorActive = true;
-                                    }
-                                });
+                                    showWitchColours();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //I DONT WANT TO CHEAT!
+                                    sensorActive = true;
+                                }
+                            });
 
-                        AlertDialog alert = a_builder.create();
-                        alert.show();
-                    }
+                    AlertDialog alert = a_builder.create();
+                    alert.show();
                 }
+
             }
         }
     }
@@ -501,17 +503,18 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(currentPlayer.getHasCheated()){
+                        if (currentPlayer.getHasCheated()) {
                             //TRUE
                             //Cheater muss zwei Runden aussetzen
-                            askForCheated.setText("True!");
-                            //displayTrueMessage();
+                            Toast.makeText(Gamescreen.this, "True! What a Cheater...",
+                                    Toast.LENGTH_LONG).show();
 
-                        }else {
+
+                        } else {
                             //FALSE
                             //Petze muss eine Runde aussetzen
-                            askForCheated.setText("False...");
-                            //displayFalseMessage();
+                            Toast.makeText(Gamescreen.this, "Your're wrong...",
+                                    Toast.LENGTH_LONG).show();
 
                         }
                     }
@@ -519,17 +522,17 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(currentPlayer.getHasCheated()){
+                        if (currentPlayer.getHasCheated()) {
                             //TRUE
                             //Cheater muss zwei Runden aussetzen
-                            askForCheated.setText("False...");
-                            //displayTrueMessage();
+                            Toast.makeText(Gamescreen.this, "but he or she did cheat...",
+                                    Toast.LENGTH_LONG).show();
 
-                        }else {
+                        } else {
                             //FALSE
                             //Petze muss eine Runde aussetzen
-                            askForCheated.setText("True!");
-                            //displayFalseMessage();
+                            Toast.makeText(Gamescreen.this, "You're right!",
+                                    Toast.LENGTH_LONG).show();
 
                         }
                     }
