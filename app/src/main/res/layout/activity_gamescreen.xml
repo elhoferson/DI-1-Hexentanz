@@ -67,4 +67,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bright_transparent" />
+
+    <Button
+        android:id="@+id/askForCheatedButton"
+        android:layout_width="235dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="280dp"
+        android:layout_marginEnd="216dp"
+        android:text="ask for cheat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

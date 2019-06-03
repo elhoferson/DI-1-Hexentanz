@@ -62,6 +62,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private Sensor sensor;
     private String luminosityState;
     private boolean sensorActive;
+    private Button askForCheated;
 
 
 
@@ -105,6 +106,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         luminosityIcon = findViewById(R.id.luminosityView);
         luminosityIcon.setImageResource(R.drawable.bright_transparent);
         sensorActive = true;
+        askForCheated = findViewById(R.id.askForCheatedButton);
+        askForCheated.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askForCheated();
+            }
+        });
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -496,9 +504,12 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                         if(currentPlayer.getHasCheated()){
                             //TRUE
                             //Cheater muss zwei Runden aussetzen
+                            displayTrueMessage();
+
                         }else {
                             //FALSE
                             //Petze muss eine Runde aussetzen
+                            displayFalseMessage();
                         }
                     }
                 })
