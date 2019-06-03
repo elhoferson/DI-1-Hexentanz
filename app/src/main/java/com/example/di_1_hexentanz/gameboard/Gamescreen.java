@@ -182,7 +182,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 if(NetworkLogic.getInstance().getClient() == client) {
                     return;
                 } else {
-                    msg.walkFields();
+                    moveWitchesAllClients(msg);
                 }
 
             }
@@ -245,6 +245,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
+    }
+
+    private void moveWitchesAllClients(MoveMessage msg) {
+        msg.getSelectedWitch().moveWitch(getFelder()[msg.getSelectedWitch().getCurrentField().getNumber()+msg.getDiceResult()]);
     }
 
 
