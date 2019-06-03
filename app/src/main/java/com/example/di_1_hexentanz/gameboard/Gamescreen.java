@@ -26,6 +26,8 @@ import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
 
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.AbstractMessage;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TestMessage;
@@ -177,6 +179,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             @Override
             public void handleReceivedMessage(Client client, MoveMessage msg) {
                 // TODO move the witch, maybe if i was the client who send the message i don't have to move the witch again because it's already done
+                if(NetworkLogic.getInstance().getClient() == client) {
+                    return;
+                } else {
+                    msg.walkFields();
+                }
 
             }
         });

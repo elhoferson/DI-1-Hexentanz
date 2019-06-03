@@ -13,6 +13,7 @@ import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.AbstractMessage;
 import com.example.di_1_hexentanz.network.messages.MessageTag;
+import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
@@ -38,6 +39,7 @@ public class TouchableSurface extends View {
     Player player;
     private Goal goal = new Goal();
     int goalFeld = 0;
+    MoveMessage moveMessage;
 
     private int next;
 
@@ -142,6 +144,7 @@ public class TouchableSurface extends View {
                                     .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+6 + activity.getLastDiceResult()) % 40]);
+                                            moveMessage.setWalkFields(6);
                                             NetworkLogic.getInstance().sendMessageToHost(new AbstractMessage(MessageTag.MOVE_WITCH));
 
 
@@ -188,6 +191,7 @@ public class TouchableSurface extends View {
 
 
                         }else selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
+
 
 
                         //checkIfWitchIsOnField();
