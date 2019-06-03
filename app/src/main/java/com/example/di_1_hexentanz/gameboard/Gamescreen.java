@@ -155,6 +155,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
                 }
             });
+             NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
+                    // distribute move message to all clients
+                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                }
+            });
         } else {
 
         }
@@ -169,7 +176,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<MoveMessage>() {
             @Override
             public void handleReceivedMessage(Client client, MoveMessage msg) {
-                NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                // TODO move the witch, maybe if i was the client who send the message i don't have to move the witch again because it's already done
 
             }
         });
