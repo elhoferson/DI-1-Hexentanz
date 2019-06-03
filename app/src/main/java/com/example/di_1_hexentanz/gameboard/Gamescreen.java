@@ -495,7 +495,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     }
 
     public void askForCheated() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+        final AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
         a_builder.setMessage("Did the current Player cheat?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -504,24 +504,54 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                         if(currentPlayer.getHasCheated()){
                             //TRUE
                             //Cheater muss zwei Runden aussetzen
-                            displayTrueMessage();
+                            askForCheated.setText("True!");
+                            //displayTrueMessage();
 
                         }else {
                             //FALSE
                             //Petze muss eine Runde aussetzen
-                            displayFalseMessage();
+                            askForCheated.setText("False...");
+                            //displayFalseMessage();
+
                         }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //do nothing
+                        if(currentPlayer.getHasCheated()){
+                            //TRUE
+                            //Cheater muss zwei Runden aussetzen
+                            askForCheated.setText("False...");
+                            //displayTrueMessage();
+
+                        }else {
+                            //FALSE
+                            //Petze muss eine Runde aussetzen
+                            askForCheated.setText("True!");
+                            //displayFalseMessage();
+
+                        }
                     }
                 });
 
         AlertDialog alert = a_builder.create();
         alert.show();
+    }
+
+    private void displayTrueMessage() {
+        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+        a_builder.setMessage("True! The cheater has to skip 2 rounds now.")
+                .setCancelable(false)
+                .setPositiveButton("Ok", null);
+    }
+
+
+    private void displayFalseMessage() {
+        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+        a_builder.setMessage("Wrong! You have to skip 1 round now...")
+                .setCancelable(false)
+                .setPositiveButton("Ok", null);
     }
 
     @Override
