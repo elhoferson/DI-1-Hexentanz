@@ -11,8 +11,6 @@ import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.network.messages.AbstractMessage;
-import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
@@ -146,7 +144,7 @@ public class TouchableSurface extends View {
                                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + activity.getLastDiceResult()) % 40]);
                                             moveMessage.setSelectedWitch(selectedWitch);
                                             moveMessage.setDiceResult(6);
-                                            NetworkLogic.getInstance().sendMessageToHost(new AbstractMessage(MessageTag.MOVE_WITCH));
+                                            NetworkLogic.getInstance().sendMessageToHost(new MoveMessage());
 
 
                                         }
@@ -195,7 +193,7 @@ public class TouchableSurface extends View {
                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
                             moveMessage.setSelectedWitch(selectedWitch);
                             moveMessage.setDiceResult(activity.getLastDiceResult());
-                            NetworkLogic.getInstance().sendMessageToHost(new AbstractMessage(MessageTag.MOVE_WITCH));
+                            NetworkLogic.getInstance().sendMessageToHost(new MoveMessage());
                         }
 
 
