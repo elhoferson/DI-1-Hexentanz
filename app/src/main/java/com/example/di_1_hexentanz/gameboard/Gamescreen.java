@@ -149,7 +149,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         fieldRadius = width / 20;
         fieldwidth = 2 * fieldRadius + 10;
 
-        if (NetworkLogic.getInstance().getUsageType().equals(NetworkLogic.UsageType.HOST)) {
+        // add listeners for the host
+        if (NetworkLogic.getInstance().isHost()) {
             NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
                 @Override
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
@@ -157,6 +158,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
                 }
             });
+
              NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
                 @Override
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
@@ -167,6 +169,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         } else {
 
         }
+
+        // add listeners for clients - remember also the host is a client
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<TurnMessage>() {
 
             @Override

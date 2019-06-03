@@ -144,7 +144,7 @@ public class TouchableSurface extends View {
                                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + activity.getLastDiceResult()) % 40]);
                                             moveMessage.setSelectedWitch(selectedWitch);
                                             moveMessage.setDiceResult(6);
-                                            NetworkLogic.getInstance().sendMessageToHost(new MoveMessage());
+                                            NetworkLogic.getInstance().sendMessageToHost(moveMessage);
 
 
                                         }
@@ -193,7 +193,7 @@ public class TouchableSurface extends View {
                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
                             moveMessage.setSelectedWitch(selectedWitch);
                             moveMessage.setDiceResult(activity.getLastDiceResult());
-                            NetworkLogic.getInstance().sendMessageToHost(new MoveMessage());
+                            NetworkLogic.getInstance().sendMessageToHost(moveMessage);
                         }
 
 
