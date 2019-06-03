@@ -136,12 +136,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
         nb.setVisibility(View.INVISIBLE);
 
-        /*
-        Button testButton1 = findViewById(R.id.button2);
-        testButton1.bringToFront();
-        showWitchColours(testButton1);
-        */
-
 
         switch (color) {
             case BLUE:
@@ -181,29 +175,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
     }
-
-    /*
-
-    public void showWitchColours(Button testButton1) {
-        testButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (colorVisible) {
-                    for (int i = 0; i < witches.size(); i++) {
-                        witches.get(i).hideColor();
-                    }
-                    colorVisible = false;
-                } else {
-                    for (int i = 0; i < witches.size(); i++) {
-                        witches.get(i).showColor();
-                    }
-                    colorVisible = true;
-                }
-            }
-        });
-    }
-
-    */
 
 
     /**

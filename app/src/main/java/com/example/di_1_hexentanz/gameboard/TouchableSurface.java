@@ -84,6 +84,11 @@ public class TouchableSurface extends View {
                  */
                 if (activity.getState() == GameState.PUT_WITCH_ON_BOARD) {
 
+                    /*if(activity.witches.size() >= 1) {
+                        checkIfWitchIsOnField();
+                    }
+                    */
+
                     activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
 
                     next--;
@@ -215,11 +220,13 @@ public class TouchableSurface extends View {
                         } else if (goal.checkIfGoalInWay(selectedWitch, activity.getLastDiceResult())) {
                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + activity.getLastDiceResult()) % 40]);
 
-                        } else
+                        } else {
+                            //checkIfWitchIsOnField();
                             selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
 
+                        }
 
-                        //checkIfWitchIsOnField();
+
 
                         activity.setState(GameState.MY_TURN);
                         nb.setVisibility(INVISIBLE);
@@ -250,10 +257,10 @@ public class TouchableSurface extends View {
      * check if there is already a witch on the field
      */
     public void checkIfWitchIsOnField() {
-        for(int i = 1; i < activity.witches.size(); i++) {
+        for(int i = 0; i < activity.witches.size(); i++) {
 
-                if(witches[i].getCurrentField().getFeldView().number == selectedWitch.getCurrentField().getFeldView().number) {
-                    witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
+                if(activity.witches.get(i).getCurrentField().getNumber() == activity.selectedWitch.getCurrentField().getNumber()+activity.getLastDiceResult()) {
+                    activity.witches.get(i).moveWitch(activity.getFelder()[activity.witches.get(i).getCurrentField().getNumber() %40 - 4]);
                 }
         }
     }
