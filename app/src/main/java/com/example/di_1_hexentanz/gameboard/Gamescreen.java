@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,14 @@ import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
+
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.AbstractMessage;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
+import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
+import com.example.di_1_hexentanz.network.messages.std.TestMessage;
+import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
@@ -63,6 +72,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private DiceUI dice = new DiceUI();
     private Goal goal = new Goal();
 
+
+
+    private AbstractClientMessageReceivedListener<TestMessage> cml = new AbstractClientMessageReceivedListener<TestMessage>() {
+        @Override
+        public void handleReceivedMessage(Client client, TestMessage msg) {
+            Log.e("MSG", "Server: " + msg.getMsg());
+        }
+    };
+
     //Sensor variables:
     private float luminosity;
     private ImageView luminosityIcon;
@@ -98,6 +116,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        NetworkLogic.getInstance().getClient().addClientListener(cml);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamescreen);
         View decorView = getWindow().getDecorView();
@@ -138,6 +158,16 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
                 }
             });
+
+             NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
+                    // distribute move message to all clients
+                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                }
+            });
+        } else {
+
         }
 
         // add listeners for clients - remember also the host is a client
@@ -145,6 +175,19 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
             @Override
             public void handleReceivedMessage(Client client, TurnMessage msg) {
+
+            }
+        });
+
+        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<MoveMessage>() {
+            @Override
+            public void handleReceivedMessage(Client client, MoveMessage msg) {
+                // TODO move the witch, maybe if i was the client who send the message i don't have to move the witch again because it's already done
+                if(NetworkLogic.getInstance().getClient() == client) {
+                    return;
+                } else {
+                    moveWitchesAllClients(msg);
+                }
 
             }
         });
@@ -206,6 +249,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
+    }
+
+    private void moveWitchesAllClients(MoveMessage msg) {
+        msg.getSelectedWitch().moveWitch(getFelder()[msg.getSelectedWitch().getCurrentField().getNumber()+msg.getDiceResult()]);
     }
 
 

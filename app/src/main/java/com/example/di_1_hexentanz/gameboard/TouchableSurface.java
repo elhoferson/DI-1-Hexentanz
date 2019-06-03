@@ -1,13 +1,17 @@
 package com.example.di_1_hexentanz.gameboard;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.dice.DiceUI;
@@ -15,6 +19,8 @@ import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.player.Witch;
+
+import static com.example.di_1_hexentanz.dice.DiceUI.RESULT;
 
 public class TouchableSurface extends View {
     Feld[] felder;
@@ -31,6 +37,7 @@ public class TouchableSurface extends View {
     Player player;
     private Goal goal = new Goal();
     int goalFeld = 0;
+    MoveMessage moveMessage;
 
     private int next;
 
@@ -85,7 +92,13 @@ public class TouchableSurface extends View {
                 }
 
                 if(activity.getState() == GameState.SHOW_WITCH_COLOURS) {
-                    activity.showWitchColours();
+
+                    try {
+                        activity.showWitchColours();
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     activity.setState(GameState.MY_TURN);
                     nb.setVisibility(INVISIBLE);
                     yb.setVisibility(INVISIBLE);
@@ -114,42 +127,75 @@ public class TouchableSurface extends View {
                             y > yb.getTopPosition() &&
                             y < yb.getTopPosition() + yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
-                        if(goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())){
+
+                        if (activity.getLastDiceResult() == 6) {
+                            AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(activity);
+                            popupNumber6.setCancelable(false);
+                            popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
+                            popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    activity.showWitchColours();
+
+
+                                }
+                            })
+                                    .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + activity.getLastDiceResult()) % 40]);
+                                            moveMessage.setSelectedWitch(selectedWitch);
+                                            moveMessage.setDiceResult(6);
+                                            NetworkLogic.getInstance().sendMessageToHost(moveMessage);
+
+
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .show();
+
+                        }
+
+                        if (goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())) {
                             AlertDialog.Builder goInGoal = new AlertDialog.Builder(activity);
 
-                                goInGoal.setCancelable(false);
-                                goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
-                                goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        goal.goInGoal(selectedWitch.getPlayer());
-                                        if(goal.isWinner(selectedWitch.getPlayer())){
-                                            Intent gewonnen = new Intent(activity, Winnerpop.class);
-                                            activity.startActivity(gewonnen);
-                                        }
-
-                                        selectedWitch.moveWitch(goalfelder[goalFeld]);
-                                        goalFeld++;
-                                        activity.updateTextInGoal(activity.getCurrentPlayer().getWitchesInGoal());
+                            goInGoal.setCancelable(false);
+                            goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
+                            goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    goal.goInGoal(selectedWitch.getPlayer());
+                                    if (goal.isWinner(selectedWitch.getPlayer())) {
+                                        Intent gewonnen = new Intent(activity, Winnerpop.class);
+                                        activity.startActivity(gewonnen);
                                     }
-                                })
-                                        .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult()) % 40]);
+
+                                    selectedWitch.moveWitch(goalfelder[goalFeld]);
+                                    goalFeld++;
+                                    activity.updateTextInGoal(activity.getCurrentPlayer().getWitchesInGoal());
+                                }
+                            })
+                                    .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + activity.getLastDiceResult()) % 40]);
 
 
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_info)
-                                        .show();
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .show();
 
 
-                        }else if(goal.checkIfGoalInWay(selectedWitch,activity.getLastDiceResult())){
+                        } else if (goal.checkIfGoalInWay(selectedWitch, activity.getLastDiceResult())) {
 
 
-                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult()) % 40]);
+                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + activity.getLastDiceResult()) % 40]);
 
 
-                        }else selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
+                        } else {
+                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
+                            moveMessage.setSelectedWitch(selectedWitch);
+                            moveMessage.setDiceResult(activity.getLastDiceResult());
+                            NetworkLogic.getInstance().sendMessageToHost(moveMessage);
+                        }
+
 
 
                         //checkIfWitchIsOnField();
@@ -232,4 +278,7 @@ public class TouchableSurface extends View {
         super.performClick();
         return true;
     }
+
+
+
 }
