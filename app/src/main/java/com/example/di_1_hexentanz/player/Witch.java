@@ -36,8 +36,8 @@ public class Witch {
 
     public void moveWitch(Feld destination) {
         mediaPlayer.start();
-          witchView.moveView(destination.getX(), destination.getY());
-          currentField = destination;
+        witchView.moveView(destination.getX(), destination.getY());
+        currentField = destination;
     }
 
     public void showColor() {
@@ -48,8 +48,15 @@ public class Witch {
         witchView.hideColor();
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return this.player;
     }
 
+    public void setCurrentField(Feld currentField) {
+        this.currentField = currentField;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }
