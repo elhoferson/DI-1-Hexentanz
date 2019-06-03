@@ -29,6 +29,7 @@ import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.AbstractMessage;
 import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.EndGameMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TestMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
@@ -159,7 +160,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 }
             });
 
-             NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
                 @Override
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
                     // distribute move message to all clients
@@ -175,6 +176,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
             @Override
             public void handleReceivedMessage(Client client, TurnMessage msg) {
+
+            }
+        });
+
+        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<EndGameMessage>() {
+            @Override
+            public void handleReceivedMessage(Client client, EndGameMessage msg) {
 
             }
         });

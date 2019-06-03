@@ -2,7 +2,10 @@ package com.example.di_1_hexentanz.player;
 
 import android.support.v7.app.AppCompatActivity;
 
+
+
 public class Goal extends AppCompatActivity {
+
 
 
 
@@ -11,6 +14,7 @@ public class Goal extends AppCompatActivity {
             if((witch.getCurrentField().getNumber()+i)%40 == witch.player.getZielFeld().getNumber()
             || witch.getCurrentField().getNumber()+i == witch.player.getZielFeld().getNumber()){
                return true;
+
             }
 
     }
@@ -33,15 +37,13 @@ public class Goal extends AppCompatActivity {
     public boolean checkIfGoalInWay(Witch witch, int lastDiceResult) {
        int witchFeld = witch.getPlayer().getZielFeld().getNumber();
 
-       try{
-           witchFeld = witch.getCurrentField().getNumber();
-       }catch (NullPointerException e){
-           return loop(witch,lastDiceResult,witchFeld);
 
-       }
+       if(witch.getCurrentField() == null){
+          witchFeld = witch.getPlayer().getZielFeld().getNumber();
+       }else witchFeld = witch.getCurrentField().getNumber();
 
-       return loop(witch,lastDiceResult,witchFeld);
-
+      return loop(witch,lastDiceResult,witchFeld);
+       
 
 }
 

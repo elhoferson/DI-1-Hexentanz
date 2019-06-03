@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class Startscreen extends AppCompatActivity {
 
-    private MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,28 +24,7 @@ public class Startscreen extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bgsound);
 
-
-        final ImageView BtnSound = findViewById(R.id.btn_sound);
-        BtnSound.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(!mediaPlayer.isPlaying()) {
-                    mediaPlayer.start();
-                    BtnSound.setImageResource(R.drawable.sound_on);
-                }
-                else {
-                    mediaPlayer.pause();
-                    BtnSound.setImageResource(R.drawable.sound_off);
-                }
-
-            }
-        });
-
-
-        mediaPlayer.start();
     }
 
     public void onClick(View v) {
@@ -54,7 +33,7 @@ public class Startscreen extends AppCompatActivity {
             Toast.makeText(this, "Wifi not active!", Toast.LENGTH_SHORT).show();
             return;
         }
-        mediaPlayer.stop();
+
 
         switch (v.getId()) {
             case R.id.Btn_CreateGame:

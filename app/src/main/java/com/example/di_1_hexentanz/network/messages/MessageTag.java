@@ -5,5 +5,6 @@ public enum MessageTag {
     PICK_COLOR,
     MOVE_WITCH,
     END_TURN,
-    TURN;
+    TURN,
+    END_GAME;
 }

@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.std.EndGameMessage;
+import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Winnerpop;
@@ -38,6 +40,7 @@ public class TouchableSurface extends View {
     private Goal goal = new Goal();
     int goalFeld = 0;
     MoveMessage moveMessage;
+    EndGameMessage endGameMessage;
 
     private int next;
 
