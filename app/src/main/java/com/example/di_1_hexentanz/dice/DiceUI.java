@@ -25,7 +25,7 @@ public class DiceUI extends AppCompatActivity {
     private ImageView dicePic;
     private DiceLogic dice;
     private boolean allWitchesOnBoard;
-    private static int SHAKE_THRESHOLD = 8;
+    private static int SHAKE_THRESHOLD = 5;
     private SensorManager shakingSensor;
 
     @Override
@@ -66,10 +66,11 @@ public class DiceUI extends AppCompatActivity {
             float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
 
             if (acceleration > SHAKE_THRESHOLD) {
-                if (dice.rollDice() == 6) {
+                if(dice.rollDice() == 6 ) {
                     dicePic.setImageResource(diceImg[5]);
                     rolledNumber6();
-                } else {
+                }
+                else {
                     dicePic.setImageResource(diceImg[dice.rollDice() - 1]);
                     backToGamescreen();
                 }
@@ -110,14 +111,10 @@ public class DiceUI extends AppCompatActivity {
             popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
             popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    //show the colour of the witch
-                    //Gamescreen screen = new Gamescreen();
-                    //screen.setState(GameState.SHOW_WITCH_COLOURS);
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra(RESULT, 0);
+                    returnIntent.putExtra(RESULT, 7);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
-                    //screen.showWitchColours();
 
                 }
             })
@@ -139,6 +136,7 @@ public class DiceUI extends AppCompatActivity {
             backToGamescreen();
         }
     }
+
 
 
     public void backToGamescreen() {
@@ -168,6 +166,7 @@ public class DiceUI extends AppCompatActivity {
         }
 
     }
+
 
 
     private void goBackAndSendResult() {

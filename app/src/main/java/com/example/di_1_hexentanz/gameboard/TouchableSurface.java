@@ -62,6 +62,11 @@ public class TouchableSurface extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
                 if (activity.getState() == GameState.MY_TURN) {
+
+                    if(activity.colorVisible) {
+                        activity.showWitchColours();
+                    }
+
                     if (x > btnYourTurn.getLeftPosition() &&
                             x < btnYourTurn.getLeftPosition() + btnYourTurn.getBitmapWidth() &&
                             y > btnYourTurn.getTopPosition() &&
@@ -74,8 +79,16 @@ public class TouchableSurface extends View {
 
                 }
 
+                /**
+                 * put all witches on game board
+                 */
                 if (activity.getState() == GameState.PUT_WITCH_ON_BOARD) {
-                    //checkIfWitchIsOnField();
+
+                    /*if(activity.witches.size() >= 1) {
+                        checkIfWitchIsOnField();
+                    }
+                    */
+
                     activity.putWitchOnGameboard(activity.getCurrentPlayer().getWitches()[next - 1], yb, nb);
 
                     next--;
@@ -84,19 +97,13 @@ public class TouchableSurface extends View {
                     activity.setState(GameState.MY_TURN);
                 }
 
-                if(activity.getState() == GameState.SHOW_WITCH_COLOURS) {
-                    activity.showWitchColours();
-                    activity.setState(GameState.MY_TURN);
-                    nb.setVisibility(INVISIBLE);
-                    yb.setVisibility(INVISIBLE);
-                    btnYourTurn.setVisibility(VISIBLE);
-                    activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
 
 
-                }
+                /**
+                 * if rolled number 6 and want to show color of one witch
+                 */
+                if (activity.getState() == GameState.SELECT_WITCH_COLOR) {
 
-
-                if (activity.getState() == GameState.SELECT_WITCH) {
                     for (int i = 0; i < felder.length; i++) {
                         if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
                             for (int j = 0; j < activity.getWitches().size(); j++) {
@@ -108,13 +115,80 @@ public class TouchableSurface extends View {
                     }
                 }
 
-                if (activity.getState() == GameState.CONFIRM_SELECTION) {
+
+                /**
+                 * witch, where color is shown
+                 */
+                if(activity.getState() == GameState.CONFIRM_WITCH_COLOR) {
                     if (x > yb.getLeftPosition() &&
                             x < yb.getLeftPosition() + yb.getBitmapWidth() &&
                             y > yb.getTopPosition() &&
                             y < yb.getTopPosition() + yb.getBitMapHeight()) {
                         selectedWitch.getCurrentField().unhighlight();
-                        if(goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())){
+
+
+                        try {
+                            Thread.sleep(2000);
+                            selectedWitch.showColor();
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        activity.colorVisible = true;
+
+                        activity.setState(GameState.MY_TURN);
+                        nb.setVisibility(INVISIBLE);
+                        yb.setVisibility(INVISIBLE);
+                        btnYourTurn.setVisibility(VISIBLE);
+                        activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
+
+                    }
+
+                    if (x > nb.getLeftPosition() &&
+                            x < nb.getLeftPosition() + nb.getBitmapWidth() &&
+                            y > nb.getTopPosition() &&
+                            y < nb.getTopPosition() + nb.getBitMapHeight()) {
+                        yb.setVisibility(INVISIBLE);
+                        nb.setVisibility(INVISIBLE);
+                        activity.returnToWitchSelection();
+                    }
+                }
+
+
+
+                /**
+                 * select witch, which you want to move
+                 */
+                if (activity.getState() == GameState.SELECT_WITCH_MOVE) {
+                    for (int i = 0; i < felder.length; i++) {
+                        if (x < felder[i].getX() + 45 && x > felder[i].getX() - 45 && y < felder[i].getY() + 45 && y > felder[i].getY() - 45) {
+                            for (int j = 0; j < activity.getWitches().size(); j++) {
+                                if (activity.getWitches().get(j).currentField.getNumber() == felder[i].getNumber()) {
+                                    selectWitch(activity.getWitches().get(j));
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                /**
+                 * move selected witch
+                 */
+                if (activity.getState() == GameState.CONFIRM_WITCH_MOVE) {
+                    if (x > yb.getLeftPosition() &&
+                            x < yb.getLeftPosition() + yb.getBitmapWidth() &&
+                            y > yb.getTopPosition() &&
+                            y < yb.getTopPosition() + yb.getBitMapHeight()) {
+                        selectedWitch.getCurrentField().unhighlight();
+
+
+                        /**
+                         * move witch in goal or not
+                         */
+                        if (goal.canGoInGoal(selectedWitch, activity.getLastDiceResult())) {
                             AlertDialog.Builder goInGoal = new AlertDialog.Builder(activity);
 
                                 goInGoal.setCancelable(false);
@@ -137,22 +211,22 @@ public class TouchableSurface extends View {
                                                 selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult()) % 40]);
 
 
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_info)
-                                        .show();
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .show();
 
 
-                        }else if(goal.checkIfGoalInWay(selectedWitch,activity.getLastDiceResult())){
+                        } else if (goal.checkIfGoalInWay(selectedWitch, activity.getLastDiceResult())) {
+                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + activity.getLastDiceResult()) % 40]);
+
+                        } else {
+                            //checkIfWitchIsOnField();
+                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
+
+                        }
 
 
-                            selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult()) % 40]);
-
-
-                        }else selectedWitch.moveWitch(activity.getFelder()[(selectedWitch.getCurrentField().getNumber() + activity.getLastDiceResult()) % 40]);
-
-
-                        //checkIfWitchIsOnField();
 
                         activity.setState(GameState.MY_TURN);
                         nb.setVisibility(INVISIBLE);
@@ -160,6 +234,7 @@ public class TouchableSurface extends View {
                         btnYourTurn.setVisibility(VISIBLE);
                         activity.findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
                     }
+
                     if (x > nb.getLeftPosition() &&
                             x < nb.getLeftPosition() + nb.getBitmapWidth() &&
                             y > nb.getTopPosition() &&
@@ -181,16 +256,15 @@ public class TouchableSurface extends View {
     /**
      * check if there is already a witch on the field
      */
-/*
     public void checkIfWitchIsOnField() {
         for(int i = 0; i < activity.witches.size(); i++) {
 
-                if(witches[i].getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+1 + activity.getLastDiceResult() % 40) {
-                    witches[i].moveWitch(activity.getFelder()[witches[i].getCurrentField().getNumber() %40- 4]);
+                if(activity.witches.get(i).getCurrentField().getNumber() == activity.selectedWitch.getCurrentField().getNumber()+activity.getLastDiceResult()) {
+                    activity.witches.get(i).moveWitch(activity.getFelder()[activity.witches.get(i).getCurrentField().getNumber() %40 - 4]);
                 }
         }
     }
-    */
+
 
 
 
