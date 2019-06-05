@@ -9,9 +9,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,22 +20,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
-import com.example.di_1_hexentanz.R;
+import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.player.Witch;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Gamescreen extends AppCompatActivity implements SensorEventListener {
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
-    ArrayList<Witch> witches = new ArrayList<>();
+public class Gamescreen extends AppCompatActivity implements  SensorEventListener{
+
+    ArrayList<Witch> allWitches = new ArrayList<>();
     private Feld[] felder = new Feld[40];
     private Feld[] goalfelder = new Feld[16];
     Witch selectedWitch;
@@ -55,6 +59,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private TextView txtGoal;
     private DiceUI dice = new DiceUI();
     private Goal goal = new Goal();
+
+    //handleTouch
+    int next;
+    //private Goal goal = new Goal();
+    int goalFeld = 0;
+    Witch[] witchesPlayer = new Witch[4];
+
 
     //Sensor variables:
     private float luminosity;
@@ -92,6 +103,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         Gamescreen.color = color;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +134,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //State to start with
         state = GameState.MY_TURN;
 
-        findViewById(R.id.TestDisplay).setVisibility(View.INVISIBLE);
+        findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
 
         maxWitches = 4;
 
@@ -142,11 +154,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         CustomButton yb = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.YES_BTN);
         addContentView(yb, findViewById(R.id.contraintLayout).getLayoutParams());
-        yb.setVisibility(View.INVISIBLE);
+        yb.setVisibility(INVISIBLE);
 
         CustomButton nb = new CustomButton(getApplicationContext(), displayMetrics, IButton.BtnType.NO_BTN);
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
-        nb.setVisibility(View.INVISIBLE);
+        nb.setVisibility(INVISIBLE);
 
 
         switch (color) {
@@ -173,7 +185,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         currentPlayer.initWitches(getApplicationContext(), fieldRadius);
 
         for (int i = 0; i < maxWitches; i++) {
-            this.witches.add(currentPlayer.getWitches()[i]);
+            this.allWitches.add(currentPlayer.getWitches()[i]);
         }
 
         txtHome = findViewById(R.id.txtHome);
@@ -182,7 +194,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         txtGoal = findViewById(R.id.txtGoal);
         txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
 
-        surface = new TouchableSurface(getApplicationContext(), felder, goalfelder, yourTurnButton, yb, nb, this, dice, currentPlayer);
+        surface = new TouchableSurface(getApplicationContext(), this, dice, currentPlayer, yourTurnButton, yb, nb);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -199,13 +211,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             @Override
             public void run() {
                 if (!colorVisible) {
-                    for (int i = 0; i < witches.size(); i++) {
-                        witches.get(i).showColor();
+                    for (int i = 0; i < allWitches.size(); i++) {
+                        allWitches.get(i).showColor();
                     }
                     colorVisible = true;
                 } else {
-                    for (int i = 0; i < witches.size(); i++) {
-                        witches.get(i).hideColor();
+                    for (int i = 0; i < allWitches.size(); i++) {
+                        allWitches.get(i).hideColor();
                     }
                     colorVisible = false;
                 }
@@ -266,13 +278,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(Gamescreen.this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(Gamescreen.this);
     }
 
 
@@ -282,36 +294,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
 
+                lastDiceResult = data.getIntExtra("result", -1);
 
                 if (allWitchesOnBoard()) {
 
-
-                    int result = data.getIntExtra("result", -1);
-                    lastDiceResult = result;
-
-                    if (lastDiceResult == 7) {
-                        state = GameState.SELECT_WITCH_COLOR;
-                        surface.hideYourTurnButton();
-                        TextView output = findViewById(R.id.TestDisplay);
-                        String outputText = "Wähle Hexe zum Aufdecken!";
-                        output.setText(outputText);
-                        output.setVisibility(View.VISIBLE);
-                    } else {
-                        state = GameState.SELECT_WITCH_MOVE;
-                        surface.hideYourTurnButton();
-                        TextView output = findViewById(R.id.TestDisplay);
-                        String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
-                        output.setText(outputText);
-                        output.setVisibility(View.VISIBLE);
-                    }
-
+                    selectWitch();
 
                 } else {
 
-                    int result = data.getIntExtra("result", -1);
-                    lastDiceResult = result;
-
-                    state = GameState.PUT_WITCH_ON_BOARD;
+                    setState(GameState.PUT_WITCH_ON_BOARD);
 
                     /**PERFORM TOUCH**/
                     this.surface.dispatchTouchEvent(MotionEvent.obtain(
@@ -333,46 +324,50 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
     }
 
+
     public void returnToWitchSelection() {
-        if (lastDiceResult == 7) {
-            state = GameState.SELECT_WITCH_COLOR;
-            surface.getSelectedWitch().getCurrentField().unhighlight();
-            surface.hideYourTurnButton();
-            TextView output = findViewById(R.id.TestDisplay);
-            String outputText = "Wähle eine Hexe zum Aufdecken";
-            output.setText(outputText);
-            output.setVisibility(View.VISIBLE);
-        } else {
-            state = GameState.SELECT_WITCH_MOVE;
-            surface.getSelectedWitch().getCurrentField().unhighlight();
-            surface.hideYourTurnButton();
-            TextView output = findViewById(R.id.TestDisplay);
-            String outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
-            output.setText(outputText);
-            output.setVisibility(View.VISIBLE);
-        }
+        selectedWitch.getCurrentField().unhighlight();
+        selectWitch();
     }
 
-    public ArrayList<Witch> getWitches() {
-        return witches;
+
+    public void selectWitch() {
+        surface.hideYourTurnButton();
+        TextView output = findViewById(R.id.TestDisplay);
+        String outputText;
+        output.setVisibility(VISIBLE);
+
+        if (lastDiceResult == 7) {
+            state = GameState.SELECT_WITCH_COLOR;
+            outputText = "Wähle eine Hexe zum Aufdecken";
+
+        } else {
+            state = GameState.SELECT_WITCH_MOVE;
+            outputText = "Bewege eine Hexe um " + lastDiceResult + " Felder!";
+        }
+
+        output.setText(outputText);
+    }
+
+    public ArrayList<Witch> getAllWitches() {
+        return allWitches;
     }
 
 
     public void witchSelected(final Witch witch, CustomButton yb, CustomButton nb) {
+        yb.setVisibility(VISIBLE);
+        nb.setVisibility(VISIBLE);
+        witch.getCurrentField().highlight();
+        TextView outputtext = findViewById(R.id.TestDisplay);
+
         if (lastDiceResult == 7) {
             setState(GameState.CONFIRM_WITCH_COLOR);
-            witch.getCurrentField().highlight();
-            TextView outputtext = findViewById(R.id.TestDisplay);
             outputtext.setText("Diese Hexe aufdecken?");
-            yb.setVisibility(View.VISIBLE);
-            nb.setVisibility(View.VISIBLE);
+
         } else {
             setState(GameState.CONFIRM_WITCH_MOVE);
             witch.getCurrentField().highlight();
-            TextView outputtext = findViewById(R.id.TestDisplay);
             outputtext.setText("Diese Hexe bewegen?");
-            yb.setVisibility(View.VISIBLE);
-            nb.setVisibility(View.VISIBLE);
         }
 
     }
@@ -393,24 +388,25 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         this.txtGoal.setText("At goal: " + number);
     }
 
-    public void putWitchOnGameboard(Witch witch, CustomButton yb, CustomButton nb) {
+    public void putWitchOnGameboard(Witch witch) {
         Feld destination;
 
-            if (goal.checkIfGoalInWay(witch, lastDiceResult)) {
+        if (goal.checkIfGoalInWay(witch, lastDiceResult)) {
 
-                destination = felder[(witch.getPlayer().getStartFeld().getNumber()+1 + lastDiceResult-1) % 40];
-            }else
-                destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult-1) % 40];
+            destination = felder[(witch.getPlayer().getStartFeld().getNumber() + 1 + lastDiceResult - 1) % 40];
+        } else
+            destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult - 1) % 40];
 
 
-        witch.putWitchOnGameboard(this,destination);
-        yb.setVisibility(View.INVISIBLE);
-        nb.setVisibility(View.INVISIBLE);
-}
+        witch.putWitchOnGameboard(this, destination);
+        surface.yb.setVisibility(INVISIBLE);
+        surface.nb.setVisibility(INVISIBLE);
+    }
 
     public void setLuminosity(float luminosity) {
         this.luminosity = luminosity;
     }
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -569,6 +565,162 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     public float getLuminosity() {
         return luminosity;
+    }
+
+
+
+    public void playGame() {
+
+        if (getState() == GameState.MY_TURN) {
+
+            if (colorVisible) {
+                showWitchColours();
+            }
+
+            if (surface.clickedYourTurnButton()) {
+                Intent i = new Intent(getApplicationContext(), DiceUI.class);
+                i.putExtra("allWitchesOnBoard", allWitchesOnBoard());
+                startActivityForResult(i, 1);
+
+            }
+
+
+        }
+
+        /**
+         * put all allWitches on game board
+         */
+        if (getState() == GameState.PUT_WITCH_ON_BOARD) {
+
+            putWitchOnGameboard(getCurrentPlayer().getWitches()[surface.next - 1]);
+
+            surface.next--;
+            getCurrentPlayer().setWitchesAtHome(getCurrentPlayer().getWitchesAtHome() - 1);
+            updateTextAtHome(getCurrentPlayer().getWitchesAtHome());
+            setState(GameState.MY_TURN);
+        }
+
+
+        /**
+         * if rolled number 6 and want to show color of one witch
+         */
+        if (getState() == GameState.SELECT_WITCH_COLOR || getState() == GameState.SELECT_WITCH_MOVE) {
+            getSelectedWitch();
+        }
+
+
+        /**
+         * witch, where color is shown
+         */
+        if (getState() == GameState.CONFIRM_WITCH_COLOR) {
+            if (surface.clickedYesButton()) {
+                unhighlightSelectedWitch();
+
+                selectedWitch.showColor();
+
+                colorVisible = true;
+
+                surface.setNextPlayer();
+            } else if (surface.clickedNoButton()) {
+                surface.changeSelectedWitch();
+
+            }
+        }
+
+
+        /**
+         * move selected witch
+         */
+        if (getState() == GameState.CONFIRM_WITCH_MOVE) {
+            if (surface.clickedYesButton()) {
+                unhighlightSelectedWitch();
+
+                /**
+                 * move witch in goal or not
+                 */
+                if (goal.canGoInGoal(selectedWitch, getLastDiceResult())) {
+                    AlertDialog.Builder goInGoal = new AlertDialog.Builder(Gamescreen.this);
+
+                    goInGoal.setCancelable(false);
+                    goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
+                    goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            goal.goInGoal(selectedWitch.getPlayer());
+                            if (goal.isWinner(selectedWitch.getPlayer())) {
+                                Intent gewonnen = new Intent(Gamescreen.this, Winnerpop.class);
+                                startActivity(gewonnen);
+                            }
+
+                            selectedWitch.moveWitch(goalfelder[goalFeld]);
+                            goalFeld++;
+                            updateTextInGoal(getCurrentPlayer().getWitchesInGoal());
+                        }
+                    })
+                            .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
+
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+
+
+                } else if (goal.checkIfGoalInWay(selectedWitch, getLastDiceResult())) {
+                    selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
+
+                } else {
+                    //checkIfWitchIsOnField();
+                    selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
+
+                }
+
+                surface.setNextPlayer();
+
+            } else if (surface.clickedNoButton()) {
+                surface.changeSelectedWitch();
+            }
+
+        }
+    }
+
+    private void unhighlightSelectedWitch() {
+        selectedWitch.getCurrentField().unhighlight();
+    }
+
+    private void getSelectedWitch() {
+        for (int i = 0; i < felder.length; i++) {
+            if (surface.x < felder[i].getX() + 45 && surface.x > felder[i].getX() - 45 && surface.y < felder[i].getY() + 45 && surface.y > felder[i].getY() - 45) {
+                for (int j = 0; j < getAllWitches().size(); j++) {
+                    if (getAllWitches().get(j).currentField.getNumber() == felder[i].getNumber()) {
+                        selectWitch(getAllWitches().get(j));
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void selectWitch(Witch witch) {
+        selectedWitch = witch;
+        witchSelected(witch, surface.yb, surface.nb);
+    }
+
+
+
+
+    /**
+     * check if there is already a witch on the field
+     */
+    public void checkIfWitchIsOnField() {
+        for(int i = 0; i < allWitches.size(); i++) {
+
+            if(allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+getLastDiceResult()) {
+                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() %40 - 4]);
+            }
+
+        }
     }
 
 }
