@@ -14,7 +14,6 @@ import com.example.di_1_hexentanz.player.Witch;
 
 public class TouchableSurface extends View {
     Gamescreen activity;
-    Witch selectedWitch;
     private PlayerColor color;
     CustomButton btnYourTurn;
     CustomButton yb;
