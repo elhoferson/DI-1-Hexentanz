@@ -9,8 +9,7 @@ public class DiceLogic {
 
 
     public int rollDice() {
-       result = randomGenerator.nextInt(6) + 1;
-       setResult(result);
+       setResult(randomGenerator.nextInt(6) + 1);
        return result;
     }
 

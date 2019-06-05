@@ -14,8 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.di_1_hexentanz.gameboard.GameState;
-import com.example.di_1_hexentanz.gameboard.Gamescreen;
 import com.example.di_1_hexentanz.R;
 
 
@@ -71,14 +69,15 @@ public class DiceUI extends AppCompatActivity {
                     rolledNumber6();
                 }
                 else {
-                    dicePic.setImageResource(diceImg[dice.rollDice() - 1]);
+                    dicePic.setImageResource(diceImg[dice.getResult()-1]);
                     backToGamescreen();
                 }
             }
 
         }
         @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        public void onAccuracyChanged(Sensor sensor,
+                                      int accuracy) {
             //not in use
 
         }
