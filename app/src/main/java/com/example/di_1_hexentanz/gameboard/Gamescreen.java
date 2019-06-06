@@ -204,27 +204,27 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
     /**
      * show witch colours, when rolling a 6 and clicking on positive button of alert dialog
      */
-    public void showWitchColours() {
+   public void showWitchColours() {
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!colorVisible) {
-                    for (int i = 0; i < allWitches.size(); i++) {
-                        allWitches.get(i).showColor();
+                    for (Witch w : allWitches) {
+                        w.showColor();
+                        colorVisible = true;
                     }
-                    colorVisible = true;
-                } else {
-                    for (int i = 0; i < allWitches.size(); i++) {
-                        allWitches.get(i).hideColor();
-                    }
-                    colorVisible = false;
                 }
+                    else {
+                        for(Witch w : allWitches) {
+                            w.hideColor();
+                            colorVisible = false;
+                        }
+                    }
             }
         }, 2000);
     }
-
 
     private void drawBoardGame() {
 
