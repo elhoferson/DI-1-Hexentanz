@@ -14,8 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.di_1_hexentanz.gameboard.GameState;
-import com.example.di_1_hexentanz.gameboard.Gamescreen;
 import com.example.di_1_hexentanz.R;
 
 
@@ -25,7 +23,7 @@ public class DiceUI extends AppCompatActivity {
     private ImageView dicePic;
     private DiceLogic dice;
     private boolean allWitchesOnBoard;
-    private static int SHAKE_THRESHOLD = 8;
+    private static int SHAKE_THRESHOLD = 5;
     private SensorManager shakingSensor;
 
     @Override
@@ -66,18 +64,20 @@ public class DiceUI extends AppCompatActivity {
             float acceleration = (float) Math.sqrt(x * x + y * y + z * z) - SensorManager.GRAVITY_EARTH;
 
             if (acceleration > SHAKE_THRESHOLD) {
-                if (dice.rollDice() == 6) {
+                if(dice.rollDice() == 6 ) {
                     dicePic.setImageResource(diceImg[5]);
                     rolledNumber6();
-                } else {
-                    dicePic.setImageResource(diceImg[dice.rollDice() - 1]);
+                }
+                else {
+                    dicePic.setImageResource(diceImg[dice.getResult()-1]);
                     backToGamescreen();
                 }
             }
 
         }
         @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        public void onAccuracyChanged(Sensor sensor,
+                                      int accuracy) {
             //not in use
 
         }
@@ -112,15 +112,10 @@ public class DiceUI extends AppCompatActivity {
             popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
             popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    Gamescreen screen = new Gamescreen();
-                    screen.showWitchColours();
-                    screen.setState(GameState.SHOW_WITCH_COLOURS);
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra(RESULT, 0);
+                    returnIntent.putExtra(RESULT, 7);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
-                    //screen.showWitchColours();
-
 
                 }
             })
@@ -144,6 +139,7 @@ public class DiceUI extends AppCompatActivity {
 
         */
     }
+
 
 
     public void backToGamescreen() {
@@ -173,6 +169,7 @@ public class DiceUI extends AppCompatActivity {
         }
 
     }
+
 
 
     private void goBackAndSendResult() {

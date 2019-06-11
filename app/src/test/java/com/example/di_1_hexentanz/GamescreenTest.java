@@ -29,8 +29,8 @@ public class GamescreenTest {
 
     @Test
     public void testGetState() {
-        testscreen.setState(GameState.SHOW_WITCH_COLOURS);
-        assertEquals(testscreen.getState(), GameState.SHOW_WITCH_COLOURS);
+        testscreen.setState(GameState.SELECT_WITCH_COLOR);
+        assertEquals(testscreen.getState(), GameState.SELECT_WITCH_COLOR);
     }
 
     @Test
