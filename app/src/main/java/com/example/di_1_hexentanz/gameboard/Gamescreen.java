@@ -47,7 +47,7 @@ import java.util.TimerTask;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class Gamescreen extends AppCompatActivity implements  SensorEventListener{
+public class Gamescreen extends AppCompatActivity implements SensorEventListener {
 
     ArrayList<Witch> allWitches = new ArrayList<>();
     private Feld[] felder = new Feld[40];
@@ -79,41 +79,11 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
 
 
     //Sensor variables:
-    private float luminosity;
-    private ImageView luminosityIcon;
-    private SensorManager sensorManager;
     private Sensor sensor;
-    private String luminosityState;
-    private boolean sensorActive;
+    private SensorManager sensorManager;
     private Button askForCheated;
-    boolean firedSensorThisRound;
-
-
-    public Feld[] getFelder() {
-        return felder;
-    }
-
-    public int getLastDiceResult() {
-        return lastDiceResult;
-    }
-
-    public void setLastDiceResult(int lastDiceResult) {
-        this.lastDiceResult = lastDiceResult;
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
-
-    public static void setColor(PlayerColor color) {
-        Gamescreen.color = color;
-    }
-
+    private lumiSensor lumiSensor;
+    private ImageView luminosityIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,9 +98,12 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
         luminosityIcon = findViewById(R.id.luminosityView);
         luminosityIcon.setImageResource(R.drawable.bright_transparent);
-        sensorActive = true;
+
+        lumiSensor.setSensorActive(true);
+        lumiSensor.setFiredSensorThisRound(false);
         askForCheated = findViewById(R.id.askForCheatedButton);
         askForCheated.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +111,9 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                 askForCheated();
             }
         });
-        firedSensorThisRound = false;
+
+
+
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -167,7 +142,7 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                 }
             });
 
-             NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
                 @Override
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
                     // distribute move message to all clients
@@ -191,7 +166,7 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
             @Override
             public void handleReceivedMessage(Client client, MoveMessage msg) {
                 // TODO move the witch, maybe if i was the client who send the message i don't have to move the witch again because it's already done
-                if(NetworkLogic.getInstance().getClient() == client) {
+                if (NetworkLogic.getInstance().getClient() == client) {
                     return;
                 } else {
                     moveWitchesAllClients(msg);
@@ -255,15 +230,40 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
 
     }
 
+    public Feld[] getFelder() {
+        return felder;
+    }
+
+    public int getLastDiceResult() {
+        return lastDiceResult;
+    }
+
+    public void setLastDiceResult(int lastDiceResult) {
+        this.lastDiceResult = lastDiceResult;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+
+    public static void setColor(PlayerColor color) {
+        Gamescreen.color = color;
+    }
+
     private void moveWitchesAllClients(MoveMessage msg) {
-        msg.getSelectedWitch().moveWitch(getFelder()[msg.getSelectedWitch().getCurrentField().getNumber()+msg.getDiceResult()]);
+        msg.getSelectedWitch().moveWitch(getFelder()[msg.getSelectedWitch().getCurrentField().getNumber() + msg.getDiceResult()]);
     }
 
 
     /**
      * show witch colours, when rolling a 6 and clicking on positive button of alert dialog
      */
-   public void showWitchColours() {
+    public void showWitchColours() {
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -274,13 +274,12 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                         w.showColor();
                         colorVisible = true;
                     }
-                }
-                    else {
-                        for(Witch w : allWitches) {
-                            w.hideColor();
-                            colorVisible = false;
-                        }
+                } else {
+                    for (Witch w : allWitches) {
+                        w.hideColor();
+                        colorVisible = false;
                     }
+                }
             }
         }, 2000);
     }
@@ -462,89 +461,89 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         surface.nb.setVisibility(INVISIBLE);
     }
 
-    public void setLuminosity(float luminosity) {
-        this.luminosity = luminosity;
-    }
-
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         updateSensor(event);
     }
 
     private void updateSensor(SensorEvent event) {
-        //only fire sensor action if Player hasn't cheated before
-        if (!currentPlayer.getHasCheated() && sensorActive && !firedSensorThisRound) {
-            //needed for canceling if alert is showing
+        //only fire sensor action if Player hasn't cheated before, sensor is active and sensor didnt fire this round
+        if (!currentPlayer.getHasCheated() && lumiSensor.getSensorActive() && !lumiSensor.getFiredSensorThisRound()) {
 
+            lumiSensor.setLuminosity(event.values[0]);
 
-            luminosity = event.values[0];
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
                 //Light Sensor action
 
-                if (event.values[0] > 100) {
+                if (lumiSensor.getLuminosity() > 100) {
                     //bright
                     luminosityIcon.setImageResource(R.drawable.bright_transparent);
-                    luminosityState = "bright";
+                    lumiSensor.setLuminosityState("bright");
 
-                } else if (luminosity < 100 && luminosity >= 50) {
+                } else if (lumiSensor.getLuminosity() < 100 && lumiSensor.getLuminosity() >= 50) {
                     //cloudy
                     luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
-                    luminosityState = "cloudy";
+                    lumiSensor.setLuminosityState("cloudy");
 
-                } else if (luminosity < 50 && luminosity >= 25) {
+                } else if (lumiSensor.getLuminosity() < 50 && lumiSensor.getLuminosity() >= 25) {
                     //dusky
                     luminosityIcon.setImageResource(R.drawable.dusky_transparent);
-                    luminosityState = "dusky";
+                    lumiSensor.setLuminosityState("dusky");
 
-                } else if (luminosity < 25 && luminosity >= 5) {
+                } else if (lumiSensor.getLuminosity() < 25 && lumiSensor.getLuminosity() >= 5) {
                     //nearly_dark
                     luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
-                    luminosityState = "nearly_dark";
+                    lumiSensor.setLuminosityState("nearly_dark");
 
-                } else if (luminosity < 5) {
+                } else if (lumiSensor.getLuminosity() < 5) {
                     //dark
                     luminosityIcon.setImageResource(R.drawable.dark_transparent);
-                    luminosityState = "dark";
+                    lumiSensor.setLuminosityState("dark");
 
 
                     //pause sensor
-                    sensorActive = false;
-                    firedSensorThisRound = true;
+                    lumiSensor.setSensorActive(false);
+                    lumiSensor.setFiredSensorThisRound(true);
 
                     //build and show Alert Dialog
-                    AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-                    a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
-                            "You look around, but you don't see anybody. Do you want to cheat?")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //YES I WANT TO CHEAT!
-                                    currentPlayer.setHasCheated(true);
-                                    showWitchColours();
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    showWitchColours();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //I DONT WANT TO CHEAT!
-                                    sensorActive = true;
-                                }
-                            });
-
-                    AlertDialog alert = a_builder.create();
-                    alert.show();
+                    alertDialogDoYouWantToCheat();
                 }
 
             }
         }
+    }
+
+    private void alertDialogDoYouWantToCheat() {
+        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
+        a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+                "You look around, but you don't see anybody. Do you want to cheat?")
+                .setCancelable(false)
+                .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //YES
+                        currentPlayer.setHasCheated(true);
+                        showWitchColours();
+                        try {
+                            Thread.sleep(3000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        showWitchColours();
+                    }
+                })
+
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //NO
+                        //re-enable sensor for next round
+                        lumiSensor.setSensorActive(true);
+                    }
+                });
+
+        AlertDialog alert = a_builder.create();
+        alert.show();
     }
 
     public void askForCheated() {
@@ -611,22 +610,11 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //not in use
-
     }
 
     public ImageView getLuminosityIcon() {
         return luminosityIcon;
     }
-
-    public String getLuminosityState() {
-        return luminosityState;
-    }
-
-    public float getLuminosity() {
-        return luminosity;
-    }
-
-
 
     public void playGame() {
 
@@ -760,23 +748,18 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         }
     }
 
-
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
         witchSelected(witch, surface.yb, surface.nb);
     }
-
-
-
-
     /**
      * check if there is already a witch on the field
      */
     public void checkIfWitchIsOnField() {
-        for(int i = 0; i < allWitches.size(); i++) {
+        for (int i = 0; i < allWitches.size(); i++) {
 
-            if(allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+getLastDiceResult()) {
-                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() %40 - 4]);
+            if (allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) {
+                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() % 40 - 4]);
             }
 
         }
