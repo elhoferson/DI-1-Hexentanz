@@ -58,6 +58,17 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
         receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice);
+        getManager().discoverPeers(getChannel(), new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.i(WIFI_P2P_TAG,"successful discovering peers");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
+            }
+        });
 
     }
 
@@ -91,6 +102,16 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        NetworkLogic.getInstance().getHost().removeServerListener(tml);
+        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
+            }
+        });
     }
 }
