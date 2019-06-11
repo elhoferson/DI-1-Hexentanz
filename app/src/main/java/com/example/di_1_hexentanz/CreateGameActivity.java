@@ -35,7 +35,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         public void handleReceivedMessage(Server server, Server.ConnectionToClient client, ColorPickMessage msg) {
             boolean success = GameConfig.getInstance().registerPlayerColor(client.getClientId(), msg.getPlayerColor());
             if (success) {
-
+                //TODO update list of devices with colors
             }
             NetworkLogic.getInstance().sendMessageToClient(new ColorPickResultMessage(success, msg.getPlayerColor()), client.getClientId());
         }
@@ -72,8 +72,8 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
 
         switch (v.getId()) {
             case R.id.btn_startGame:
-                if (GameConfig.getInstance().getPlayerColors().size() >= 1) {
-                    GameConfig.getInstance().gameStarted();
+                // player count has to be greater than min players without me
+                if (GameConfig.getInstance().getPlayerColors().size() >= GameConfig.getInstance().getMinPlayers() - 1) {
                     Intent intent = new Intent(getApplicationContext(), ColourChoosing.class);
                     startActivity(intent);
                 } else {

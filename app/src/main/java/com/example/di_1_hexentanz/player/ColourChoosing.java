@@ -2,7 +2,6 @@ package com.example.di_1_hexentanz.player;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.gameboard.Gamescreen;
+import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.ColorPickMessage;
@@ -23,13 +23,15 @@ public class ColourChoosing extends AppCompatActivity {
         public void handleReceivedMessage(Client client, ColorPickResultMessage msg) {
             if (msg.isSuccessful()) {
                 NetworkLogic.getInstance().getClient().removeClientListener(cprm);
+                if (NetworkLogic.getInstance().isHost()) {
+                    GameConfig.getInstance().gameStarted();
+                }
                 Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
                 intent.putExtra("playerColor", msg.getPlayerColor());
                 startActivity(intent);
             } else {
                 // TODO disable colour button
-                Looper.prepare();
-                Toast.makeText(ColourChoosing.this, "Color "+msg.getPlayerColor()+" can't be picked", Toast.LENGTH_LONG).show();
+                Toast.makeText(ColourChoosing.this.getApplicationContext(), "Color "+msg.getPlayerColor()+" can't be picked", Toast.LENGTH_LONG).show();
             }
         }
     };

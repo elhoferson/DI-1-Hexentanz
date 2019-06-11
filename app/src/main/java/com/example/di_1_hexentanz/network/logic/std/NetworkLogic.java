@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz.network.logic.std;
 
 import android.util.Log;
 
+import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.messages.AbstractMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
@@ -13,7 +14,6 @@ public class NetworkLogic {
 
     private static final String TAG = "NETWORK";
     private static final int PORT = 9872;
-    private static final int CLIENT_LIMIT = 6;
     private static NetworkLogic instance = null;
     private UsageType usageType;
     // only if usage type host
@@ -32,7 +32,7 @@ public class NetworkLogic {
                 public void run() {
                     instance = new NetworkLogic();
                     Server server = new Server(PORT);
-                    server.setClientLimit(CLIENT_LIMIT);
+                    server.setClientLimit(GameConfig.getInstance().getMaxPlayers());
                     server.start();
                     instance.setHost(server);
                     instance.setUsageType(UsageType.HOST);

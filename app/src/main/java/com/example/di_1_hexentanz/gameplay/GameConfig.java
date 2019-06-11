@@ -14,11 +14,13 @@ public class GameConfig {
 
     private Map<Integer, PlayerColor> playerColors = Collections.synchronizedMap(new HashMap<Integer, PlayerColor>());
     private Boolean gameStarted = false;
+    private Integer minPlayers = 2;
+    private Integer maxPlayers = 6;
 
     private List<Integer> turnOrder;
-    private int round = 1;
+    private Integer round = 1;
 
-    private GameConfig () {
+    private GameConfig() {
 
     }
 
@@ -28,6 +30,9 @@ public class GameConfig {
 
     public Boolean registerPlayerColor(Integer clientId, PlayerColor color) {
         if (gameStarted) {
+            return false;
+        }
+        if (playerColors.size() + 1 > maxPlayers) {
             return false;
         }
         synchronized (playerColors) {
@@ -49,10 +54,8 @@ public class GameConfig {
     }
 
     public void calculateTurnOrder() {
-        if (turnOrder == null) {
-            turnOrder = new ArrayList<>(playerColors.keySet());
-            Collections.shuffle(turnOrder);
-        }
+        turnOrder = new ArrayList<>(playerColors.keySet());
+        Collections.shuffle(turnOrder);
     }
 
     public Integer getStarter() {
@@ -65,7 +68,7 @@ public class GameConfig {
         if (index >= getTurnOrder().size()) {
             index = 0;
             // increase round counter
-            round ++;
+            round++;
         }
         return getTurnOrder().get(index);
     }
@@ -78,5 +81,15 @@ public class GameConfig {
         instance = new GameConfig();
     }
 
+    public Integer getMinPlayers() {
+        return minPlayers;
+    }
 
+    public Integer getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public Integer getRound() {
+        return round;
+    }
 }

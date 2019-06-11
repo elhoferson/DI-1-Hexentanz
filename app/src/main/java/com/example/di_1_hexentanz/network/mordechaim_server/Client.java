@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz.network.mordechaim_server;
 
+import android.os.Looper;
 import android.util.Log;
 
 import java.io.IOException;
@@ -514,6 +515,7 @@ public class Client {
 	 */
 	private class MessageHandling implements Runnable {
 		public void run() {
+			Looper.prepare();
 			while (running()) {
 				try {
 					Object msg = messages.take();
