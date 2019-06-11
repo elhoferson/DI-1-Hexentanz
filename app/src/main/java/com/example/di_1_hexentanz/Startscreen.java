@@ -15,6 +15,12 @@ public class Startscreen extends AppCompatActivity {
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startscreen);
@@ -65,13 +71,14 @@ public class Startscreen extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         View decorView = getWindow().getDecorView();
+
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
     }
 }

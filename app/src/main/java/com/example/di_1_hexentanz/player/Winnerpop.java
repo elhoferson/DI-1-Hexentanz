@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.Startscreen;
@@ -17,6 +18,13 @@ public class Winnerpop extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        TextView winner;
+        Intent intetn = getIntent();
+        String USERNAME = "username";
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winnerpop);
 
@@ -27,6 +35,11 @@ public class Winnerpop extends AppCompatActivity {
         int height = dm.heightPixels;
 
         getWindow().setLayout((int)(width*0.7),(int)(0.7*height));
+
+        winner = findViewById(R.id.winner);
+        winner.setText(intetn.getStringExtra(USERNAME));
+
+
     }
 
     public void onClick(View view){

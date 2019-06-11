@@ -57,13 +57,5 @@ public class CustomButtonTest {
         assertEquals(testButton.getTypeBtn(), typeBtn);
     }
 
-    /*
-    @Test
-    public void testgetBitmap(IButton.BtnType typeBtn) {
-        testButton.setTypeBtn(typeBtn);
-        CustomButton mockButton = mock(CustomButton.class);
-        when(mockButton.getTypeBtn() == IButton.BtnType.YOUR_TURN_BTN);
-    }
-    */
 
 }

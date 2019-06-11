@@ -27,12 +27,34 @@ public abstract class AbstractWifiP2pActivity extends AppCompatActivity implemen
                 Log.e(WIFI_P2P_TAG, "Channel disconneted");
             }
         });
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.i(WIFI_P2P_TAG,"successful discovering peers");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
+        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
+            }
+        });
     }
 
     @Override

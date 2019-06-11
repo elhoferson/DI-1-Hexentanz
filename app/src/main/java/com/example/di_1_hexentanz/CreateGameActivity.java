@@ -25,18 +25,24 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     private List<WifiP2pDevice> devices = new ArrayList<>();
     private WifiP2pServerBroadcastReceiver receiver;
 
+    private
+            AbstractHostMessageReceivedListener<TestMessage> tml = new AbstractHostMessageReceivedListener<TestMessage>() {
+        @Override
+        public void handleReceivedMessage(Server server, Server.ConnectionToClient client, TestMessage msg) {
+            Log.e("MSG", "Client: " +client.getClientId() + ", Msg: "+ msg.getMsg());
+            // send back to specific client
+            NetworkLogic.getInstance().sendMessageToClient(msg, client.getClientId());
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
         TextView myDevice = findViewById(R.id.text_mydevice);
         NetworkLogic.init();
-        NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<TestMessage>() {
-            @Override
-            public void handleReceivedMessage(Server server, Server.ConnectionToClient client, TestMessage msg) {
-                Log.e("MSG", "Client: " +client.getClientId() + ", Msg: "+ msg.getMsg());
-            }
-        });
+        NetworkLogic.getInstance().getHost().addServerListener(tml);
+
+
         getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -51,7 +57,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         ListView peerList = findViewById(R.id.peerList);
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
-        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice);
+        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice, this);
 
     }
 

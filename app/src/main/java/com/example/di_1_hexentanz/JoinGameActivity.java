@@ -45,6 +45,8 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //Toast.makeText(getApplicationContext(), "Peer Selected : "+selectedPeer.toString(),   Toast.LENGTH_LONG).show();
                         connect(selectedPeer);
+
+
                     }
                 })
                         .setNegativeButton("Nicht beitreten", new DialogInterface.OnClickListener() {
@@ -58,18 +60,8 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
             }
         });
         TextView myDeviceView = findViewById(R.id.text_mydevice);
-        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter, myDeviceView);
-        getManager().discoverPeers(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful discovering peers");
-            }
+        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter, myDeviceView,this);
 
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
-            }
-        });
     }
 
     @Override
@@ -82,22 +74,6 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
-            }
-        });
     }
 
     private void connect(WifiP2pDevice device) {

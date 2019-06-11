@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz.network.obj;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.std.TestMessage;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
+import com.example.di_1_hexentanz.player.ColourChoosing;
 
 import java.net.InetAddress;
 
@@ -23,12 +25,14 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
     private TextView myDeviceView;
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
+    private Activity activity;
 
-    public AbstractWifiP2pBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter, TextView myDeviceView) {
+    public AbstractWifiP2pBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter, TextView myDeviceView, Activity activity) {
         this.manager = manager;
         this.channel = channel;
         this.deviceListAdapter = deviceListAdapter;
         this.myDeviceView = myDeviceView;
+        this.activity = activity;
     }
 
     @Override
@@ -75,6 +79,8 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
                             Log.i(WIFI_P2P_TAG, "I'am a client and will connect to the owner");
                             NetworkLogic.initClient(groupOwnerAddress);
                             NetworkLogic.getInstance().sendMessageToHost(new TestMessage());
+                            Intent intent = new Intent(activity, ColourChoosing.class);
+                            activity.startActivity(intent);
                         }
                     }
                 });
