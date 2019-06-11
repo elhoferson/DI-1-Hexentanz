@@ -95,4 +95,20 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        getManager().cancelConnect(getChannel(), new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d(WIFI_P2P_TAG, "disconnect succesful");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(WIFI_P2P_TAG, "disconnect not succesful with reason "+ reason);
+            }
+        });
+        super.onDestroy();
+    }
 }

@@ -13,8 +13,10 @@ public class GameConfig {
     private static GameConfig instance = new GameConfig();
 
     private Map<Integer, PlayerColor> playerColors = Collections.synchronizedMap(new HashMap<Integer, PlayerColor>());
+    private Boolean gameStarted = false;
 
     private List<Integer> turnOrder;
+    private int round = 1;
 
     private GameConfig () {
 
@@ -25,6 +27,9 @@ public class GameConfig {
     }
 
     public Boolean registerPlayerColor(Integer clientId, PlayerColor color) {
+        if (gameStarted) {
+            return false;
+        }
         synchronized (playerColors) {
             if (playerColors.containsValue(color)) {
                 return false;
@@ -50,13 +55,23 @@ public class GameConfig {
         }
     }
 
+    public Integer getStarter() {
+        return getTurnOrder().get(0);
+    }
+
     public Integer getNextClient(Integer clientId) {
         // get next client in turnorder if last on is current take the first one in order
         int index = getTurnOrder().indexOf(clientId) + 1;
         if (index >= getTurnOrder().size()) {
             index = 0;
+            // increase round counter
+            round ++;
         }
         return getTurnOrder().get(index);
+    }
+
+    public void gameStarted() {
+        gameStarted = true;
     }
 
     public void reset() {

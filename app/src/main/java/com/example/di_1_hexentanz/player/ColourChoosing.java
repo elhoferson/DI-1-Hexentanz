@@ -2,15 +2,37 @@ package com.example.di_1_hexentanz.player;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.gameboard.Gamescreen;
-import com.example.di_1_hexentanz.player.PlayerColor;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.ColorPickMessage;
+import com.example.di_1_hexentanz.network.messages.std.ColorPickResultMessage;
+import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 
 public class ColourChoosing extends AppCompatActivity {
+
+    private AbstractClientMessageReceivedListener<ColorPickResultMessage> cprm = new AbstractClientMessageReceivedListener<ColorPickResultMessage>() {
+        @Override
+        public void handleReceivedMessage(Client client, ColorPickResultMessage msg) {
+            if (msg.isSuccessful()) {
+                NetworkLogic.getInstance().getClient().removeClientListener(cprm);
+                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
+                intent.putExtra("playerColor", msg.getPlayerColor());
+                startActivity(intent);
+            } else {
+                // TODO disable colour button
+                Looper.prepare();
+                Toast.makeText(ColourChoosing.this, "Color "+msg.getPlayerColor()+" can't be picked", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +47,7 @@ public class ColourChoosing extends AppCompatActivity {
         btnBlue.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.BLUE);
-                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
-                startActivity(intent);
+                startColoredActivity(PlayerColor.BLUE);
             }
         });
 
@@ -35,9 +55,7 @@ public class ColourChoosing extends AppCompatActivity {
         btnGreen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.GREEN);
-                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
-                startActivity(intent);
+                startColoredActivity(PlayerColor.GREEN);
             }
         });
 
@@ -45,9 +63,7 @@ public class ColourChoosing extends AppCompatActivity {
         btnYellow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.YELLOW);
-                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
-                startActivity(intent);
+                startColoredActivity(PlayerColor.YELLOW);
             }
         });
 
@@ -55,11 +71,14 @@ public class ColourChoosing extends AppCompatActivity {
         btnRed.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Gamescreen.setColor(PlayerColor.RED);
-                Intent intent = new Intent(getApplicationContext(), Gamescreen.class);
-                startActivity(intent);
+                startColoredActivity(PlayerColor.RED);
             }
         });
+        NetworkLogic.getInstance().getClient().addClientListener(cprm);
+    }
+
+    private void startColoredActivity(PlayerColor color) {
+        NetworkLogic.getInstance().sendMessageToHost(new ColorPickMessage(color));
     }
 
 
