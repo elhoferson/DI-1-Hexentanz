@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz.wifi.network.mordechaim_server;
 
 import android.util.Log;
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -100,9 +101,13 @@ public class Client {
 			public void commandReceived(Client client, Command cmd) {
 				if (cmd == ServerCommand.DISCONNECTED)
 					shutDown();
+
 			}
+
 		});
+
 	}
+
 
 	/**
 	 * Returns if the client is currently running. This may be changed either by

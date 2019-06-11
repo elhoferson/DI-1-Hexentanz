@@ -11,8 +11,12 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.di_1_hexentanz.player.ColourChoosing;
 import com.example.di_1_hexentanz.wifi.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.wifi.network.messages.std.StartMessage;
 import com.example.di_1_hexentanz.wifi.network.messages.std.TestMessage;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.ClientAdapter;
 import com.example.di_1_hexentanz.wifi.network.obj.std.WifiP2pDeviceAdapter;
 
 import java.net.InetAddress;
@@ -32,7 +36,7 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         String action = intent.getAction();
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
@@ -74,7 +78,18 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
                         } else if (info.groupFormed) {
                             Log.i(WIFI_P2P_TAG, "I'am a client and will connect to the owner");
                             NetworkLogic.initClient(groupOwnerAddress);
-                            NetworkLogic.getInstance().sendMessageToHost(new TestMessage());
+                            NetworkLogic.getInstance().update(new ClientAdapter(){
+                                @Override
+                                public void messageReceived(Client client, Object message){
+                                    if(message instanceof StartMessage){
+                                        NetworkLogic.getInstance().sendMessageToHost((StartMessage)message);
+                                        context.startActivity(new Intent(context, ColourChoosing.class));
+
+                                    }
+                                }
+                            });
+                         //   NetworkLogic.getInstance().sendMessageToHost(new TestMessage());
+
                         }
                     }
                 });
@@ -93,4 +108,5 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
     }
 
     public abstract void fillList(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter);
+
 }

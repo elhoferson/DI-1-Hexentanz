@@ -1,12 +1,13 @@
 package com.example.di_1_hexentanz.wifi.network.obj.std;
 
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 
 public class WifiP2pIntentFilter extends IntentFilter {
 
     public WifiP2pIntentFilter() {
-        super();
+
 
         // Indicates a change in the Wi-Fi P2P status.
         this.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -20,4 +21,6 @@ public class WifiP2pIntentFilter extends IntentFilter {
         // Indicates this device's details have changed.
         this.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
     }
+
+
 }

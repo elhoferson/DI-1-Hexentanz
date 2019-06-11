@@ -1,13 +1,16 @@
 package com.example.di_1_hexentanz.wifi.network.logic.std;
 
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.util.Log;
 
 import com.example.di_1_hexentanz.wifi.network.messages.AbstractMessage;
 import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.wifi.network.mordechaim_server.ClientAdapter;
 import com.example.di_1_hexentanz.wifi.network.mordechaim_server.Server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class NetworkLogic {
 
@@ -20,6 +23,8 @@ public class NetworkLogic {
     private Server host;
 
     private Client client;
+
+    private ArrayList<WifiP2pDevice> players = new ArrayList<>();
 
     private NetworkLogic() {
 
@@ -135,5 +140,14 @@ public class NetworkLogic {
     public enum UsageType {
         HOST,
         CLIENT
+    }
+
+    public boolean addPlayers(ArrayList<WifiP2pDevice> devices){
+        return this.players.addAll(devices);
+
+    }
+
+    public void update(ClientAdapter clientAdapter){
+         getClient().addClientListener(clientAdapter);
     }
 }
