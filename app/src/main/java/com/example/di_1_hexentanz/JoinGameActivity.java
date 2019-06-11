@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -16,6 +17,7 @@ import com.example.di_1_hexentanz.network.activity.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pClientBroadcastReceiver;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
+import com.example.di_1_hexentanz.player.ColourChoosing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,9 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //Toast.makeText(getApplicationContext(), "Peer Selected : "+selectedPeer.toString(),   Toast.LENGTH_LONG).show();
                         connect(selectedPeer);
+
+                        Intent intent = new Intent(JoinGameActivity.this, ColourChoosing.class);
+                        startActivity(intent);
                     }
                 })
                         .setNegativeButton("Nicht beitreten", new DialogInterface.OnClickListener() {

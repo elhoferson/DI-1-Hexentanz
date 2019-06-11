@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,19 +23,12 @@ import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
 import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
-
-import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.network.messages.AbstractMessage;
-import com.example.di_1_hexentanz.network.messages.MessageTag;
-import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
-import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
-import com.example.di_1_hexentanz.network.messages.std.TestMessage;
-import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
+import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
@@ -73,14 +65,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private Goal goal = new Goal();
 
 
-
-    private AbstractClientMessageReceivedListener<TestMessage> cml = new AbstractClientMessageReceivedListener<TestMessage>() {
-        @Override
-        public void handleReceivedMessage(Client client, TestMessage msg) {
-            Log.e("MSG", "Server: " + msg.getMsg());
-        }
-    };
-
     //Sensor variables:
     private float luminosity;
     private ImageView luminosityIcon;
@@ -116,7 +100,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        NetworkLogic.getInstance().getClient().addClientListener(cml);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamescreen);
