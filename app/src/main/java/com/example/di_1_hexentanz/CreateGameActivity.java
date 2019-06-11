@@ -25,7 +25,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     private List<WifiP2pDevice> devices = new ArrayList<>();
     private WifiP2pServerBroadcastReceiver receiver;
 
-    private // host message listener
+    private
             AbstractHostMessageReceivedListener<TestMessage> tml = new AbstractHostMessageReceivedListener<TestMessage>() {
         @Override
         public void handleReceivedMessage(Server server, Server.ConnectionToClient client, TestMessage msg) {
@@ -57,18 +57,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         ListView peerList = findViewById(R.id.peerList);
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
-        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice);
-        getManager().discoverPeers(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
-            }
-        });
+        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice, this);
 
     }
 
@@ -97,21 +86,5 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
-            }
-        });
     }
 }

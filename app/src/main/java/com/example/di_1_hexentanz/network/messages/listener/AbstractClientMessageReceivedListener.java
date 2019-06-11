@@ -11,7 +11,7 @@ public abstract class AbstractClientMessageReceivedListener<M extends AbstractMe
     @Override
     public void messageReceived(Client client, Object msg) {
         Class<M> clazz = getGenericClass();
-        if (isInstanceOf(msg.getClass(), clazz)) {
+        if (msg.getClass().equals(clazz)) {
             M myMsg = ((M) msg);
             handleReceivedMessage(client, myMsg);
         }
@@ -24,8 +24,4 @@ public abstract class AbstractClientMessageReceivedListener<M extends AbstractMe
     }
 
     public abstract void handleReceivedMessage(Client client, M msg);
-
-    private <T> boolean isInstanceOf(Class<T> clazz, Class<M> targetClass) {
-        return clazz.isInstance(targetClass);
-    }
 }

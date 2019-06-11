@@ -2,7 +2,6 @@ package com.example.di_1_hexentanz;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -17,7 +16,6 @@ import com.example.di_1_hexentanz.network.activity.AbstractWifiP2pActivity;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pClientBroadcastReceiver;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
-import com.example.di_1_hexentanz.player.ColourChoosing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +46,7 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
                         //Toast.makeText(getApplicationContext(), "Peer Selected : "+selectedPeer.toString(),   Toast.LENGTH_LONG).show();
                         connect(selectedPeer);
 
-                        Intent intent = new Intent(JoinGameActivity.this, ColourChoosing.class);
-                        startActivity(intent);
+
                     }
                 })
                         .setNegativeButton("Nicht beitreten", new DialogInterface.OnClickListener() {
@@ -63,18 +60,8 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
             }
         });
         TextView myDeviceView = findViewById(R.id.text_mydevice);
-        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter, myDeviceView);
-        getManager().discoverPeers(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful discovering peers");
-            }
+        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter, myDeviceView,this);
 
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
-            }
-        });
     }
 
     @Override
@@ -87,22 +74,6 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
-            }
-        });
     }
 
     private void connect(WifiP2pDevice device) {
