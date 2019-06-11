@@ -167,6 +167,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
                 }
             });
+
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndGameMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndGameMessage msg) {
+                NetworkLogic.getInstance().sendMessageToAll(new EndGameMessage());
+                }
+            });
+
+
         } else {
 
         }
@@ -183,7 +192,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<EndGameMessage>() {
             @Override
             public void handleReceivedMessage(Client client, EndGameMessage msg) {
-
+                if(client.getClientId() != NetworkLogic.getInstance().getClient().getClientId()){
+                    surface.startEndgameMessage();
+                }
             }
         });
 

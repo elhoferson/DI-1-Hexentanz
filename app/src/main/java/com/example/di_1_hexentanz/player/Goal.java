@@ -22,11 +22,12 @@ public class Goal extends AppCompatActivity {
 
     }
 
-    public void goInGoal(Player player){
-
-        player.setWitchesInGoal(player.getWitchesInGoal()+1);
-
+    public void checkRightGoal(Witch witch, Player player){
+        if(witch.getPlayer() != player){
+            player.setWitchesInGoal(player.getWitchesAtHome()+1);
+        }else witch.getPlayer().setWitchesInGoal(witch.getPlayer().getWitchesInGoal()+1);
     }
+
 
     public boolean isWinner(Player player){
        if( player.getWitchesInGoal() == 4){
@@ -35,7 +36,7 @@ public class Goal extends AppCompatActivity {
     }
 
     public boolean checkIfGoalInWay(Witch witch, int lastDiceResult) {
-       int witchFeld = witch.getPlayer().getZielFeld().getNumber();
+       int witchFeld;
 
 
        if(witch.getCurrentField() == null){
@@ -46,6 +47,8 @@ public class Goal extends AppCompatActivity {
        
 
 }
+
+
 
 
     public boolean loop(Witch witch, int lastDiceResult, int witchFeld){

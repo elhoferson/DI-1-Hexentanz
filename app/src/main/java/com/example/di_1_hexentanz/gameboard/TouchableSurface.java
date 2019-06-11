@@ -164,12 +164,14 @@ public class TouchableSurface extends View {
                             goInGoal.setTitle("Mit Hexe ins Ziel gehen?");
                             goInGoal.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    goal.goInGoal(selectedWitch.getPlayer());
+                                    goal.checkRightGoal(selectedWitch, player);
                                     if (goal.isWinner(selectedWitch.getPlayer())) {
-                                        Intent gewonnen = new Intent(activity, Winnerpop.class);
-                                        activity.startActivity(gewonnen);
-                                    }
+                                        EndGameMessage msg = new EndGameMessage();
+                                        NetworkLogic.getInstance().getClient().getClientId();
+                                        NetworkLogic.getInstance().sendMessageToHost(msg);
+                                        startEndgameMessage();
 
+                                    }
                                     selectedWitch.moveWitch(goalfelder[goalFeld]);
                                     goalFeld++;
                                     activity.updateTextInGoal(activity.getCurrentPlayer().getWitchesInGoal());
@@ -247,6 +249,11 @@ public class TouchableSurface extends View {
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
         activity.witchSelected(witch, yb, nb);
+    }
+
+    public void startEndgameMessage(){
+        Intent gewonnen = new Intent(activity, Winnerpop.class);
+        activity.startActivity(gewonnen);
     }
 
 

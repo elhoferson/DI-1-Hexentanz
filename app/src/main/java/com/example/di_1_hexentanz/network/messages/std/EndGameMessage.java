@@ -9,13 +9,10 @@ public class EndGameMessage extends AbstractMessage {
     Goal goal = new Goal();
 
 
-    public EndGameMessage(MessageTag tag) {
+
+    public EndGameMessage() {
         super(MessageTag.END_GAME);
     }
 
 
-
-    public void EndGame(){
-
-    }
 }
