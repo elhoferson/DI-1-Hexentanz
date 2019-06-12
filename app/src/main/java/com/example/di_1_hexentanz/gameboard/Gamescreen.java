@@ -185,7 +185,7 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
 
                 if (msg.getTag() == MessageTag.END_TURN) {
                     if (NetworkLogic.getInstance().isHost()) {
-                        NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), //TODO get next CLIENT ID);
+                        NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
                     }
                 }
 
