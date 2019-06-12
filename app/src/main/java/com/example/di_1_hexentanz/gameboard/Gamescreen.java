@@ -527,7 +527,7 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                                     try {
                                         Thread.sleep(3000);
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+                                        Log.e("THREAD","sleep interrupted", e);
                                     }
                                     showWitchColours();
                                 }
