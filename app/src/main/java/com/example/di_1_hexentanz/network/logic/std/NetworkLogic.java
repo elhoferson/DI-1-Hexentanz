@@ -159,7 +159,7 @@ public class NetworkLogic {
         return getUsageType().equals(UsageType.HOST);
     }
 
-    private UsageType getUsageType() {
+    public UsageType getUsageType() {
         return usageType;
     }
 
