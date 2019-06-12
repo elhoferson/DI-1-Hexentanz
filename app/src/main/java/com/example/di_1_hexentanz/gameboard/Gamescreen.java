@@ -27,12 +27,15 @@ import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.network.mordechaim_server.ClientListener;
+import com.example.di_1_hexentanz.network.mordechaim_server.Command;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Player;
@@ -172,9 +175,15 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                     moveWitch(msg.getSelectedWitch(), msg.getDiceResult());
                 }
 
+                if (NetworkLogic.getInstance().)
+
+
+                if (msg.getTag() == MessageTag.END_TURN) {
+
+                }
+
             }
         });
-
 
 
         drawBoardGame();
