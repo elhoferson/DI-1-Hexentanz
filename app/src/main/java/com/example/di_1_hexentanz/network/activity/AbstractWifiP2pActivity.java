@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.obj.IWifiP2pConstants;
+import com.example.di_1_hexentanz.network.threads.std.WifiP2pDiscoverPeersThread;
 
 import java.lang.reflect.Method;
 
@@ -16,45 +17,23 @@ public abstract class AbstractWifiP2pActivity extends AppCompatActivity implemen
 
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
+    private WifiP2pDiscoverPeersThread dpt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = (WifiP2pManager) getApplicationContext().getSystemService(WIFI_P2P_SERVICE);
-        channel = manager.initialize(this, getMainLooper(), new WifiP2pManager.ChannelListener() {
-            @Override
-            public void onChannelDisconnected() {
-                Log.e(WIFI_P2P_TAG, "Channel disconneted");
-            }
-        });
-        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
-            }
-        });
+        channel = manager.initialize(this, getMainLooper(), null);
+        dpt = new WifiP2pDiscoverPeersThread(manager, channel);
+        dpt.start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
-        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
-            }
+        dpt.interrupt();
 
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
-            }
-        });
     }
 
     @Override
@@ -73,7 +52,7 @@ public abstract class AbstractWifiP2pActivity extends AppCompatActivity implemen
         return channel;
     }
 
-    public void disconnect() {
+    private void disconnect() {
         if (getManager() != null && getChannel() != null) {
             getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
                 @Override

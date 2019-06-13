@@ -31,7 +31,12 @@ public class ColourChoosing extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 // TODO disable colour button
-                Toast.makeText(ColourChoosing.this.getApplicationContext(), "Color "+msg.getPlayerColor()+" can't be picked", Toast.LENGTH_LONG).show();
+                final PlayerColor pickedColor = msg.getPlayerColor();
+                ColourChoosing.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast. makeText(ColourChoosing.this, "Color "+pickedColor+" can't be picked", Toast. LENGTH_LONG). show();
+                    }
+                });
             }
         }
     };

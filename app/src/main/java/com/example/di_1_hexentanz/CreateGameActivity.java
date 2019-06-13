@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz;
 
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageR
 import com.example.di_1_hexentanz.network.messages.std.ColorPickMessage;
 import com.example.di_1_hexentanz.network.messages.std.ColorPickResultMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
+import com.example.di_1_hexentanz.network.obj.enums.WiFiP2PError;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
 import com.example.di_1_hexentanz.network.obj.std.WifiP2pServerBroadcastReceiver;
@@ -29,6 +31,7 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
 
     private List<WifiP2pDevice> devices = new ArrayList<>();
     private WifiP2pServerBroadcastReceiver receiver;
+    private Boolean groupAlreadyCreated = false;
 
     private AbstractHostMessageReceivedListener<ColorPickMessage> cpm = new AbstractHostMessageReceivedListener<ColorPickMessage>() {
         @Override
@@ -49,18 +52,8 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         NetworkLogic.init();
         NetworkLogic.getInstance().getHost().addServerListener(cpm);
 
+        removeAndCreateGroup();
 
-        getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG, "succesful created group");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "failed on created group with reason " + reason);
-            }
-        });
         ListView peerList = findViewById(R.id.peerList);
         WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
@@ -95,5 +88,58 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
+    }
+
+    private void removeAndCreateGroup() {
+        getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
+
+            @Override
+            public void onGroupInfoAvailable(final WifiP2pGroup group) {
+                if (group != null) {
+                    getManager().removeGroup(getChannel(), new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(WIFI_P2P_TAG, "Group deleted");
+                            Log.d(WIFI_P2P_TAG, "\tNetwork Name: " + group.getNetworkName());
+                            Log.d(WIFI_P2P_TAG, "\tInterface: " + group.getInterface());
+                            Log.d(WIFI_P2P_TAG, "\tPassword: " + group.getPassphrase());
+                            Log.d(WIFI_P2P_TAG, "\tOwner Name: " + group.getOwner().deviceName);
+                            Log.d(WIFI_P2P_TAG, "\tOwner Address: " + group.getOwner().deviceAddress);
+                            Log.d(WIFI_P2P_TAG, "\tClient list size: " + group.getClientList().size());
+
+                            groupAlreadyCreated = false;
+
+                            // Now we can create the group
+                            createGroup();
+                        }
+
+                        @Override
+                        public void onFailure(int reason) {
+                            Log.e(WIFI_P2P_TAG, "Error deleting group");
+                        }
+                    });
+                } else {
+                    createGroup();
+                }
+            }
+        });
+    }
+
+    private void createGroup() {
+        if (!groupAlreadyCreated) {
+            getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
+
+                @Override
+                public void onSuccess() {
+                    Log.i(WIFI_P2P_TAG, "Group created!");
+                    groupAlreadyCreated = true;
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Log.e(WIFI_P2P_TAG, "Error creating group. Reason: " + WiFiP2PError.fromReason(reason));
+                }
+            });
+        }
     }
 }
