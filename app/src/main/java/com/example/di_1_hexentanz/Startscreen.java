@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -13,12 +13,6 @@ import android.widget.Toast;
 public class Startscreen extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mediaPlayer.stop();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +54,7 @@ public class Startscreen extends AppCompatActivity {
             Toast.makeText(this, "Wifi not active!", Toast.LENGTH_SHORT).show();
             return;
         }
-        mediaPlayer.stop();
+        mediaPlayer.pause();
 
         switch (v.getId()) {
             case R.id.Btn_CreateGame:
@@ -100,6 +94,13 @@ public class Startscreen extends AppCompatActivity {
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
-        mediaPlayer.start();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+
 }

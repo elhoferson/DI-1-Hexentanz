@@ -76,7 +76,7 @@ public class ColourChoosing extends AppCompatActivity {
                 startColoredActivity(PlayerColor.RED);
             }
         });
-        NetworkLogic.getInstance().getClient().addClientListener(cprm);
+        //NetworkLogic.getInstance().getClient().addClientListener(cprm);
     }
 
     private void startColoredActivity(PlayerColor color) {

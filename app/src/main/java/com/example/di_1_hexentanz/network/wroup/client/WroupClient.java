@@ -234,6 +234,10 @@ public class WroupClient implements PeerConnectedListener, ServiceDisconnectedLi
         dataReceivedListeners.add(dataReceivedListener);
     }
 
+    public void removeDataReceivedListener(DataReceivedListener dataReceivedListener) {
+        dataReceivedListeners.remove(dataReceivedListener);
+    }
+
     /**
      * Set the listener to notify when the service device has been disconnected.
      *
@@ -458,7 +462,7 @@ public class WroupClient implements PeerConnectedListener, ServiceDisconnectedLi
 
             @Override
             public void onDnsSdServiceAvailable(String instanceName, String registrationType, WifiP2pDevice srcDevice) {
-
+                Log.d(TAG,"instanceName:" + instanceName + ", registrationType: "+ registrationType + ", device: " + srcDevice.toString());
             }
         };
     }

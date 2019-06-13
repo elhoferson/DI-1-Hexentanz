@@ -1,124 +1,49 @@
 package com.example.di_1_hexentanz.network.activity;
 
-import android.net.wifi.p2p.WifiP2pGroup;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.TextView;
 
-import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.network.obj.IWifiP2pConstants;
-
-import java.lang.reflect.Method;
+import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
+import com.example.di_1_hexentanz.network.wroup.common.WiFiDirectBroadcastReceiver;
+import com.example.di_1_hexentanz.network.wroup.common.WiFiP2PInstance;
+import com.example.di_1_hexentanz.network.wroup.common.WroupDevice;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.DeviceChangedListener;
 
 public abstract class AbstractWifiP2pActivity extends AppCompatActivity implements IWifiP2pConstants {
 
-    private WifiP2pManager manager;
-    private WifiP2pManager.Channel channel;
+    private WiFiP2PInstance wiFiP2PInstance;
+    private WiFiDirectBroadcastReceiver wiFiDirectBroadcastReceiver;
+    private static final WifiP2pIntentFilter FILTER = new WifiP2pIntentFilter();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager = (WifiP2pManager) getApplicationContext().getSystemService(WIFI_P2P_SERVICE);
-        channel = manager.initialize(this, getMainLooper(), new WifiP2pManager.ChannelListener() {
+        wiFiP2PInstance = WiFiP2PInstance.getInstance(getApplicationContext());
+        wiFiDirectBroadcastReceiver = wiFiP2PInstance.getBroadcastReceiver();
+        wiFiP2PInstance.setDeviceChangedListener(new DeviceChangedListener() {
             @Override
-            public void onChannelDisconnected() {
-                Log.e(WIFI_P2P_TAG, "Channel disconneted");
-            }
-        });
-        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot discover peers with reason "+ reason);
+            public void onDeviceSet(WroupDevice device) {
+                TextView myDevice = findViewById(R.id.text_mydevice);
+                myDevice.setText(device.getDeviceName() + " - " + device.getDeviceMac());
             }
         });
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disconnect();
-        getManager().stopPeerDiscovery(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful stopped discovering peers");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot stop discover peers with reason "+ reason);
-            }
-        });
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(wiFiDirectBroadcastReceiver, FILTER);
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (NetworkLogic.getInstance() != null) {
-            NetworkLogic.getInstance().close();
-        }
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(wiFiDirectBroadcastReceiver);
     }
 
-    public WifiP2pManager getManager() {
-        return manager;
-    }
 
-    public WifiP2pManager.Channel getChannel() {
-        return channel;
-    }
-
-    public void disconnect() {
-        if (getManager() != null && getChannel() != null) {
-            getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(final WifiP2pGroup group) {
-                    if (group != null && getManager() != null && getChannel() != null
-                    //        && group.isGroupOwner()
-                    ) {
-                        getManager().removeGroup(getChannel(), new WifiP2pManager.ActionListener() {
-
-                            @Override
-                            public void onSuccess() {
-                                Log.d(WIFI_P2P_TAG, "removeGroup onSuccess -");
-                                deletePersistentGroup(group);
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.d(WIFI_P2P_TAG, "removeGroup onFailure -" + reason);
-                            }
-                            private void deletePersistentGroup(WifiP2pGroup wifiP2pGroup) {
-                                try {
-
-                                    Method getNetworkId = WifiP2pGroup.class.getMethod("getNetworkId");
-                                    Integer networkId = (Integer) getNetworkId.invoke(wifiP2pGroup);
-                                    Method deletePersistentGroup = WifiP2pManager.class.getMethod("deletePersistentGroup",
-                                            WifiP2pManager.Channel.class, int.class, WifiP2pManager.ActionListener.class);
-                                    deletePersistentGroup.invoke(manager, channel, networkId, new WifiP2pManager.ActionListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.i(WIFI_P2P_TAG, "deletePersistentGroup onSuccess");
-                                        }
-
-                                        @Override
-                                        public void onFailure(int reason) {
-                                            Log.e(WIFI_P2P_TAG, "deletePersistentGroup failure: " + reason);
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    Log.e(WIFI_P2P_TAG, "Could not delete persistent group", e);
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }
 }

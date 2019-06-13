@@ -6,6 +6,7 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import com.example.di_1_hexentanz.network.wroup.common.listeners.DeviceChangedListener;
 import com.example.di_1_hexentanz.network.wroup.common.listeners.PeerConnectedListener;
 import com.example.di_1_hexentanz.network.wroup.common.listeners.ServiceDisconnectedListener;
 
@@ -24,6 +25,7 @@ public class WiFiP2PInstance implements WifiP2pManager.ConnectionInfoListener {
 
     private PeerConnectedListener peerConnectedListener;
     private ServiceDisconnectedListener serviceDisconnectedListener;
+    private DeviceChangedListener deviceChangedListener;
 
     private WiFiP2PInstance() {
     }
@@ -73,6 +75,11 @@ public class WiFiP2PInstance implements WifiP2pManager.ConnectionInfoListener {
         this.serviceDisconnectedListener = serviceDisconnectedListener;
     }
 
+    public void setDeviceChangedListener(DeviceChangedListener deviceChangedListener) {
+        this.deviceChangedListener = deviceChangedListener;
+    }
+
+
     public void startPeerDiscovering() {
         wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
@@ -97,6 +104,12 @@ public class WiFiP2PInstance implements WifiP2pManager.ConnectionInfoListener {
     public void onServerDeviceDisconnected() {
         if (serviceDisconnectedListener != null) {
             serviceDisconnectedListener.onServerDisconnectedListener();
+        }
+    }
+
+    public void onDeviceChanged(WroupDevice device) {
+        if (deviceChangedListener != null) {
+            deviceChangedListener.onDeviceSet(device);
         }
     }
 

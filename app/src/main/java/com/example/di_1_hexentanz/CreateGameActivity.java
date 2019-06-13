@@ -1,13 +1,10 @@
 package com.example.di_1_hexentanz;
 
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.di_1_hexentanz.gameplay.GameConfig;
@@ -17,18 +14,24 @@ import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageR
 import com.example.di_1_hexentanz.network.messages.std.ColorPickMessage;
 import com.example.di_1_hexentanz.network.messages.std.ColorPickResultMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
-import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
-import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
-import com.example.di_1_hexentanz.network.obj.std.WifiP2pServerBroadcastReceiver;
+import com.example.di_1_hexentanz.network.obj.std.WroupDeviceAdapter;
+import com.example.di_1_hexentanz.network.wroup.common.WiFiP2PError;
+import com.example.di_1_hexentanz.network.wroup.common.WroupDevice;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.ClientConnectedListener;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.ClientDisconnectedListener;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.ServiceRegisteredListener;
+import com.example.di_1_hexentanz.network.wroup.service.WroupService;
 import com.example.di_1_hexentanz.player.ColourChoosing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CreateGameActivity extends AbstractWifiP2pActivity {
 
-    private List<WifiP2pDevice> devices = new ArrayList<>();
-    private WifiP2pServerBroadcastReceiver receiver;
+    private List<WroupDevice> devices = new ArrayList<>();
+    private WroupService host;
+    private WroupDeviceAdapter peerListAdapter;
 
     private AbstractHostMessageReceivedListener<ColorPickMessage> cpm = new AbstractHostMessageReceivedListener<ColorPickMessage>() {
         @Override
@@ -45,26 +48,40 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
-        TextView myDevice = findViewById(R.id.text_mydevice);
-        NetworkLogic.init();
-        NetworkLogic.getInstance().getHost().addServerListener(cpm);
 
-
-        getManager().createGroup(getChannel(), new WifiP2pManager.ActionListener() {
+        host = WroupService.getInstance(getApplicationContext());
+        host.registerService(UUID.randomUUID().toString(), new ServiceRegisteredListener() {
             @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG, "succesful created group");
+            public void onSuccessServiceRegistered() {
+                // yippie
             }
 
             @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "failed on created group with reason " + reason);
+            public void onErrorServiceRegistered(WiFiP2PError wiFiP2PError) {
+                Log.e(WIFI_P2P_TAG, "Error on creating service is "+ wiFiP2PError);
             }
         });
+
+
+
         ListView peerList = findViewById(R.id.peerList);
-        WifiP2pDeviceAdapter peerListAdapter = new WifiP2pDeviceAdapter(this, devices);
+        peerListAdapter = new WroupDeviceAdapter(this, devices);
         peerList.setAdapter(peerListAdapter);
-        receiver = new WifiP2pServerBroadcastReceiver(getManager(), getChannel(), peerListAdapter, myDevice, this);
+
+        host.setClientConnectedListener(new ClientConnectedListener() {
+            @Override
+            public void onClientConnected(WroupDevice wroupDevice) {
+                peerListAdapter.add(wroupDevice);
+                peerListAdapter.notifyDataSetChanged();
+            }
+        });
+        host.setClientDisconnectedListener(new ClientDisconnectedListener() {
+            @Override
+            public void onClientDisconnected(WroupDevice wroupDevice) {
+                peerListAdapter.remove(wroupDevice);
+                peerListAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -86,14 +103,10 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(receiver, new WifiP2pIntentFilter());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
+    protected void onDestroy() {
+        super.onDestroy();
+        if (host != null) {
+            host.disconnect();
+        }
     }
 }

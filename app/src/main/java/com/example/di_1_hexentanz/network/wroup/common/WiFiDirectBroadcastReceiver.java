@@ -72,9 +72,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
             WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             Log.d(TAG, "This device name: " + device.deviceName);
             Log.d(TAG, "This device address: " + device.deviceAddress);
-
+            WroupDevice wd = new WroupDevice(device);
+            wiFiP2PInstance.onDeviceChanged(wd);
             if (wiFiP2PInstance.getThisDevice() == null) {
-                wiFiP2PInstance.setThisDevice(new WroupDevice(device));
+                wiFiP2PInstance.setThisDevice(wd);
             }
         }
     }

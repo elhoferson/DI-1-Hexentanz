@@ -8,6 +8,8 @@ import android.util.Log;
 import com.example.di_1_hexentanz.network.wroup.common.WiFiP2PError;
 import com.example.di_1_hexentanz.network.wroup.common.WiFiP2PInstance;
 
+import java.lang.reflect.Method;
+
 
 public class WiFiDirectUtils {
 
@@ -65,17 +67,43 @@ public class WiFiDirectUtils {
         wiFiP2PInstance.getWifiP2pManager().requestGroupInfo(wiFiP2PInstance.getChannel(), new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(final WifiP2pGroup group) {
-                wiFiP2PInstance.getWifiP2pManager().removeGroup(wiFiP2PInstance.getChannel(), new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.i(TAG, "Group removed: " + group.getNetworkName());
-                    }
+                if (group != null) {
+                    wiFiP2PInstance.getWifiP2pManager().removeGroup(wiFiP2PInstance.getChannel(), new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.i(TAG, "Group removed: " + group.getNetworkName());
+                            deletePersistentGroup(group);
+                        }
 
-                    @Override
-                    public void onFailure(int reason) {
-                        Log.e(TAG, "Fail disconnecting from group. Reason: " + WiFiP2PError.fromReason(reason));
-                    }
-                });
+                        @Override
+                        public void onFailure(int reason) {
+                            Log.e(TAG, "Fail disconnecting from group. Reason: " + WiFiP2PError.fromReason(reason));
+                        }
+
+                        private void deletePersistentGroup(WifiP2pGroup wifiP2pGroup) {
+                            try {
+
+                                Method getNetworkId = WifiP2pGroup.class.getMethod("getNetworkId");
+                                Integer networkId = (Integer) getNetworkId.invoke(wifiP2pGroup);
+                                Method deletePersistentGroup = WifiP2pManager.class.getMethod("deletePersistentGroup",
+                                        WifiP2pManager.Channel.class, int.class, WifiP2pManager.ActionListener.class);
+                                deletePersistentGroup.invoke(wiFiP2PInstance.getWifiP2pManager(), wiFiP2PInstance.getChannel(), networkId, new WifiP2pManager.ActionListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.i(TAG, "deletePersistentGroup onSuccess");
+                                    }
+
+                                    @Override
+                                    public void onFailure(int reason) {
+                                        Log.e(TAG, "deletePersistentGroup failure: " + reason);
+                                    }
+                                });
+                            } catch (Exception e) {
+                                Log.e(TAG, "Could not delete persistent group", e);
+                            }
+                        }
+                    });
+                }
             }
         });
     }

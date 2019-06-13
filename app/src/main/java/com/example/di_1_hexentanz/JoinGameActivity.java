@@ -2,28 +2,32 @@ package com.example.di_1_hexentanz;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.di_1_hexentanz.network.activity.AbstractWifiP2pActivity;
-import com.example.di_1_hexentanz.network.obj.std.WifiP2pClientBroadcastReceiver;
-import com.example.di_1_hexentanz.network.obj.std.WifiP2pDeviceAdapter;
-import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
+import com.example.di_1_hexentanz.network.obj.std.WroupDeviceAdapter;
+import com.example.di_1_hexentanz.network.wroup.client.WroupClient;
+import com.example.di_1_hexentanz.network.wroup.common.WiFiP2PError;
+import com.example.di_1_hexentanz.network.wroup.common.WroupDevice;
+import com.example.di_1_hexentanz.network.wroup.common.WroupServiceDevice;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.ServiceConnectedListener;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.ServiceDisconnectedListener;
+import com.example.di_1_hexentanz.network.wroup.common.listeners.ServiceDiscoveredListener;
+import com.example.di_1_hexentanz.player.ColourChoosing;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class JoinGameActivity extends AbstractWifiP2pActivity {
 
-    private List<WifiP2pDevice> devices = new ArrayList<>();
-    private WifiP2pClientBroadcastReceiver receiver;
+    private List<WroupDevice> devices = new ArrayList<>();
+    private WroupDeviceAdapter deviceListAdapter;
+    private WroupClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,21 +35,17 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
         setContentView(R.layout.activity_join_game);
 
         ListView hostList = findViewById(R.id.hostList);
-        WifiP2pDeviceAdapter deviceListAdapter = new WifiP2pDeviceAdapter(this, devices);
+        deviceListAdapter = new WroupDeviceAdapter(this, devices);
         hostList.setAdapter(deviceListAdapter);
-        hostList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
-            {
+        hostList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
 
-                final WifiP2pDevice selectedPeer = devices.get(position);
+                final WroupServiceDevice selectedPeer = (WroupServiceDevice) devices.get(position);
                 AlertDialog.Builder connectDialog = new AlertDialog.Builder(JoinGameActivity.this);
-                connectDialog.setTitle("Willst du dem Spiel von "+selectedPeer.deviceName+" beitreten?");
+                connectDialog.setTitle("Willst du dem Spiel von " + selectedPeer.getDeviceName() + " beitreten?");
                 connectDialog.setPositiveButton("Beitreten", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //Toast.makeText(getApplicationContext(), "Peer Selected : "+selectedPeer.toString(),   Toast.LENGTH_LONG).show();
                         connect(selectedPeer);
-
 
                     }
                 })
@@ -59,56 +59,61 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
 
             }
         });
-        TextView myDeviceView = findViewById(R.id.text_mydevice);
-        receiver = new WifiP2pClientBroadcastReceiver(getManager(), getChannel(), deviceListAdapter, myDeviceView,this);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(receiver, new WifiP2pIntentFilter());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
-    }
-
-    private void connect(WifiP2pDevice device) {
-
-        final WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
-        //config.groupOwnerIntent = 15;
-        //config.wps.setup = WpsInfo.PBC;
-
-        getManager().connect(getChannel(), config, new WifiP2pManager.ActionListener() {
+        client = WroupClient.getInstance(getApplicationContext());
+        client.setServerDisconnetedListener(new ServiceDisconnectedListener() {
             @Override
-            public void onSuccess() {
-                Log.i(WIFI_P2P_TAG,"successful connected to "+ config.deviceAddress);
+            public void onServerDisconnectedListener() {
+            }
+        });
+
+        discover();
+
+    }
+
+    private void discover() {
+        deviceListAdapter.clear();
+        client.discoverServices(5000L, new ServiceDiscoveredListener() {
+            @Override
+            public void onNewServiceDeviceDiscovered(WroupServiceDevice serviceDevice) {
+                //deviceListAdapter.add(serviceDevice);
+
             }
 
             @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "cannot connect to with "+ config.deviceAddress+" reason "+ reason);
+            public void onFinishServiceDeviceDiscovered(List<WroupServiceDevice> serviceDevices) {
+                deviceListAdapter.addAll(serviceDevices);
+                deviceListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(WiFiP2PError wiFiP2PError) {
+                Log.e(WIFI_P2P_TAG, "discovering error with reason " + wiFiP2PError);
             }
         });
     }
+
+    private void connect(WroupServiceDevice host) {
+        client.connectToService(host, new ServiceConnectedListener() {
+            @Override
+            public void onServiceConnected(WroupDevice serviceDevice) {
+                chooseColor();
+            }
+        });
+
+    }
+
+    private void chooseColor() {
+        Intent intent = new Intent(getApplicationContext(), ColourChoosing.class);
+        startActivity(intent);
+    }
+
 
     @Override
     protected void onDestroy() {
-        getManager().cancelConnect(getChannel(), new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.d(WIFI_P2P_TAG, "disconnect succesful");
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Log.e(WIFI_P2P_TAG, "disconnect not succesful with reason "+ reason);
-            }
-        });
         super.onDestroy();
+        if (client != null) {
+            client.disconnect();
+        }
     }
 }

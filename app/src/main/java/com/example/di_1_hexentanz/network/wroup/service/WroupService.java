@@ -73,14 +73,14 @@ public class WroupService implements PeerConnectedListener {
 
     private static final String SERVICE_TYPE = "_wroup._tcp";
     public static final String SERVICE_PORT_PROPERTY = "SERVICE_PORT";
-    public static final Integer SERVICE_PORT_VALUE = 9999;
+    public static final Integer SERVICE_PORT_VALUE = 9872;
     public static final String SERVICE_NAME_PROPERTY = "SERVICE_NAME";
-    public static final String SERVICE_NAME_VALUE = "WROUP";
+    public static final String SERVICE_NAME_VALUE = "Hexentanz";
     public static final String SERVICE_GROUP_NAME = "GROUP_NAME";
 
     private static WroupService instance;
 
-    private DataReceivedListener dataReceivedListener;
+    private List<DataReceivedListener> dataReceivedListeners = new ArrayList<>();
     private ClientConnectedListener clientConnectedListener;
     private ClientDisconnectedListener clientDisconnectedListener;
     private Map<String, WroupDevice> clientsConnected = new HashMap<>();
@@ -219,8 +219,12 @@ public class WroupService implements PeerConnectedListener {
      *
      * @param dataReceivedListener The <code>DataReceivedListener</code> to notify data entries.
      */
-    public void setDataReceivedListener(DataReceivedListener dataReceivedListener) {
-        this.dataReceivedListener = dataReceivedListener;
+    public void addDataReceivedListener(DataReceivedListener dataReceivedListener) {
+        dataReceivedListeners.add(dataReceivedListener);
+    }
+
+    public void removeDataReceivedListener(DataReceivedListener dataReceivedListener) {
+        dataReceivedListeners.remove(dataReceivedListener);
     }
 
     /**
@@ -445,8 +449,10 @@ public class WroupService implements PeerConnectedListener {
                 clientDisconnectedListener.onClientDisconnected(client);
             }
         } else {
-            if (dataReceivedListener != null) {
-                dataReceivedListener.onDataReceived(messageWrapper);
+            if (!dataReceivedListeners.isEmpty()) {
+                for (DataReceivedListener dataReceivedListener : dataReceivedListeners) {
+                    dataReceivedListener.onDataReceived(messageWrapper);
+                }
             }
         }
     }
