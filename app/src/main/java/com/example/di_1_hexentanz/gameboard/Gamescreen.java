@@ -27,12 +27,16 @@ import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.BeginTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
+import com.example.di_1_hexentanz.network.mordechaim_server.ClientListener;
+import com.example.di_1_hexentanz.network.mordechaim_server.Command;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Player;
@@ -172,9 +176,21 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                     moveWitch(msg.getSelectedWitch(), msg.getDiceResult());
                 }
 
+                if (NetworkLogic.getInstance().getUsageType() == NetworkLogic.UsageType.CLIENT) {
+                    if (msg.getTag() == MessageTag.BEGIN_TURN) {
+                        surface.itsMyTurn();
+                    }
+                }
+
+
+                if (msg.getTag() == MessageTag.END_TURN) {
+                    if (NetworkLogic.getInstance().isHost()) {
+                        NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
+                    }
+                }
+
             }
         });
-
 
 
         drawBoardGame();
