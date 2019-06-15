@@ -11,6 +11,7 @@ import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.gameboard.Gamescreen;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.logic.std.WifiP2pLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.ColorPickMessage;
 import com.example.di_1_hexentanz.network.messages.std.ColorPickResultMessage;
@@ -88,7 +89,10 @@ public class ColourChoosing extends AppCompatActivity {
         NetworkLogic.getInstance().sendMessageToHost(new ColorPickMessage(color));
     }
 
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        WifiP2pLogic.instance().disconnect();
+        NetworkLogic.getInstance().close();
+    }
 }
