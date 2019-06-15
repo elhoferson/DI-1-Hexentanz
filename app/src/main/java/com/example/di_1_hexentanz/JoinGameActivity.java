@@ -73,17 +73,18 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
 
     private void discover() {
         deviceListAdapter.clear();
-        client.discoverServices(5000L, new ServiceDiscoveredListener() {
+        client.discoverServices(500000L, new ServiceDiscoveredListener() {
             @Override
             public void onNewServiceDeviceDiscovered(WroupServiceDevice serviceDevice) {
-                //deviceListAdapter.add(serviceDevice);
+                deviceListAdapter.add(serviceDevice);
+                deviceListAdapter.notifyDataSetChanged();
 
             }
 
             @Override
             public void onFinishServiceDeviceDiscovered(List<WroupServiceDevice> serviceDevices) {
-                deviceListAdapter.addAll(serviceDevices);
-                deviceListAdapter.notifyDataSetChanged();
+                //deviceListAdapter.addAll(serviceDevices);
+                //deviceListAdapter.notifyDataSetChanged();
             }
 
             @Override

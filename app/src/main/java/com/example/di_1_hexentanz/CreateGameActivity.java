@@ -71,18 +71,30 @@ public class CreateGameActivity extends AbstractWifiP2pActivity {
         host.setClientConnectedListener(new ClientConnectedListener() {
             @Override
             public void onClientConnected(WroupDevice wroupDevice) {
-                peerListAdapter.add(wroupDevice);
-                peerListAdapter.notifyDataSetChanged();
+                updatePeerList(wroupDevice, false);
             }
         });
         host.setClientDisconnectedListener(new ClientDisconnectedListener() {
             @Override
             public void onClientDisconnected(WroupDevice wroupDevice) {
-                peerListAdapter.remove(wroupDevice);
-                peerListAdapter.notifyDataSetChanged();
+               updatePeerList(wroupDevice, true);
             }
         });
 
+    }
+
+    private void updatePeerList(final WroupDevice wroupDevice, final Boolean delete) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (delete) {
+                    peerListAdapter.remove(wroupDevice);
+                } else {
+                    peerListAdapter.add(wroupDevice);
+                }
+                peerListAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void onClick(View v) {

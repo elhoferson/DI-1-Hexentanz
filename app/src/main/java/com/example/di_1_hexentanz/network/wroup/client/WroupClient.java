@@ -397,7 +397,7 @@ public class WroupClient implements PeerConnectedListener, ServiceDisconnectedLi
         handler.postDelayed(new Runnable() {
             public void run() {
                 WiFiDirectUtils.clearServiceRequest(wiFiP2PInstance);
-                WiFiDirectUtils.stopPeerDiscovering(wiFiP2PInstance);
+                //WiFiDirectUtils.stopPeerDiscovering(wiFiP2PInstance);
                 WiFiDirectUtils.removeGroup(wiFiP2PInstance);
 
                 serverSocket = null;
