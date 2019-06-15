@@ -82,6 +82,7 @@ public class ColourChoosing extends AppCompatActivity {
                 startColoredActivity(PlayerColor.RED);
             }
         });
+        WifiP2pLogic.instance().getDiscoverPeerThread().interrupt();
         NetworkLogic.getInstance().getClient().addClientListener(cprm);
     }
 

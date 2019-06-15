@@ -6,6 +6,7 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.util.Log;
 
 import com.example.di_1_hexentanz.network.obj.IWifiP2pConstants;
+import com.example.di_1_hexentanz.network.threads.std.WifiP2pDiscoverPeersThread;
 
 import java.lang.reflect.Method;
 
@@ -14,6 +15,7 @@ public class WifiP2pLogic implements IWifiP2pConstants {
     private static final WifiP2pLogic instance = new WifiP2pLogic();
     private WifiP2pManager manager;
     private Channel channel;
+    private WifiP2pDiscoverPeersThread dpt;
 
     public static WifiP2pLogic instance() {
         return instance;
@@ -22,6 +24,8 @@ public class WifiP2pLogic implements IWifiP2pConstants {
     public void init (WifiP2pManager manager, Channel channel) {
         this.manager = manager;
         this.channel = channel;
+        dpt = new WifiP2pDiscoverPeersThread();
+        dpt.start();
     }
 
     public Channel getChannel() {
@@ -33,6 +37,7 @@ public class WifiP2pLogic implements IWifiP2pConstants {
     }
 
     public void disconnect() {
+        dpt.interrupt();
         if (getManager() != null && getChannel() != null) {
             getManager().requestGroupInfo(getChannel(), new WifiP2pManager.GroupInfoListener() {
                 @Override
@@ -79,5 +84,9 @@ public class WifiP2pLogic implements IWifiP2pConstants {
                 }
             });
         }
+    }
+
+    public WifiP2pDiscoverPeersThread getDiscoverPeerThread() {
+        return dpt;
     }
 }

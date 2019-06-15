@@ -128,7 +128,9 @@ public class NetworkLogic {
         runBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                getClient().send(msg);
+                if (!getClient().send(msg)) {
+                    Log.e(TAG, "client send message "+ msg.getTag()+" to host not successful");
+                }
             }
         });
     }
@@ -137,7 +139,9 @@ public class NetworkLogic {
         runBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                getHost().sendToAll(msg);
+                if (!getHost().sendToAll(msg)) {
+                    Log.e(TAG, "host send to all message "+ msg.getTag()+" not successful");
+                }
             }
         });
     }
@@ -146,7 +150,9 @@ public class NetworkLogic {
         runBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                getHost().send(msg, clientId);
+                if (!getHost().send(msg, clientId)) {
+                    Log.e(TAG, "host send message "+ msg.getTag()+" to client "+clientId+" not successful");
+                }
             }
         });
     }
