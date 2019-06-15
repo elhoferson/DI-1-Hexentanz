@@ -176,19 +176,22 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                     moveWitch(msg.getSelectedWitch(), msg.getDiceResult());
                 }
 
-                if (NetworkLogic.getInstance().getUsageType() == NetworkLogic.UsageType.CLIENT) {
-                    if (msg.getTag() == MessageTag.BEGIN_TURN) {
-                        surface.itsMyTurn();
-                    }
+            }
+        });
+
+        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<BeginTurnMessage>() {
+            @Override
+            public void handleReceivedMessage(Client client, BeginTurnMessage msg) {
+                surface.itsMyTurn();
+            }
+        });
+
+        NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
+            @Override
+            public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
+                if (NetworkLogic.getInstance().isHost()) {
+                    NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
                 }
-
-
-                if (msg.getTag() == MessageTag.END_TURN) {
-                    if (NetworkLogic.getInstance().isHost()) {
-                        NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
-                    }
-                }
-
             }
         });
 
