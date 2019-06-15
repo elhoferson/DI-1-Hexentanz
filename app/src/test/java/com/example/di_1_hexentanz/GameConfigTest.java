@@ -67,6 +67,19 @@ public class GameConfigTest {
         assertEquals(starter.intValue(), starterClient.intValue());
     }
 
+    @Test
+    public void skipPlayerTest() {
+        GameConfig.getInstance().calculateTurnOrder();
+        Integer skipPlayer = GameConfig.getInstance().getTurnOrder().get(0);
+        GameConfig.getInstance().addSkipPlayerNextRound(skipPlayer);
+
+        Integer currentClient = skipPlayer;
+        for (int i = 0; i < GameConfig.getInstance().getTurnOrder().size(); i++) {
+            currentClient = GameConfig.getInstance().getNextClient(currentClient);
+        }
+        assertEquals(currentClient, GameConfig.getInstance().getTurnOrder().get(1));
+    }
+
 
 
     @After

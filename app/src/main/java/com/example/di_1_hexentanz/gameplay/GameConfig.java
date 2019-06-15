@@ -13,6 +13,7 @@ public class GameConfig {
     private static GameConfig instance = new GameConfig();
 
     private Map<Integer, PlayerColor> playerColors = Collections.synchronizedMap(new HashMap<Integer, PlayerColor>());
+    private Map<Integer, List<Integer>> skipPlayersPerRound = new HashMap<>();
     private Boolean gameStarted = false;
     private Integer minPlayers = 2;
     private Integer maxPlayers = 6;
@@ -45,6 +46,21 @@ public class GameConfig {
         }
     }
 
+    public void addSkipPlayerNextRound(Integer clientId) {
+        Integer nextRound = round + 1;
+        List<Integer> skipPlayersNextRound = getSkipPlayers(nextRound);
+        skipPlayersNextRound.add(clientId);
+        skipPlayersPerRound.put(nextRound, skipPlayersNextRound);
+    }
+
+    private List<Integer> getSkipPlayers(Integer round) {
+        List<Integer> skipPlayers = skipPlayersPerRound.get(round);
+        if (skipPlayers == null) {
+            skipPlayers = new ArrayList<>();
+        }
+        return skipPlayers;
+    }
+
     public List<Integer> getTurnOrder() {
         return turnOrder;
     }
@@ -70,7 +86,13 @@ public class GameConfig {
             // increase round counter
             round++;
         }
-        return getTurnOrder().get(index);
+        // get next client from turn order
+        Integer nextClient = getTurnOrder().get(index);
+        // if next player has to be skipped --> recursive call
+        if (getSkipPlayers(round).contains(nextClient)) {
+            nextClient = getNextClient(nextClient);
+        }
+        return nextClient;
     }
 
     public void gameStarted() {
