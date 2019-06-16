@@ -79,11 +79,37 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
     //Sensor variables:
-    private Sensor sensor;
-    private SensorManager sensorManager;
-    private Button askForCheated;
-    private lumiSensor lumiSensor;
     private ImageView luminosityIcon;
+    private SensorManager sensorManager;
+    private Sensor sensor;
+    private Button askForCheated;
+    lumiSensor lumiSensor;
+
+    public Feld[] getFelder() {
+        return felder;
+    }
+
+    public int getLastDiceResult() {
+        return lastDiceResult;
+    }
+
+    public void setLastDiceResult(int lastDiceResult) {
+        this.lastDiceResult = lastDiceResult;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+
+    public static void setColor(PlayerColor color) {
+        Gamescreen.color = color;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +121,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        //Initialize Sensor:
+        //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lumiSensor = new lumiSensor();
         lumiSensor.sensorActive = true;
-        lumiSensor.setFiredSensorThisRound(false);
-        //Initialize Icon:
+
         luminosityIcon = findViewById(R.id.luminosityView);
         luminosityIcon.setImageResource(R.drawable.bright_transparent);
-        //Initialize ask button:
+
         askForCheated = findViewById(R.id.askForCheatedButton);
         askForCheated.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +137,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 lumiSensor.askForCheated();
             }
         });
+        lumiSensor.setFiredSensorThisRound(false);
 
 
         displayMetrics = new DisplayMetrics();
@@ -226,30 +253,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
-    }
-
-    public Feld[] getFelder() {
-        return felder;
-    }
-
-    public int getLastDiceResult() {
-        return lastDiceResult;
-    }
-
-    public void setLastDiceResult(int lastDiceResult) {
-        this.lastDiceResult = lastDiceResult;
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-    }
-    
-    public static void setColor(PlayerColor color) {
-        Gamescreen.color = color;
     }
 
     private void moveWitchesAllClients(MoveMessage msg) {
@@ -458,17 +461,19 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         surface.nb.setVisibility(INVISIBLE);
     }
 
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         updateSensor(event);
     }
 
     private void updateSensor(SensorEvent event) {
-        //only fire sensor action if Player hasn't cheated before, sensor is active and sensor didnt fire this round
+        //only fire sensor action if Player hasn't cheated before
         if (!currentPlayer.getHasCheated() && lumiSensor.getSensorActive() && !lumiSensor.getFiredSensorThisRound()) {
+            //needed for canceling if alert is showing
+
 
             lumiSensor.setLuminosity(event.values[0]);
-
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
                 //Light Sensor action
 
@@ -502,14 +507,12 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     lumiSensor.sensorActive = false;
                     lumiSensor.setFiredSensorThisRound(true);
 
-                    //build and show Alert Dialog
                     lumiSensor.alertDialogDoYouWantToCheat();
-                }
 
+                }
             }
         }
     }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -519,7 +522,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     public ImageView getLuminosityIcon() {
         return luminosityIcon;
     }
-
+    
     public void playGame() {
 
         if (getState() == GameState.MY_TURN) {
@@ -652,10 +655,12 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
     }
 
+
     private void selectWitch(Witch witch) {
         selectedWitch = witch;
         witchSelected(witch, surface.yb, surface.nb);
     }
+
 
     /**
      * check if there is already a witch on the field

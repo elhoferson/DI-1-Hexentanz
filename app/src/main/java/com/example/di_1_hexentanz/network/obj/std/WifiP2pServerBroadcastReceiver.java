@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz.network.obj.std;
 
+import android.app.Activity;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.widget.TextView;
 
@@ -8,8 +9,8 @@ import com.example.di_1_hexentanz.network.obj.AbstractWifiP2pBroadcastReceiver;
 
 public class WifiP2pServerBroadcastReceiver extends AbstractWifiP2pBroadcastReceiver {
 
-    public WifiP2pServerBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter, TextView myDeviceView) {
-        super(manager, channel, deviceListAdapter, myDeviceView);
+    public WifiP2pServerBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pDeviceAdapter deviceListAdapter, TextView myDeviceView, Activity activity) {
+        super(manager, channel, deviceListAdapter, myDeviceView, activity);
     }
 
     @Override

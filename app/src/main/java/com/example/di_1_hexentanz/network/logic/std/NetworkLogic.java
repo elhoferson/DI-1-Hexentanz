@@ -2,6 +2,7 @@ package com.example.di_1_hexentanz.network.logic.std;
 
 import android.util.Log;
 
+import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.messages.AbstractMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
@@ -13,7 +14,6 @@ public class NetworkLogic {
 
     private static final String TAG = "NETWORK";
     private static final int PORT = 9872;
-    private static final int CLIENT_LIMIT = 6;
     private static NetworkLogic instance = null;
     private UsageType usageType;
     // only if usage type host
@@ -32,7 +32,7 @@ public class NetworkLogic {
                 public void run() {
                     instance = new NetworkLogic();
                     Server server = new Server(PORT);
-                    server.setClientLimit(CLIENT_LIMIT);
+                    server.setClientLimit(GameConfig.getInstance().getMaxPlayers());
                     server.start();
                     instance.setHost(server);
                     instance.setUsageType(UsageType.HOST);
@@ -128,7 +128,9 @@ public class NetworkLogic {
         runBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                getClient().send(msg);
+                if (!getClient().send(msg)) {
+                    Log.e(TAG, "client send message "+ msg.getTag()+" to host not successful");
+                }
             }
         });
     }
@@ -137,7 +139,9 @@ public class NetworkLogic {
         runBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                getHost().sendToAll(msg);
+                if (!getHost().sendToAll(msg)) {
+                    Log.e(TAG, "host send to all message "+ msg.getTag()+" not successful");
+                }
             }
         });
     }
@@ -146,7 +150,9 @@ public class NetworkLogic {
         runBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                getHost().send(msg, clientId);
+                if (!getHost().send(msg, clientId)) {
+                    Log.e(TAG, "host send message "+ msg.getTag()+" to client "+clientId+" not successful");
+                }
             }
         });
     }
@@ -159,7 +165,7 @@ public class NetworkLogic {
         return getUsageType().equals(UsageType.HOST);
     }
 
-    private UsageType getUsageType() {
+    public UsageType getUsageType() {
         return usageType;
     }
 
