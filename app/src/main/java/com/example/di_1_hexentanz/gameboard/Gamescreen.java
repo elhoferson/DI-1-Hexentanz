@@ -12,8 +12,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -27,16 +27,12 @@ import com.example.di_1_hexentanz.gameboard.buttons.CustomButton;
 import com.example.di_1_hexentanz.gameboard.buttons.IButton;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
-import com.example.di_1_hexentanz.network.messages.MessageTag;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
-import com.example.di_1_hexentanz.network.messages.std.BeginTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
-import com.example.di_1_hexentanz.network.mordechaim_server.ClientListener;
-import com.example.di_1_hexentanz.network.mordechaim_server.Command;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.player.Goal;
 import com.example.di_1_hexentanz.player.Player;
@@ -51,13 +47,13 @@ import java.util.TimerTask;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class Gamescreen extends AppCompatActivity implements  SensorEventListener{
+public class Gamescreen extends AppCompatActivity implements SensorEventListener {
 
     ArrayList<Witch> allWitches = new ArrayList<>();
     private Feld[] felder = new Feld[40];
     private Feld[] goalfelder = new Feld[16];
     Witch selectedWitch;
-    private PlayerColor color;
+    private static PlayerColor color;
     int height;
     int fieldRadius;
     int width;
@@ -83,15 +79,11 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
 
 
     //Sensor variables:
-    private float luminosity;
     private ImageView luminosityIcon;
     private SensorManager sensorManager;
     private Sensor sensor;
-    private String luminosityState;
-    private boolean sensorActive;
     private Button askForCheated;
-    boolean firedSensorThisRound;
-
+    lumiSensor lumiSensor;
 
     public Feld[] getFelder() {
         return felder;
@@ -114,6 +106,11 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
     }
 
 
+    public static void setColor(PlayerColor color) {
+        Gamescreen.color = color;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -127,17 +124,21 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lumiSensor = new lumiSensor();
+        lumiSensor.sensorActive = true;
+
         luminosityIcon = findViewById(R.id.luminosityView);
         luminosityIcon.setImageResource(R.drawable.bright_transparent);
-        sensorActive = true;
+
         askForCheated = findViewById(R.id.askForCheatedButton);
         askForCheated.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                askForCheated();
+                lumiSensor.askForCheated();
             }
         });
-        firedSensorThisRound = false;
+        lumiSensor.setFiredSensorThisRound(false);
+
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -156,13 +157,33 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         fieldRadius = width / 20;
         fieldwidth = 2 * fieldRadius + 10;
 
+        // add listeners for the host
+        if (NetworkLogic.getInstance().isHost()) {
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
+                    Integer nextClient = GameConfig.getInstance().getNextClient(client.getClientId());
+                    NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
+                }
+            });
+
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
+                    // distribute move message to all clients
+                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                }
+            });
+        } else {
+
+        }
+
         // add listeners for clients - remember also the host is a client
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<TurnMessage>() {
 
             @Override
             public void handleReceivedMessage(Client client, TurnMessage msg) {
-                Log.e("TURN", "It's my turn");
-                // TODO enable your turn button and
+
             }
         });
 
@@ -170,28 +191,12 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
             @Override
             public void handleReceivedMessage(Client client, MoveMessage msg) {
                 // TODO move the witch, maybe if i was the client who send the message i don't have to move the witch again because it's already done
-                if(NetworkLogic.getInstance().getClient() == client) {
+                if (NetworkLogic.getInstance().getClient() == client) {
                     return;
                 } else {
-                    moveWitch(msg.getSelectedWitch(), msg.getDiceResult());
+                    moveWitchesAllClients(msg);
                 }
 
-            }
-        });
-
-        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<BeginTurnMessage>() {
-            @Override
-            public void handleReceivedMessage(Client client, BeginTurnMessage msg) {
-                surface.itsMyTurn();
-            }
-        });
-
-        NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
-            @Override
-            public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
-                if (NetworkLogic.getInstance().isHost()) {
-                    NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
-                }
             }
         });
 
@@ -210,8 +215,7 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
         nb.setVisibility(INVISIBLE);
 
-        // get color from intent
-        color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
+
         switch (color) {
             case BLUE:
                 currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
@@ -249,41 +253,17 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
-        // add listeners for the host
-        if (NetworkLogic.getInstance().isHost()) {
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
-                    Integer nextClient = GameConfig.getInstance().getNextClient(client.getClientId());
-                    NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
-                }
-            });
-
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
-                    // distribute move message to all clients
-                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
-                }
-            });
-
-            // calculate turn order and send starter turn msg
-            GameConfig.getInstance().calculateTurnOrder();
-            Integer firstPlayer = GameConfig.getInstance().getStarter();
-            NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), firstPlayer);
-        }
-
     }
 
-    private void moveWitch(Witch witch, int diceResult) {
-        witch.moveWitch(getFelder()[witch.getCurrentField().getNumber()+diceResult]);
+    private void moveWitchesAllClients(MoveMessage msg) {
+        msg.getSelectedWitch().moveWitch(getFelder()[msg.getSelectedWitch().getCurrentField().getNumber() + msg.getDiceResult()]);
     }
 
 
     /**
      * show witch colours, when rolling a 6 and clicking on positive button of alert dialog
      */
-   public void showWitchColours() {
+    public void showWitchColours() {
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -294,13 +274,12 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
                         w.showColor();
                         colorVisible = true;
                     }
-                }
-                    else {
-                        for(Witch w : allWitches) {
-                            w.hideColor();
-                            colorVisible = false;
-                        }
+                } else {
+                    for (Witch w : allWitches) {
+                        w.hideColor();
+                        colorVisible = false;
                     }
+                }
             }
         }, 2000);
     }
@@ -482,10 +461,6 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
         surface.nb.setVisibility(INVISIBLE);
     }
 
-    public void setLuminosity(float luminosity) {
-        this.luminosity = luminosity;
-    }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -494,160 +469,60 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
 
     private void updateSensor(SensorEvent event) {
         //only fire sensor action if Player hasn't cheated before
-        if (!currentPlayer.getHasCheated() && sensorActive && !firedSensorThisRound) {
+        if (!currentPlayer.getHasCheated() && lumiSensor.getSensorActive() && !lumiSensor.getFiredSensorThisRound()) {
             //needed for canceling if alert is showing
 
 
-            luminosity = event.values[0];
+            lumiSensor.setLuminosity(event.values[0]);
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
                 //Light Sensor action
 
-                if (event.values[0] > 100) {
+                if (lumiSensor.getLuminosity() > 100) {
                     //bright
                     luminosityIcon.setImageResource(R.drawable.bright_transparent);
-                    luminosityState = "bright";
+                    lumiSensor.setLuminosityState("bright");
 
-                } else if (luminosity < 100 && luminosity >= 50) {
+                } else if (lumiSensor.getLuminosity() < 100 && lumiSensor.getLuminosity() >= 50) {
                     //cloudy
                     luminosityIcon.setImageResource(R.drawable.cloudy_transparent);
-                    luminosityState = "cloudy";
+                    lumiSensor.setLuminosityState("cloudy");
 
-                } else if (luminosity < 50 && luminosity >= 25) {
+                } else if (lumiSensor.getLuminosity() < 50 && lumiSensor.getLuminosity() >= 25) {
                     //dusky
                     luminosityIcon.setImageResource(R.drawable.dusky_transparent);
-                    luminosityState = "dusky";
+                    lumiSensor.setLuminosityState("dusky");
 
-                } else if (luminosity < 25 && luminosity >= 5) {
+                } else if (lumiSensor.getLuminosity() < 25 && lumiSensor.getLuminosity() >= 5) {
                     //nearly_dark
                     luminosityIcon.setImageResource(R.drawable.nearly_dark_transparent);
-                    luminosityState = "nearly_dark";
+                    lumiSensor.setLuminosityState("nearly_dark");
 
-                } else if (luminosity < 5) {
+                } else if (lumiSensor.getLuminosity() < 5) {
                     //dark
                     luminosityIcon.setImageResource(R.drawable.dark_transparent);
-                    luminosityState = "dark";
+                    lumiSensor.setLuminosityState("dark");
 
 
                     //pause sensor
-                    sensorActive = false;
-                    firedSensorThisRound = true;
+                    lumiSensor.sensorActive = false;
+                    lumiSensor.setFiredSensorThisRound(true);
 
-                    //build and show Alert Dialog
-                    AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-                    a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
-                            "You look around, but you don't see anybody. Do you want to cheat?")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //YES I WANT TO CHEAT!
-                                    currentPlayer.setHasCheated(true);
-                                    showWitchColours();
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (Exception e) {
-                                        Log.e("THREAD","sleep interrupted", e);
-                                    }
-                                    showWitchColours();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //I DONT WANT TO CHEAT!
-                                    sensorActive = true;
-                                }
-                            });
+                    lumiSensor.alertDialogDoYouWantToCheat();
 
-                    AlertDialog alert = a_builder.create();
-                    alert.show();
                 }
-
             }
         }
-    }
-
-    public void askForCheated() {
-        final AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-        a_builder.setMessage("Did the current Player cheat?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (currentPlayer.getHasCheated()) {
-                            //TRUE
-                            //Cheater muss zwei Runden aussetzen
-                            Toast.makeText(Gamescreen.this, "True! What a Cheater...",
-                                    Toast.LENGTH_LONG).show();
-
-
-                        } else {
-                            //FALSE
-                            //Petze muss eine Runde aussetzen
-                            Toast.makeText(Gamescreen.this, "Your're wrong...",
-                                    Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (currentPlayer.getHasCheated()) {
-                            //TRUE
-                            //Cheater muss zwei Runden aussetzen
-                            Toast.makeText(Gamescreen.this, "but he or she did cheat...",
-                                    Toast.LENGTH_LONG).show();
-
-                        } else {
-                            //FALSE
-                            //Petze muss eine Runde aussetzen
-                            Toast.makeText(Gamescreen.this, "You're right!",
-                                    Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                });
-
-        AlertDialog alert = a_builder.create();
-        alert.show();
-    }
-
-    private void displayTrueMessage() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-        a_builder.setMessage("True! The cheater has to skip 2 rounds now.")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null);
-    }
-
-
-    private void displayFalseMessage() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(Gamescreen.this);
-        a_builder.setMessage("Wrong! You have to skip 1 round now...")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //not in use
-
     }
 
     public ImageView getLuminosityIcon() {
         return luminosityIcon;
     }
-
-    public String getLuminosityState() {
-        return luminosityState;
-    }
-
-    public float getLuminosity() {
-        return luminosity;
-    }
-
-
-
+    
     public void playGame() {
 
         if (getState() == GameState.MY_TURN) {
@@ -787,16 +662,14 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
     }
 
 
-
-
     /**
      * check if there is already a witch on the field
      */
     public void checkIfWitchIsOnField() {
-        for(int i = 0; i < allWitches.size(); i++) {
+        for (int i = 0; i < allWitches.size(); i++) {
 
-            if(allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber()+getLastDiceResult()) {
-                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() %40 - 4]);
+            if (allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) {
+                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() % 40 - 4]);
             }
 
         }
