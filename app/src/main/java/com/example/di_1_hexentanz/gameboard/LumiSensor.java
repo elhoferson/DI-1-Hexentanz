@@ -59,41 +59,43 @@ public class LumiSensor {
     }
 
     public void alertDialogDoYouWantToCheat() {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
-                "You look around, but you don't see anybody. Do you want to cheat?")
-                .setCancelable(false)
-                .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //YES
+        if (gamescreen.isFinishing()) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+            alertBuilder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+                    "You look around, but you don't see anybody. Do you want to cheat?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //YES
 
-                        //save that current player has cheated
-                        NetworkLogic.getInstance().sendMessageToHost(new CheatMessage(MessageTag.CHEAT));
+                            //save that current player has cheated
+                            NetworkLogic.getInstance().sendMessageToHost(new CheatMessage(MessageTag.CHEAT));
 
-                        gamescreen.showWitchColours();
+                            gamescreen.showWitchColours();
 
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            Log.e("lumiSensor", "error sleeping", e);
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                Log.e("lumiSensor", "error sleeping", e);
+                            }
+
+                            gamescreen.showWitchColours();
                         }
+                    })
 
-                        gamescreen.showWitchColours();
-                    }
-                })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //NO
+                            //re-enable sensor for next round
+                            sensorActive = true;
+                        }
+                    });
 
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //NO
-                        //re-enable sensor for next round
-                        sensorActive = true;
-                    }
-                });
-
-        AlertDialog alert = alertBuilder.create();
-        alert.show();
+            AlertDialog alert = alertBuilder.create();
+            alert.show();
+        }
     }
 
     public void askForCheated() {
