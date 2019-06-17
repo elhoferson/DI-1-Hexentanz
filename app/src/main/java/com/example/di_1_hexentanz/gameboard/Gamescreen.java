@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.BeginTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
@@ -177,6 +179,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
             @Override
             public void handleReceivedMessage(Client client, TurnMessage msg) {
+                Log.e("TURN", "It's my turn");
 
             }
         });
@@ -195,6 +198,27 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             }
         });
 
+        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<BeginTurnMessage>() {
+            @Override
+            public void handleReceivedMessage(Client client, BeginTurnMessage msg) {
+                surface.itsMyTurn();
+            }
+        });
+
+        NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
+            @Override
+            public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
+                if (NetworkLogic.getInstance().isHost()) {
+                    NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
+                }
+            }
+        });
+
+        // calculate turn order and send starter turn msg
+        GameConfig.getInstance().calculateTurnOrder();
+        Integer firstPlayer = GameConfig.getInstance().getStarter();
+        NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), firstPlayer);
+
 
         drawBoardGame();
 
@@ -210,7 +234,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
         nb.setVisibility(INVISIBLE);
 
-        color = getIntent().getSerializableExtra("playerColor");
+
+        color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
+
         switch (color) {
             case BLUE:
                 currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
