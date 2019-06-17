@@ -73,20 +73,41 @@ public class GameConfigTest {
         Integer skipPlayer = GameConfig.getInstance().getTurnOrder().get(0);
         GameConfig.getInstance().addSkipPlayerNextRound(skipPlayer);
 
-        Integer currentClient = skipPlayer;
-        for (int i = 0; i < GameConfig.getInstance().getTurnOrder().size(); i++) {
-            currentClient = GameConfig.getInstance().getNextClient(currentClient);
-        }
+        Integer currentClient = goOneRound(skipPlayer);
         assertEquals(currentClient, GameConfig.getInstance().getTurnOrder().get(1));
     }
     
     @Test
     public void cheatTest() {
-        GameConfig.getInstance().putPlayerCheated(1);
-        assertTrue(GameConfig.getInstance().checkPlayerCheatedThisRound(1));
+        Integer testClient = 1;
+        // player not cheated any time
+        assertFalse(GameConfig.getInstance().checkPlayerCheatedThisRound(testClient));
+
+        GameConfig.getInstance().putPlayerCheated(testClient);
+        assertTrue(GameConfig.getInstance().checkPlayerCheatedThisRound(testClient));
+
+        // try to cheat another time
+        assertFalse(GameConfig.getInstance().putPlayerCheated(testClient));
+
+        // player cheated in the round before
+        GameConfig.getInstance().calculateTurnOrder();
+        goOneRound(testClient);
+        assertFalse(GameConfig.getInstance().checkPlayerCheatedThisRound(testClient));
         
-        // TODO try to add another cheat round and player cheated in a round before
-        
+    }
+
+    @Test
+    public void goOneRoundTest() {
+        GameConfig.getInstance().calculateTurnOrder();
+        assertEquals(1, goOneRound(1).intValue());
+    }
+
+    private Integer goOneRound(Integer startPlayer) {
+        Integer currentClient = startPlayer;
+        for (int i = 0; i < GameConfig.getInstance().getTurnOrder().size(); i++) {
+            currentClient = GameConfig.getInstance().getNextClient(currentClient);
+        }
+        return currentClient;
     }
 
     @After
