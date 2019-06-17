@@ -153,27 +153,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         fieldRadius = width / 20;
         fieldwidth = 2 * fieldRadius + 10;
 
-        // add listeners for the host
-        if (NetworkLogic.getInstance().isHost()) {
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
-                    Integer nextClient = GameConfig.getInstance().getNextClient(client.getClientId());
-                    NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
-                }
-            });
-
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
-                    // distribute move message to all clients
-                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
-                }
-            });
-        } else {
-
-        }
-
         // add listeners for clients - remember also the host is a client
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<TurnMessage>() {
 
@@ -204,22 +183,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 surface.itsMyTurn();
             }
         });
-
-        NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
-            @Override
-            public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
-                if (NetworkLogic.getInstance().isHost()) {
-                    NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), 1); //TODO get next CLIENT ID
-                }
-            }
-        });
-
-        // calculate turn order and send starter turn msg
-        GameConfig.getInstance().calculateTurnOrder();
-        Integer firstPlayer = GameConfig.getInstance().getStarter();
-        NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), firstPlayer);
-
-
+        
         drawBoardGame();
 
 
@@ -273,6 +237,30 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         surface = new TouchableSurface(getApplicationContext(), this, dice, currentPlayer, yourTurnButton, yb, nb);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
+        
+        // add listeners for the host
+        if (NetworkLogic.getInstance().isHost()) {
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
+                    Integer nextClient = GameConfig.getInstance().getNextClient(client.getClientId());
+                    NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), nextClient);
+                }
+            });
+
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
+                    // distribute move message to all clients
+                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                }
+            });
+            
+            // calculate turn order and send starter turn msg
+            GameConfig.getInstance().calculateTurnOrder();
+            Integer firstPlayer = GameConfig.getInstance().getStarter();
+            NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), firstPlayer);
+        } 
 
     }
 
