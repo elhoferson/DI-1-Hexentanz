@@ -37,6 +37,7 @@ public class GameConfig {
         }
         
         playersCheatRound.put(clientId, round);
+        return true;
             
     }
     
