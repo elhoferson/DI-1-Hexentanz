@@ -32,7 +32,7 @@ public class Goaltest {
     @Test
     public void goInGoalTest(){
         player.setWitchesInGoal(2);
-        goal.goInGoal(player);
+
         Assert.assertEquals(3,player.getWitchesInGoal());
     }
 

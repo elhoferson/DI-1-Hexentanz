@@ -76,7 +76,6 @@ public class Gamescreen extends AppCompatActivity implements  SensorEventListene
 
     //handleTouch
     int next;
-    //private Goal goal = new Goal();
     int goalFeld = 0;
     Witch[] witchesPlayer = new Witch[4];
 
