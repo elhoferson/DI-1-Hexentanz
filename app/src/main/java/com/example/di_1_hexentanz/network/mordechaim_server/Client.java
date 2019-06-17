@@ -660,6 +660,7 @@ public class Client {
 
 				return true;
 			} catch (IOException e) {
+				Log.e(TAG, "send message to host failed", e);
 				return false;
 			}
 		}

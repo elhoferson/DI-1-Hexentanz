@@ -45,8 +45,12 @@ public abstract class AbstractWifiP2pBroadcastReceiver extends BroadcastReceiver
                 Log.i(WIFI_P2P_TAG, "WIFI P2p enabled");
             } else {
                 // Wi-Fi P2P is not enabled
-                Toast.makeText(deviceListAdapter.getContext(), "WIFI P2p disabled",   Toast.LENGTH_LONG).show();
-                Log.e(WIFI_P2P_TAG, "WIFI P2p disabled");
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, "WIFI P2p disabled", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
             Log.i(WIFI_P2P_TAG, "WIFI P2p peers changed");

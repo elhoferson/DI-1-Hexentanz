@@ -76,8 +76,7 @@ public class DiceUI extends AppCompatActivity {
 
         }
         @Override
-        public void onAccuracyChanged(Sensor sensor,
-                                      int accuracy) {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
             //not in use
 
         }
@@ -105,7 +104,7 @@ public class DiceUI extends AppCompatActivity {
     public void rolledNumber6() {
         this.onPause();
 
-        /*
+
         AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(this);
         popupNumber6.setCancelable(false);
         if (allWitchesOnBoard) {
@@ -137,7 +136,6 @@ public class DiceUI extends AppCompatActivity {
             backToGamescreen();
         }
 
-        */
     }
 
 

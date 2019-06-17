@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,7 +21,7 @@ import com.example.di_1_hexentanz.network.obj.std.WifiP2pIntentFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JoinGameActivity extends AbstractWifiP2pActivity {
+public class JoinGameActivity extends AbstractWifiP2pActivity implements View.OnClickListener {
 
     private List<WifiP2pDevice> devices = new ArrayList<>();
     private WifiP2pClientBroadcastReceiver receiver;
@@ -30,6 +31,8 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_game);
 
+        Button btnProblem = findViewById(R.id.btnProblemToFindHost);
+        btnProblem.setOnClickListener(this);
         ListView hostList = findViewById(R.id.hostList);
         WifiP2pDeviceAdapter deviceListAdapter = new WifiP2pDeviceAdapter(this, devices);
         hostList.setAdapter(deviceListAdapter);
@@ -94,5 +97,41 @@ public class JoinGameActivity extends AbstractWifiP2pActivity {
                 Log.e(WIFI_P2P_TAG, "cannot connect to with "+ config.deviceAddress+" reason "+ reason);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        getManager().cancelConnect(getChannel(), new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d(WIFI_P2P_TAG, "disconnect succesful");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(WIFI_P2P_TAG, "disconnect not succesful with reason "+ reason);
+            }
+        });
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnProblemToFindHost:
+                AlertDialog problemDialog = new AlertDialog.Builder(JoinGameActivity.this).create();
+                problemDialog.setTitle("Haben Sie Problem den Host zu finden?");
+                problemDialog.setMessage("Gehen Sie in den Einstellungen auf WLAN dann Wifi Direct (in älteren Versionen rechts oben auf die 3 Punkte und dann auf Erweitert, dann auf Wifi Direct)."+
+                                         "Verbinden Sie sich per klick auf den Host und wechseln Sie zurück ins Spiel.");
+                problemDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                problemDialog.show();
+                break;
+        }
     }
 }

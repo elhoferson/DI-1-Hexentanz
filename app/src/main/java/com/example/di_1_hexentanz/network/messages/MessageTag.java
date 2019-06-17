@@ -6,5 +6,6 @@ public enum MessageTag {
     MOVE_WITCH,
     END_TURN,
     TURN,
-    END_GAME;
+    END_GAME,
+    BEGIN_TURN;
 }
