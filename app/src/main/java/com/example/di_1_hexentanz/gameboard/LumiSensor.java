@@ -1,5 +1,6 @@
 package com.example.di_1_hexentanz.gameboard;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,13 +9,13 @@ import android.widget.Toast;
 
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
+import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
 
 
 public class LumiSensor {
 
     Gamescreen gamescreen;
-    GameConfig config;
-
     private float luminosity;
 
     private String luminosityState;
@@ -23,10 +24,9 @@ public class LumiSensor {
     Context context;
 
 
-    public LumiSensor(Context context) {
+    public LumiSensor(Context context, Gamescreen gamescreen) {
         this.context = context;
-        gamescreen = new Gamescreen();
-        this.config = GameConfig.getInstance();
+        this.gamescreen = gamescreen;
     }
 
     public float getLuminosity() {
@@ -58,8 +58,8 @@ public class LumiSensor {
     }
 
     public void alertDialogDoYouWantToCheat() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(context);
-        a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
                 "You look around, but you don't see anybody. Do you want to cheat?")
                 .setCancelable(false)
                 .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
@@ -68,14 +68,14 @@ public class LumiSensor {
                         //YES
 
                         //save that current player has cheated
-                        config.putPlayerCheated(NetworkLogic.getInstance().getClient().getClientId());
+                        NetworkLogic.getInstance().sendMessageToHost(new CheatMessage(MessageTag.CHEAT));
 
                         gamescreen.showWitchColours();
 
                         try {
                             Thread.sleep(3000);
                         } catch (InterruptedException e) {
-                            Log.e("lumiSensor","error sleeping", e);
+                            Log.e("lumiSensor", "error sleeping", e);
                         }
 
                         gamescreen.showWitchColours();
@@ -91,13 +91,13 @@ public class LumiSensor {
                     }
                 });
 
-        AlertDialog alert = a_builder.create();
+        AlertDialog alert = alertBuilder.create();
         alert.show();
     }
 
     public void askForCheated() {
-        final AlertDialog.Builder a_builder = new AlertDialog.Builder(context);
-        a_builder.setMessage("Did the current Player cheat?")
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setMessage("Did the current Player cheat?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -146,7 +146,7 @@ public class LumiSensor {
 
                 });
 
-        AlertDialog alert = a_builder.create();
+        AlertDialog alert = alertBuilder.create();
         alert.show();
     }
 

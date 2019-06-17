@@ -29,6 +29,7 @@ import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.BeginTurnMessage;
+import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
 import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
@@ -120,7 +121,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        lumiSensor = new LumiSensor(Gamescreen.this);
+        lumiSensor = new LumiSensor(getApplicationContext(), Gamescreen.this);
         lumiSensor.sensorActive = true;
 
         luminosityIcon = findViewById(R.id.luminosityView);
@@ -253,6 +254,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
                     // distribute move message to all clients
                     NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                }
+            });
+
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<CheatMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, CheatMessage msg) {
+                    //save that player has cheated
+                    GameConfig.getInstance().putPlayerCheated(client.getClientId());
+
                 }
             });
             
