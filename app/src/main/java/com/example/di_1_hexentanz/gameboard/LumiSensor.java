@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.MessageTag;
+import com.example.di_1_hexentanz.network.messages.std.AskCheatMessage;
 import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
 
 
@@ -109,8 +110,8 @@ public class LumiSensor {
                             Toast.makeText(context, "True! What a Cheater...",
                                     Toast.LENGTH_LONG).show();
 
-                            //Cheater muss zwei Runden aussetzen
-                            GameConfig.getInstance().addSkipPlayerNextRound(NetworkLogic.getInstance().getClient().getClientId());
+                            //Cheater muss aussetzen
+                            NetworkLogic.getInstance().sendMessageToHost(new AskCheatMessage(MessageTag.ASK_FOR_CHEAT));
 
 
                         } else {
@@ -118,7 +119,7 @@ public class LumiSensor {
                             Toast.makeText(context, "Your're wrong...",
                                     Toast.LENGTH_LONG).show();
                             //Petze muss eine Runde aussetzen
-                            GameConfig.getInstance().addSkipPlayerNextRound(NetworkLogic.getInstance().getClient().getClientId());
+
 
                         }
 

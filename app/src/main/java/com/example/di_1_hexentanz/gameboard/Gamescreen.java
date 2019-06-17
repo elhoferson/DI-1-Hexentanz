@@ -28,6 +28,7 @@ import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
+import com.example.di_1_hexentanz.network.messages.std.AskCheatMessage;
 import com.example.di_1_hexentanz.network.messages.std.BeginTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
@@ -263,6 +264,20 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     //save that player has cheated
                     GameConfig.getInstance().putPlayerCheated(client.getClientId());
 
+                }
+            });
+
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<AskCheatMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, AskCheatMessage msg) {
+                    Integer currentPlayer = GameConfig.getInstance().getCurrentPlayer();
+                    if (GameConfig.getInstance().checkPlayerCheatedThisRound(currentPlayer)) {
+                        // cheater has cheated
+                        GameConfig.getInstance().addSkipPlayerNextRound(currentPlayer);
+                    } else {
+                        // "petze" was wrong
+                        GameConfig.getInstance().addSkipPlayerNextRound(client.getClientId());
+                    }
                 }
             });
             

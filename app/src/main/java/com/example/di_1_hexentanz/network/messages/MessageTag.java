@@ -7,5 +7,6 @@ public enum MessageTag {
     END_TURN,
     TURN,
     BEGIN_TURN,
-    CHEAT
+    CHEAT,
+    ASK_FOR_CHEAT
 }
