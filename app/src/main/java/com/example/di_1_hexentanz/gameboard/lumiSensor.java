@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import com.example.di_1_hexentanz.gameplay.GameConfig;
+
 
 public class lumiSensor {
 
@@ -86,16 +88,20 @@ public class lumiSensor {
                     public void onClick(DialogInterface dialog, int which) {
                         if (gamescreen.getCurrentPlayer().getHasCheated()) {
                             //TRUE
-                            //Cheater muss zwei Runden aussetzen
                             Toast.makeText(gamescreen.getApplicationContext(), "True! What a Cheater...",
                                     Toast.LENGTH_LONG).show();
+
+                            //Cheater muss zwei Runden aussetzen
+                            //GameConfig.getInstance().addSkipPlayerNextRound();
 
 
                         } else {
                             //FALSE
-                            //Petze muss eine Runde aussetzen
+
                             Toast.makeText(gamescreen.getApplicationContext(), "Your're wrong...",
                                     Toast.LENGTH_LONG).show();
+                            //Petze muss eine Runde aussetzen
+                            //GameConfig.getInstance().addSkipPlayerNextRound();
 
                         }
                     }
@@ -105,7 +111,6 @@ public class lumiSensor {
                     public void onClick(DialogInterface dialog, int which) {
                         if (gamescreen.getCurrentPlayer().getHasCheated()) {
                             //TRUE
-                            //Cheater muss zwei Runden aussetzen
                             Toast.makeText(gamescreen.getApplicationContext(), "but he or she did cheat...",
                                     Toast.LENGTH_LONG).show();
 
