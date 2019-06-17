@@ -1,6 +1,7 @@
 package com.example.di_1_hexentanz.gameboard;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
@@ -9,14 +10,21 @@ import com.example.di_1_hexentanz.gameplay.GameConfig;
 
 public class LumiSensor {
 
-    Gamescreen gamescreen = new Gamescreen();
+    Gamescreen gamescreen;
+    GameConfig config;
 
     private float luminosity;
 
     private String luminosityState;
     boolean sensorActive;
     private boolean firedSensorThisRound;
+    Context context;
 
+    public LumiSensor(Context context) {
+        this.context = context;
+        gamescreen = new Gamescreen();
+        this.config = GameConfig.getInstance();
+    }
 
     public float getLuminosity() {
         return luminosity;
@@ -47,7 +55,7 @@ public class LumiSensor {
     }
 
     public void alertDialogDoYouWantToCheat() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
+        AlertDialog.Builder a_builder = new AlertDialog.Builder(context);
         a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
                 "You look around, but you don't see anybody. Do you want to cheat?")
                 .setCancelable(false)
@@ -55,7 +63,11 @@ public class LumiSensor {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //YES
-                        gamescreen.getCurrentPlayer().setHasCheated(true);
+
+
+                        gamescreen.getCurrentPlayer().setHasCheated(true); // bug
+
+
                         gamescreen.showWitchColours();
                         try {
                             Thread.sleep(3000);
@@ -80,7 +92,7 @@ public class LumiSensor {
     }
 
     public void askForCheated() {
-        final AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
+        final AlertDialog.Builder a_builder = new AlertDialog.Builder(context);
         a_builder.setMessage("Did the current Player cheat?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -88,7 +100,8 @@ public class LumiSensor {
                     public void onClick(DialogInterface dialog, int which) {
                         if (gamescreen.getCurrentPlayer().getHasCheated()) {
                             //TRUE
-                            Toast.makeText(gamescreen.getApplicationContext(), "True! What a Cheater...",
+                            //Cheater muss zwei Runden aussetzen
+                            Toast.makeText(context, "True! What a Cheater...",
                                     Toast.LENGTH_LONG).show();
 
                             //Cheater muss zwei Runden aussetzen
@@ -97,8 +110,8 @@ public class LumiSensor {
 
                         } else {
                             //FALSE
-
-                            Toast.makeText(gamescreen.getApplicationContext(), "Your're wrong...",
+                            //Petze muss eine Runde aussetzen
+                            Toast.makeText(context, "Your're wrong...",
                                     Toast.LENGTH_LONG).show();
                             //Petze muss eine Runde aussetzen
                             //GameConfig.getInstance().addSkipPlayerNextRound();
@@ -111,13 +124,14 @@ public class LumiSensor {
                     public void onClick(DialogInterface dialog, int which) {
                         if (gamescreen.getCurrentPlayer().getHasCheated()) {
                             //TRUE
-                            Toast.makeText(gamescreen.getApplicationContext(), "but he or she did cheat...",
+                            //Cheater muss zwei Runden aussetzen
+                            Toast.makeText(context, "but he or she did cheat...",
                                     Toast.LENGTH_LONG).show();
 
                         } else {
                             //FALSE
                             //Petze muss eine Runde aussetzen
-                            Toast.makeText(gamescreen.getApplicationContext(), "You're right!",
+                            Toast.makeText(context, "You're right!",
                                     Toast.LENGTH_LONG).show();
 
                         }
@@ -127,21 +141,5 @@ public class LumiSensor {
         AlertDialog alert = a_builder.create();
         alert.show();
     }
-
-    private void displayTrueMessage() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
-        a_builder.setMessage("True! The cheater has to skip 2 rounds now.")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null);
-    }
-
-
-    private void displayFalseMessage() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
-        a_builder.setMessage("Wrong! You have to skip 1 round now...")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null);
-    }
-
 
 }
