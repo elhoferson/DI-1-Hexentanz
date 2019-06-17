@@ -43,18 +43,12 @@ public class GameConfig {
     
     public Boolean checkPlayerCheatedThisRound(Integer clientId) {
         Integer cheatRound = playersCheatRound.get(clientId);
-        if (cheatRound != null) {
+        if (cheatRound == null) {
             //player never cheated
             return false;
         }
-        
-        if (cheatRound == round) {
-            // the player cheated this round
-            return true;
-        } else {
-            // cheated in a round before
-            return false;
-        }    
+        // did the player cheat in this round?
+        return cheatRound.equals(round);
     }
 
     public Boolean registerPlayerColor(Integer clientId, PlayerColor color) {
