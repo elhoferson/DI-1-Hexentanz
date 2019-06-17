@@ -14,6 +14,7 @@ public class GameConfig {
 
     private Map<Integer, PlayerColor> playerColors = Collections.synchronizedMap(new HashMap<Integer, PlayerColor>());
     private Map<Integer, List<Integer>> skipPlayersPerRound = new HashMap<>();
+    private Map<Integer, Integer> playersCheatRound = new HashMap<>();
     private Boolean gameStarted = false;
     private Integer minPlayers = 2;
     private Integer maxPlayers = 6;
@@ -27,6 +28,32 @@ public class GameConfig {
 
     public static GameConfig getInstance() {
         return instance;
+    }
+    
+    public Boolean putPlayerCheated(Integer clientId) {
+        if (playersCheatRound.containsKey(clientId)) {
+            // already cheated
+            return false;
+        }
+        
+        playersCheatRound.put(clientId, round);
+            
+    }
+    
+    public Boolean checkPlayerCheatedThisRound(Integer clientId) {
+        Integer cheatRound = playersCheatRound.get(clientId);
+        if (cheatRound != null) {
+            //player never cheated
+            return false;
+        }
+        
+        if (cheatRound == round) {
+            // the player cheated this round
+            return true;
+        } else {
+            // cheated in a round before
+            return false;
+        }    
     }
 
     public Boolean registerPlayerColor(Integer clientId, PlayerColor color) {
