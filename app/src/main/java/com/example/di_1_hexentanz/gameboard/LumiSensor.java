@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.widget.Toast;
 
 
-public class lumiSensor {
+public class LumiSensor {
 
     Gamescreen gamescreen = new Gamescreen();
 

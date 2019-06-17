@@ -12,14 +12,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
@@ -69,6 +67,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private TextView txtGoal;
     private DiceUI dice = new DiceUI();
     private Goal goal = new Goal();
+    MoveMessage moveMessage;
 
 
     //handleTouch
@@ -83,7 +82,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private SensorManager sensorManager;
     private Sensor sensor;
     private Button askForCheated;
-    lumiSensor lumiSensor;
+    LumiSensor lumiSensor;
 
     public Feld[] getFelder() {
         return felder;
@@ -124,7 +123,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        lumiSensor = new lumiSensor();
+        lumiSensor = new LumiSensor();
         lumiSensor.sensorActive = true;
 
         luminosityIcon = findViewById(R.id.luminosityView);
@@ -186,6 +185,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
             }
         });
+
 
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<MoveMessage>() {
             @Override
@@ -589,6 +589,34 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             if (surface.clickedYesButton()) {
                 unhighlightSelectedWitch();
 
+
+                if (getLastDiceResult() == 6) {
+                    AlertDialog.Builder popupNumber6 = new AlertDialog.Builder(Gamescreen.this);
+                    popupNumber6.setCancelable(false);
+                    popupNumber6.setTitle("Du hast eine 6 gewürfelt, entscheide deinen nächsten Zug!");
+                    popupNumber6.setPositiveButton("Farbe der Hexe anzeigen", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            showWitchColours();
+
+
+                        }
+                    })
+                            .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + getLastDiceResult()) % 40]);
+                                    moveMessage.setSelectedWitch(selectedWitch);
+                                    moveMessage.setDiceResult(6);
+                                    NetworkLogic.getInstance().sendMessageToHost(moveMessage);
+
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+
+                }
+
+
                 /**
                  * move witch in goal or not
                  */
@@ -627,6 +655,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 } else {
                     //checkIfWitchIsOnField();
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
+                    moveMessage.setSelectedWitch(selectedWitch);
+                    moveMessage.setDiceResult(getLastDiceResult());
+                    NetworkLogic.getInstance().sendMessageToHost(moveMessage);
 
                 }
 
