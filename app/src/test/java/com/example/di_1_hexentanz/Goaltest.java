@@ -23,17 +23,10 @@ public class Goaltest {
         goal = new Goal();
     }
 
-    @Test
-    public void isWinnerTest(){
-        player.setWitchesInGoal(4);
-        Assert.assertTrue(goal.isWinner(player));
-    }
 
     @Test
     public void goInGoalTest(){
-        player.setWitchesInGoal(2);
 
-        Assert.assertEquals(3,player.getWitchesInGoal());
     }
 
 

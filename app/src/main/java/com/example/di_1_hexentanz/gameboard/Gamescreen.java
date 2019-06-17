@@ -244,7 +244,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         switch (color) {
             case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[0]);
                 break;
 
             case GREEN:
