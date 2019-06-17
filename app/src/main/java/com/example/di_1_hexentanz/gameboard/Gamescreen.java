@@ -477,10 +477,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     }
 
     private void updateSensor(SensorEvent event) {
-        //only fire sensor action if Player hasn't cheated before
-        if (!currentPlayer.getHasCheated() && lumiSensor.getSensorActive() && !lumiSensor.getFiredSensorThisRound()) {
-            //needed for canceling if alert is showing
 
+        int clientID = NetworkLogic.getInstance().getClient().getClientId();
+
+        if (!GameConfig.getInstance().checkPlayerCheatedThisRound(clientID) && lumiSensor.getSensorActive() && !lumiSensor.getFiredSensorThisRound()) {
 
             lumiSensor.setLuminosity(event.values[0]);
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
@@ -516,6 +516,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     lumiSensor.sensorActive = false;
                     lumiSensor.setFiredSensorThisRound(true);
 
+                    //display Dialog
                     lumiSensor.alertDialogDoYouWantToCheat();
 
                 }
