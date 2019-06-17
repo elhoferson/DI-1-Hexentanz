@@ -121,7 +121,7 @@ public class GameConfig {
         gameStarted = true;
     }
 
-    public void reset() {
+    public static void reset() {
         instance = new GameConfig();
     }
 
