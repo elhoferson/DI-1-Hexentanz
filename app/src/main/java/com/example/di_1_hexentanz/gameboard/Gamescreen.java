@@ -62,7 +62,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private GameState state;
     private int lastDiceResult;
     TouchableSurface surface;
-    private int maxWitches;
     private Player currentPlayer;
     private TextView txtHome;
     private TextView txtGoal;
@@ -143,7 +142,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
 
-        maxWitches = 4;
+        int maxWitches = 4;
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
