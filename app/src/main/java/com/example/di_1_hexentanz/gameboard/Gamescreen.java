@@ -51,7 +51,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private Feld[] felder = new Feld[40];
     private Feld[] goalfelder = new Feld[16];
     Witch selectedWitch;
-    private static PlayerColor color;
+    private PlayerColor color;
     int height;
     int fieldRadius;
     int width;
@@ -102,11 +102,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     public void setState(GameState state) {
         this.state = state;
-    }
-
-
-    public static void setColor(PlayerColor color) {
-        Gamescreen.color = color;
     }
 
 
@@ -215,7 +210,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         addContentView(nb, findViewById(R.id.contraintLayout).getLayoutParams());
         nb.setVisibility(INVISIBLE);
 
-
+        color = getIntent().getSerializableExtra("playerColor")
         switch (color) {
             case BLUE:
                 currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
