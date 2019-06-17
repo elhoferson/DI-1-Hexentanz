@@ -822,6 +822,7 @@ public class Server {
 
 				return true;
 			} catch (IOException e) {
+				Log.e(TAG, "send message to client failed", e);
 				localShutDown();
 				return false;
 			}

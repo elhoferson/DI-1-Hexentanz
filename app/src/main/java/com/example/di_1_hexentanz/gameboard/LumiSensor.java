@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.example.di_1_hexentanz.gameplay.GameConfig;
 
 
-public class lumiSensor {
+public class LumiSensor {
 
     Gamescreen gamescreen = new Gamescreen();
 

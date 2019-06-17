@@ -76,8 +76,7 @@ public class DiceUI extends AppCompatActivity {
 
         }
         @Override
-        public void onAccuracyChanged(Sensor sensor,
-                                      int accuracy) {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
             //not in use
 
         }
