@@ -120,7 +120,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        lumiSensor = new LumiSensor();
+        lumiSensor = new LumiSensor(Gamescreen.this);
         lumiSensor.sensorActive = true;
 
         luminosityIcon = findViewById(R.id.luminosityView);
