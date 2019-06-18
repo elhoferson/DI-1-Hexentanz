@@ -158,35 +158,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         fieldRadius = width / 20;
         fieldwidth = 2 * fieldRadius + 10;
 
-        // add listeners for the host
-        if (NetworkLogic.getInstance().isHost()) {
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndTurnMessage msg) {
-                    Integer nextClient = GameConfig.getInstance().getNextClient(client.getClientId());
-                    NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), nextClient);
-                }
-            });
 
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<MoveMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
-                    // distribute move message to all clients
-                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
-                }
-            });
-
-            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndGameMessage>() {
-                @Override
-                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndGameMessage msg) {
-                NetworkLogic.getInstance().sendMessageToAll(new EndGameMessage());
-                }
-            });
-
-
-        } else {
-
-        }
 
         // add listeners for clients - remember also the host is a client
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<TurnMessage>() {
@@ -202,9 +174,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<EndGameMessage>() {
             @Override
             public void handleReceivedMessage(Client client, EndGameMessage msg) {
-                if(client.getClientId() != NetworkLogic.getInstance().getClient().getClientId()){
-                    startEndgameMessage();
-                }
+                    startEndgameMessage(msg.getPlayerColor());
+
             }
         });
 
@@ -247,7 +218,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         switch (color) {
             case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[0]);
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
                 break;
 
             case GREEN:
@@ -297,6 +268,14 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
                     // distribute move message to all clients
                     NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                }
+            });
+
+            NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndGameMessage>() {
+                @Override
+                public void handleReceivedMessage(Server server, Server.ConnectionToClient client, EndGameMessage msg) {
+                    // distribute move message to all clients
+                    NetworkLogic.getInstance().sendMessageToAll(msg);
                 }
             });
 
@@ -704,8 +683,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                         public void onClick(DialogInterface dialog, int which) {
                             goal.checkRightGoal(selectedWitch, currentPlayer);
                             if (goal.isWinner(selectedWitch.getPlayer())) {
-                                Intent gewonnen = new Intent(Gamescreen.this, Winnerpop.class);
-                                startActivity(gewonnen);
+                                NetworkLogic.getInstance().sendMessageToHost(new EndGameMessage(currentPlayer.getColor()));
                             }
 
                             selectedWitch.moveWitch(goalfelder[goalFeld]);
@@ -730,9 +708,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 } else {
                     //checkIfWitchIsOnField();
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
-                    moveMessage.setSelectedWitch(selectedWitch);
-                    moveMessage.setDiceResult(getLastDiceResult());
-                    NetworkLogic.getInstance().sendMessageToHost(moveMessage);
+                    //moveMessage.setSelectedWitch(selectedWitch);
+                    //moveMessage.setDiceResult(getLastDiceResult());
+                    //NetworkLogic.getInstance().sendMessageToHost(moveMessage);
 
                 }
 
@@ -781,9 +759,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
     }
 
-    public void startEndgameMessage(){
-        Intent winner = new Intent();
-        winner.putExtra(USERNAME, currentPlayer.getName());
+    public void startEndgameMessage(PlayerColor color){
+        Intent winner = new Intent(getApplicationContext(), Winnerpop.class);
+        winner.putExtra(USERNAME, color);
         startActivity(winner);
     }
 

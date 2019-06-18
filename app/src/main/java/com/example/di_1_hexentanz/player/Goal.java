@@ -2,9 +2,10 @@ package com.example.di_1_hexentanz.player;
 
 import android.support.v7.app.AppCompatActivity;
 
+import java.io.Serializable;
 
 
-public class Goal extends AppCompatActivity {
+public class Goal implements Serializable {
 
 
 
@@ -30,7 +31,7 @@ public class Goal extends AppCompatActivity {
 
 
     public boolean isWinner(Player player){
-       if( player.getWitchesInGoal() == 4){
+       if( player.getWitchesInGoal() == 2){
            return true;
        }else return false;
     }

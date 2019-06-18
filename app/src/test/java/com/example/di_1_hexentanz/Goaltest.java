@@ -11,7 +11,22 @@ import org.junit.Test;
 
 public class Goaltest {
 
+    Goal goal;
+    Feld[] felder = new Feld[5];
+    Player player = new Player("kevin", PlayerColor.GREEN,1,4,felder[1],felder[2]);
 
+
+
+    @Before
+    public void setUp(){
+        goal = new Goal();
+    }
+
+    @Test
+    public void isWinnerTest(){
+        player.setWitchesInGoal(4);
+        Assert.assertTrue(goal.isWinner(player));
+    }
 
 
 }
