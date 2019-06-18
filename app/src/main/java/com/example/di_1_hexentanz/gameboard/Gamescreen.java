@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,11 +29,10 @@ import com.example.di_1_hexentanz.network.messages.listener.AbstractClientMessag
 import com.example.di_1_hexentanz.network.messages.listener.AbstractHostMessageReceivedListener;
 import com.example.di_1_hexentanz.network.messages.std.AskCheatMessage;
 import com.example.di_1_hexentanz.network.messages.std.BeginTurnMessage;
-import com.example.di_1_hexentanz.network.messages.std.EndGameMessage;
 import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
+import com.example.di_1_hexentanz.network.messages.std.EndGameMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
-import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.player.Goal;
@@ -216,7 +214,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         switch (color) {
             case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[0]);
                 break;
 
             case GREEN:
