@@ -261,13 +261,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 if (!colorVisible) {
                     for (Witch w : allWitches) {
                         w.showColor();
-                        colorVisible = true;
                     }
+                    colorVisible = true;
                 } else {
                     for (Witch w : allWitches) {
                         w.hideColor();
-                        colorVisible = false;
                     }
+                    colorVisible = false;
                 }
             }
         }, 2000);
@@ -717,6 +717,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                throw new RuntimeException("unreachable case");
        }
        return currentPlayer;
+   }
+
+   public boolean isColorVisible(){
+       return this.colorVisible;
    }
 
 

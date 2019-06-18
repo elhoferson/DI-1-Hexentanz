@@ -58,8 +58,29 @@ public class GamescreenTest {
     @Test (expected = RuntimeException.class)
     public void testGetPlayerFromColorFail(){
         PlayerColor color = PlayerColor.BLACK;
-
         testscreen.getPlayerFromColour(color, maxWitches);
+    }
+
+    @Test
+    public void testShowWitchColours(){
+        /**introduce sleeps to wait for showWitchColours' action**/
+        //first call should change colorVisible to true
+        testscreen.showWitchColours();
+        try{
+            Thread.sleep(2001);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        Assert.assertTrue(testscreen.isColorVisible());
+
+        //second call should change colorVisible to false
+        testscreen.showWitchColours();
+        try{
+            Thread.sleep(2001);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        Assert.assertFalse(testscreen.isColorVisible());
     }
 
    }
