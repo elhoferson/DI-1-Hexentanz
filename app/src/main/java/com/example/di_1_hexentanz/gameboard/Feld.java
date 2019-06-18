@@ -9,12 +9,14 @@ public class Feld {
     int radius;
     FeldView feldView;
 
+
     public Feld(int number, int x, int y, int radius, Context context) {
         this.number = number;
         this.x = x;
         this.y = y;
         this.radius = radius;
         feldView = new FeldView(context, x, y, radius, this, number);
+
     }
 
     public FeldView getFeldView() {
