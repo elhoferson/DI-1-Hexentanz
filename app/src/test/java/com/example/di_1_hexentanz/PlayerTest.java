@@ -1,15 +1,23 @@
 package com.example.di_1_hexentanz;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.view.View;
 
 import com.example.di_1_hexentanz.gameboard.Feld;
+import com.example.di_1_hexentanz.gameboard.Gamescreen;
+import com.example.di_1_hexentanz.gameplay.GameConfig;
 import com.example.di_1_hexentanz.player.Player;
 import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.player.Witch;
+import com.example.di_1_hexentanz.player.WitchView;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 
@@ -18,6 +26,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class PlayerTest {
@@ -29,13 +38,15 @@ public class PlayerTest {
     private Feld zielfeld;
     private PlayerColor playerColor;
     private Witch[] witches = new Witch[maxWitches];
-    private Context context;
+    private Context context = mock(Context.class);
     private Player testplayerMock;
 
 
     @Before
     public void setTestPlayer() {
         testplayer = new Player("Player1", PlayerColor.BLACK, 1, maxWitches, felder[0], felder[35]);
+        when(context.getApplicationContext()).thenReturn(context);
+
     }
 
 
