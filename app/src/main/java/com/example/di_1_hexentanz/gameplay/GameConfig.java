@@ -20,6 +20,7 @@ public class GameConfig {
     private Integer maxPlayers = 6;
 
     private List<Integer> turnOrder;
+    private Integer currentPlayer;
     private Integer round = 1;
 
     private GameConfig() {
@@ -97,7 +98,9 @@ public class GameConfig {
     }
 
     public Integer getStarter() {
-        return getTurnOrder().get(0);
+        Integer client = getTurnOrder().get(0);
+        currentPlayer = client;
+        return client;
     }
 
     public Integer getNextClient(Integer clientId) {
@@ -114,6 +117,7 @@ public class GameConfig {
         if (getSkipPlayers(round).contains(nextClient)) {
             nextClient = getNextClient(nextClient);
         }
+        currentPlayer = nextClient;
         return nextClient;
     }
 
@@ -131,6 +135,10 @@ public class GameConfig {
 
     public Integer getMaxPlayers() {
         return maxPlayers;
+    }
+
+    public Integer getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public Integer getRound() {
