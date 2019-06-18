@@ -1,20 +1,33 @@
 package com.example.di_1_hexentanz.gameboard;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.example.di_1_hexentanz.gameplay.GameConfig;
+import com.example.di_1_hexentanz.network.logic.std.NetworkLogic;
+import com.example.di_1_hexentanz.network.messages.MessageTag;
+import com.example.di_1_hexentanz.network.messages.std.AskCheatMessage;
+import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
 
 
 public class LumiSensor {
 
-    Gamescreen gamescreen = new Gamescreen();
-
+    Gamescreen gamescreen;
     private float luminosity;
 
     private String luminosityState;
     boolean sensorActive;
-    private boolean firedSensorThisRound;
+    private boolean currentPlayerHasCheated;
+    Context context;
 
+
+    public LumiSensor(Context context, Gamescreen gamescreen) {
+        this.context = context;
+        this.gamescreen = gamescreen;
+    }
 
     public float getLuminosity() {
         return luminosity;
@@ -36,30 +49,37 @@ public class LumiSensor {
         return sensorActive;
     }
 
-    public boolean getFiredSensorThisRound() {
-        return firedSensorThisRound;
+    public boolean getCurrentPlayerHasCheated() {
+        return currentPlayerHasCheated;
     }
 
-    public void setFiredSensorThisRound(boolean firedSensorThisRound) {
-        this.firedSensorThisRound = firedSensorThisRound;
+    public void setCurrentPlayerHasCheated(boolean currentPlayerHasCheated) {
+        this.currentPlayerHasCheated = currentPlayerHasCheated;
     }
 
     public void alertDialogDoYouWantToCheat() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
-        a_builder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
                 "You look around, but you don't see anybody. Do you want to cheat?")
                 .setCancelable(false)
                 .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //YES
+
+                        //save that current player has cheated
+                        NetworkLogic.getInstance().sendMessageToHost(new CheatMessage(MessageTag.CHEAT));
+
                         gamescreen.getCurrentPlayer().setHasCheated(true);
                         gamescreen.showWitchColours();
+
                         try {
                             Thread.sleep(3000);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            Log.e("lumiSensor", "error sleeping", e);
                         }
+
                         gamescreen.showWitchColours();
                     }
                 })
@@ -70,73 +90,68 @@ public class LumiSensor {
                         //NO
                         //re-enable sensor for next round
                         sensorActive = true;
+                        //currentPlayerHasCheated = false;
                     }
                 });
 
-        AlertDialog alert = a_builder.create();
+        AlertDialog alert = alertBuilder.create();
         alert.show();
     }
 
+
     public void askForCheated() {
-        final AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
-        a_builder.setMessage("Did the current Player cheat?")
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setMessage("Did the current Player cheat?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (gamescreen.getCurrentPlayer().getHasCheated()) {
-                            //TRUE
-                            //Cheater muss zwei Runden aussetzen
-                            Toast.makeText(gamescreen.getApplicationContext(), "True! What a Cheater...",
+
+
+                        if (GameConfig.getInstance().checkPlayerCheatedThisRound(NetworkLogic.getInstance().getClient().getClientId())) {
+                            //TRUE: Cheater muss zwei Runden aussetzen
+                            Toast.makeText(context, "True! What a Cheater...",
                                     Toast.LENGTH_LONG).show();
+
+                            //Cheater muss aussetzen
+                            NetworkLogic.getInstance().sendMessageToHost(new AskCheatMessage(MessageTag.ASK_FOR_CHEAT));
 
 
                         } else {
-                            //FALSE
-                            //Petze muss eine Runde aussetzen
-                            Toast.makeText(gamescreen.getApplicationContext(), "Your're wrong...",
+                            //FALSE: Petze muss eine Runde aussetzen
+                            Toast.makeText(context, "Your're wrong...",
                                     Toast.LENGTH_LONG).show();
+                            //Petze muss eine Runde aussetzen
+
 
                         }
+
+
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (gamescreen.getCurrentPlayer().getHasCheated()) {
+                        if (GameConfig.getInstance().checkPlayerCheatedThisRound(NetworkLogic.getInstance().getClient().getClientId())) {
                             //TRUE
-                            //Cheater muss zwei Runden aussetzen
-                            Toast.makeText(gamescreen.getApplicationContext(), "but he or she did cheat...",
+                            Toast.makeText(context, "but he or she did cheat...",
                                     Toast.LENGTH_LONG).show();
 
                         } else {
                             //FALSE
-                            //Petze muss eine Runde aussetzen
-                            Toast.makeText(gamescreen.getApplicationContext(), "You're right!",
+                            Toast.makeText(context, "You're right!",
                                     Toast.LENGTH_LONG).show();
 
                         }
                     }
+
+
                 });
 
-        AlertDialog alert = a_builder.create();
+        AlertDialog alert = alertBuilder.create();
         alert.show();
     }
-
-    private void displayTrueMessage() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
-        a_builder.setMessage("True! The cheater has to skip 2 rounds now.")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null);
-    }
-
-
-    private void displayFalseMessage() {
-        AlertDialog.Builder a_builder = new AlertDialog.Builder(gamescreen.getApplicationContext());
-        a_builder.setMessage("Wrong! You have to skip 1 round now...")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null);
-    }
-
 
 }
