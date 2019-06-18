@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+import com.example.di_1_hexentanz.R;
+
 
 public class FeldView extends View {
     int number;
@@ -36,14 +38,14 @@ public class FeldView extends View {
     }
 
     public void highlight() {
-        color = Color.LTGRAY;
-        radius = radius+15;
+        color = Color.MAGENTA;
+       // radius = radius+15;
         invalidate();
     }
 
     public void unhighlight() {
         color = Color.WHITE;
-        radius = radius-15;
+     //   radius = radius-15;
         invalidate();
     }
 }

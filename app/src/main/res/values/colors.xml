@@ -6,4 +6,5 @@
     <color name="colorButton">#FFC107</color>
     <color name="colorBackground">#32408B</color>
     <color name="yellow">#FFEB3B</color>
+    <color name="orange">#FF9800</color>
 </resources>

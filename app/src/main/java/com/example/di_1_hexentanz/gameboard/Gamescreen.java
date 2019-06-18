@@ -444,8 +444,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         } else
             destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult - 1) % 40];
 
-
+        for(Witch w : this.getAllWitches()){
+            if((w.getCurrentField()!=null) && w.getCurrentField().getNumber() == destination.getNumber()){
+                int nextFieldNumber = w.getCurrentField().getNumber()-4;
+                if(nextFieldNumber>=0) w.moveWitch(this.getFelder()[nextFieldNumber]);
+                else w.moveWitch(this.getFelder()[nextFieldNumber+40]);
+            }
+        }
         witch.putWitchOnGameboard(this, destination);
+
         surface.yb.setVisibility(INVISIBLE);
         surface.nb.setVisibility(INVISIBLE);
     }
