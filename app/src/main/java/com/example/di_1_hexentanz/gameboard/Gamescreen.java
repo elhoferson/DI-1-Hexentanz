@@ -640,18 +640,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                         public void onClick(DialogInterface dialog, int which) {
                             showWitchColours();
 
-
                         }
                     })
                             .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     checkIfWitchIsOnField();
-                                    //selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + getLastDiceResult()) % 40]);
-                                    //moveMessage.setSelectedWitch(selectedWitch);
-                                    //moveMessage.setDiceResult(6);
-                                    //NetworkLogic.getInstance().sendMessageToHost(moveMessage);
-
-
 
                                 }
                             })
@@ -700,9 +693,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     checkIfWitchIsOnField();
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
                     surface.setNextPlayer();
-                    //moveMessage.setSelectedWitch(selectedWitch);
-                    //moveMessage.setDiceResult(getLastDiceResult());
-                    //NetworkLogic.getInstance().sendMessageToHost(moveMessage);
 
                 }
 
