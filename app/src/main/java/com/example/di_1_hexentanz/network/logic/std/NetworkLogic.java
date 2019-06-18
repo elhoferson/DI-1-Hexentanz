@@ -129,7 +129,7 @@ public class NetworkLogic {
             @Override
             public void run() {
                 if (!getClient().send(msg)) {
-                    Log.e(TAG, "client send message "+ msg.getTag()+" to host not successful");
+                    Log.e(TAG, "client send message "+ msg.getTag()+" not successful");
                 }
             }
         });
