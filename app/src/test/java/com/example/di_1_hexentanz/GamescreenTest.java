@@ -54,6 +54,7 @@ public class GamescreenTest {
         }
 
     }
+
     @Test (expected = RuntimeException.class)
     public void testGetPlayerFromColorFail(){
         PlayerColor color = PlayerColor.BLACK;

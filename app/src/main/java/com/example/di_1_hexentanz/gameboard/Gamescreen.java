@@ -209,10 +209,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
 
         txtHome = findViewById(R.id.txtHome);
-        txtHome.setText("At home: "+ currentPlayer.getWitchesAtHome() );
+        txtHome.setText(String.format("At home: %d", currentPlayer.getWitchesAtHome()) );
 
         txtGoal = findViewById(R.id.txtGoal);
-        txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
+        txtGoal.setText(String.format("At goal: %d" ,currentPlayer.getWitchesInGoal()));
 
         surface = new TouchableSurface(getApplicationContext(), this, dice, currentPlayer, yourTurnButton, yb, nb);
         surface.setColor(color);
