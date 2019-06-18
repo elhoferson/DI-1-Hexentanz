@@ -6,7 +6,8 @@ public enum MessageTag {
     MOVE_WITCH,
     END_TURN,
     TURN,
-    BEGIN_TURN,
     CHEAT,
-    ASK_FOR_CHEAT
+    ASK_FOR_CHEAT,
+    END_GAME,
+    BEGIN_TURN;
 }

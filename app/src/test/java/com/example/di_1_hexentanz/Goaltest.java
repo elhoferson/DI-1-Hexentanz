@@ -11,7 +11,6 @@ import org.junit.Test;
 
 public class Goaltest {
 
-
     Goal goal;
     Feld[] felder = new Feld[5];
     Player player = new Player("kevin", PlayerColor.GREEN,1,4,felder[1],felder[2]);
@@ -27,13 +26,6 @@ public class Goaltest {
     public void isWinnerTest(){
         player.setWitchesInGoal(4);
         Assert.assertTrue(goal.isWinner(player));
-    }
-
-    @Test
-    public void goInGoalTest(){
-        player.setWitchesInGoal(2);
-        goal.goInGoal(player);
-        Assert.assertEquals(3,player.getWitchesInGoal());
     }
 
 
