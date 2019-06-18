@@ -122,7 +122,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         //Sensor Stuff:
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        lumiSensor = new LumiSensor(getApplicationContext(), Gamescreen.this);
+        lumiSensor = new LumiSensor(Gamescreen.this, Gamescreen.this);
         lumiSensor.sensorActive = true;
 
         luminosityIcon = findViewById(R.id.luminosityView);
@@ -135,7 +135,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 lumiSensor.askForCheated();
             }
         });
-        lumiSensor.setFiredSensorThisRound(false);
+        lumiSensor.setCurrentPlayerHasCheated(false);
 
 
         displayMetrics = new DisplayMetrics();
@@ -263,6 +263,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, CheatMessage msg) {
                     //save that player has cheated
                     GameConfig.getInstance().putPlayerCheated(client.getClientId());
+                    currentPlayer.setHasCheated(true);
 
                 }
             });
@@ -503,9 +504,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     private void updateSensor(SensorEvent event) {
 
-        int clientID = NetworkLogic.getInstance().getClient().getClientId();
-
-        if (!GameConfig.getInstance().checkPlayerCheatedThisRound(clientID) && lumiSensor.getSensorActive() && !lumiSensor.getFiredSensorThisRound()) {
+        if (lumiSensor.getSensorActive() && !currentPlayer.getHasCheated()) {
 
             lumiSensor.setLuminosity(event.values[0]);
             if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
@@ -539,7 +538,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
                     //pause sensor
                     lumiSensor.sensorActive = false;
-                    lumiSensor.setFiredSensorThisRound(true);
 
                     //display Dialog
                     lumiSensor.alertDialogDoYouWantToCheat();

@@ -1,6 +1,5 @@
 package com.example.di_1_hexentanz.gameboard;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +20,7 @@ public class LumiSensor {
 
     private String luminosityState;
     boolean sensorActive;
-    private boolean firedSensorThisRound;
+    private boolean currentPlayerHasCheated;
     Context context;
 
 
@@ -50,53 +49,55 @@ public class LumiSensor {
         return sensorActive;
     }
 
-    public boolean getFiredSensorThisRound() {
-        return firedSensorThisRound;
+    public boolean getCurrentPlayerHasCheated() {
+        return currentPlayerHasCheated;
     }
 
-    public void setFiredSensorThisRound(boolean firedSensorThisRound) {
-        this.firedSensorThisRound = firedSensorThisRound;
+    public void setCurrentPlayerHasCheated(boolean currentPlayerHasCheated) {
+        this.currentPlayerHasCheated = currentPlayerHasCheated;
     }
 
     public void alertDialogDoYouWantToCheat() {
-        if (gamescreen.isFinishing()) {
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-            alertBuilder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
-                    "You look around, but you don't see anybody. Do you want to cheat?")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //YES
 
-                            //save that current player has cheated
-                            NetworkLogic.getInstance().sendMessageToHost(new CheatMessage(MessageTag.CHEAT));
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setMessage("It is dark and cloudy tonight. This may be an opportunity for you! " +
+                "You look around, but you don't see anybody. Do you want to cheat?")
+                .setCancelable(false)
+                .setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //YES
 
-                            gamescreen.showWitchColours();
+                        //save that current player has cheated
+                        NetworkLogic.getInstance().sendMessageToHost(new CheatMessage(MessageTag.CHEAT));
 
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                Log.e("lumiSensor", "error sleeping", e);
-                            }
+                        gamescreen.getCurrentPlayer().setHasCheated(true);
+                        gamescreen.showWitchColours();
 
-                            gamescreen.showWitchColours();
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            Log.e("lumiSensor", "error sleeping", e);
                         }
-                    })
 
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //NO
-                            //re-enable sensor for next round
-                            sensorActive = true;
-                        }
-                    });
+                        gamescreen.showWitchColours();
+                    }
+                })
 
-            AlertDialog alert = alertBuilder.create();
-            alert.show();
-        }
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //NO
+                        //re-enable sensor for next round
+                        sensorActive = true;
+                        //currentPlayerHasCheated = false;
+                    }
+                });
+
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
     }
+
 
     public void askForCheated() {
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
