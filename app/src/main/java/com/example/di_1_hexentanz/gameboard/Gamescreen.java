@@ -145,7 +145,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         //State to start with
-        state = GameState.MY_TURN;
+        state = GameState.NOT_MY_TURN;
 
         findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
 
@@ -161,14 +161,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
         // add listeners for clients - remember also the host is a client
-        NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<TurnMessage>() {
 
-            @Override
-            public void handleReceivedMessage(Client client, TurnMessage msg) {
-                Log.e("TURN", "It's my turn");
-
-            }
-        });
 
 
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<EndGameMessage>() {
@@ -195,7 +188,12 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         NetworkLogic.getInstance().getClient().addClientListener(new AbstractClientMessageReceivedListener<BeginTurnMessage>() {
             @Override
             public void handleReceivedMessage(Client client, BeginTurnMessage msg) {
-                surface.itsMyTurn();
+                Gamescreen.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        surface.itsMyTurn();
+                    }
+                });
             }
         });
 
@@ -218,7 +216,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         switch (color) {
             case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[0]);
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
                 break;
 
             case GREEN:
@@ -250,6 +248,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
 
         surface = new TouchableSurface(getApplicationContext(), this, dice, currentPlayer, yourTurnButton, yb, nb);
+        surface.hideYourTurnButton();
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
 
@@ -306,7 +305,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             // calculate turn order and send starter turn msg
             GameConfig.getInstance().calculateTurnOrder();
             Integer firstPlayer = GameConfig.getInstance().getStarter();
-            NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), firstPlayer);
+            NetworkLogic.getInstance().sendMessageToClient(new BeginTurnMessage(), firstPlayer);
         } 
 
     }
@@ -605,7 +604,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             surface.next--;
             getCurrentPlayer().setWitchesAtHome(getCurrentPlayer().getWitchesAtHome() - 1);
             updateTextAtHome(getCurrentPlayer().getWitchesAtHome());
-            setState(GameState.MY_TURN);
+            surface.setNextPlayer();
         }
 
 
@@ -657,10 +656,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     })
                             .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + getLastDiceResult()) % 40]);
-                                    moveMessage.setSelectedWitch(selectedWitch);
-                                    moveMessage.setDiceResult(6);
-                                    NetworkLogic.getInstance().sendMessageToHost(moveMessage);
+                                    //selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + getLastDiceResult()) % 40]);
+                                    //moveMessage.setSelectedWitch(selectedWitch);
+                                    //moveMessage.setDiceResult(6);
+                                    //NetworkLogic.getInstance().sendMessageToHost(moveMessage);
+
 
 
                                 }
@@ -689,12 +689,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                             selectedWitch.moveWitch(goalfelder[goalFeld]);
                             goalFeld++;
                             updateTextInGoal(getCurrentPlayer().getWitchesInGoal());
+                            surface.setNextPlayer();
                         }
                     })
                             .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
-
+                                    surface.setNextPlayer();
 
                                 }
                             })
@@ -704,21 +705,22 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
                 } else if (goal.checkIfGoalInWay(selectedWitch, getLastDiceResult())) {
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
-
+                    surface.setNextPlayer();
                 } else {
                     //checkIfWitchIsOnField();
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
+                    surface.setNextPlayer();
                     //moveMessage.setSelectedWitch(selectedWitch);
                     //moveMessage.setDiceResult(getLastDiceResult());
                     //NetworkLogic.getInstance().sendMessageToHost(moveMessage);
 
                 }
 
-                surface.setNextPlayer();
 
             } else if (surface.clickedNoButton()) {
                 surface.changeSelectedWitch();
             }
+
 
         }
     }
