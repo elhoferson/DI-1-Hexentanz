@@ -58,7 +58,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     int width;
     int fieldwidth;
     DisplayMetrics displayMetrics;
-    boolean colorVisible = false;
+    private boolean colorVisible = false;
     private GameState state;
     private int lastDiceResult;
     TouchableSurface surface;
@@ -199,25 +199,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
 
         PlayerColor color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
-        switch (color) {
-            case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
-                break;
-
-            case GREEN:
-                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
-                break;
-
-            case YELLOW:
-                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
-                break;
-
-            case RED:
-                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
-                break;
-            default:
-                throw new RuntimeException("unreachable case");
-        }
+        this.currentPlayer = getPlayerFromColour(color, maxWitches);
 
 
         currentPlayer.initWitches(getApplicationContext(), fieldRadius);
@@ -227,7 +209,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
 
         txtHome = findViewById(R.id.txtHome);
-        txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
+        txtHome.setText("At home: "+ currentPlayer.getWitchesAtHome() );
 
         txtGoal = findViewById(R.id.txtGoal);
         txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
@@ -703,7 +685,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     /**
      * check if there is already a witch on the field
      */
-    public void checkIfWitchIsOnField() {
+   /* public void checkIfWitchIsOnField() {
         for (int i = 0; i < allWitches.size(); i++) {
 
             if (allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) {
@@ -711,7 +693,32 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
             }
 
         }
-    }
+    }*/
+
+   public Player getPlayerFromColour(PlayerColor color, int maxWitches){
+       Player currentPlayer;
+       switch (color) {
+           case BLUE:
+               currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
+               break;
+
+           case GREEN:
+               currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
+               break;
+
+           case YELLOW:
+               currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
+               break;
+
+           case RED:
+               currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
+               break;
+           default:
+               throw new RuntimeException("unreachable case");
+       }
+       return currentPlayer;
+   }
+
 
 }
 
