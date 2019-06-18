@@ -44,6 +44,7 @@ import com.example.di_1_hexentanz.player.Winnerpop;
 import com.example.di_1_hexentanz.player.Witch;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -57,6 +58,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private Feld[] goalfelder = new Feld[16];
     Witch selectedWitch;
     private PlayerColor color;
+    private List<Player> playerList = new ArrayList<>();
     int height;
     int fieldRadius;
     int width;
@@ -179,7 +181,11 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 if (NetworkLogic.getInstance().getClient() == client) {
                     return;
                 } else {
-                    moveWitchesAllClients(msg);
+                    for (Witch w : allWitches) {
+                        if (w.getCurrentField().equals(msg.getCurrentfield())) {
+                            w.moveWitch(msg.getDestinationfield());
+                        }
+                    }
                 }
 
             }
@@ -214,32 +220,9 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
 
-        switch (color) {
-            case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
-                break;
+        initPlayers();
+        currentPlayer = getPlayer(color);
 
-            case GREEN:
-                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
-                break;
-
-            case YELLOW:
-                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
-                break;
-
-            case RED:
-                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
-                break;
-            default:
-                throw new RuntimeException("unreachable case");
-        }
-
-
-        currentPlayer.initWitches(getApplicationContext(), fieldRadius);
-
-        for (int i = 0; i < maxWitches; i++) {
-            this.allWitches.add(currentPlayer.getWitches()[i]);
-        }
 
         txtHome = findViewById(R.id.txtHome);
         txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
@@ -266,7 +249,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 @Override
                 public void handleReceivedMessage(Server server, Server.ConnectionToClient client, MoveMessage msg) {
                     // distribute move message to all clients
-                    NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
+                    NetworkLogic.getInstance().sendMessageToAll(msg);
                 }
             });
 
@@ -310,9 +293,59 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
     }
 
+    private Player getPlayerByColor(PlayerColor color) {
+        Player p = null;
+        switch (color) {
+            case BLUE:
+                p = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
+                break;
+
+            case GREEN:
+                p = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
+                break;
+
+            case YELLOW:
+                p = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
+                break;
+
+            case RED:
+               p = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
+                break;
+            default:
+                throw new RuntimeException("unreachable case");
+        }
+        return p;
+    }
+
+    private void initPlayers() {
+        for (PlayerColor color : PlayerColor.values()) {
+            Player p = getPlayerByColor(color);
+
+            p.initWitches(getApplicationContext(), fieldRadius);
+
+            for (int i = 0; i < maxWitches; i++) {
+                this.allWitches.add(p.getWitches()[i]);
+            }
+            playerList.add(p);
+        }
+
+    }
+
+    private Player getPlayer(PlayerColor color) {
+        for (Player p : playerList) {
+            if (p.getColor().equals(color)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /*
     private void moveWitchesAllClients(MoveMessage msg) {
         msg.getSelectedWitch().moveWitch(getFelder()[msg.getSelectedWitch().getCurrentField().getNumber() + msg.getDiceResult()]);
     }
+    */
+
 
 
     /**

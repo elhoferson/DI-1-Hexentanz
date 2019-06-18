@@ -1,42 +1,27 @@
 package com.example.di_1_hexentanz.network.messages.std;
 
+import com.example.di_1_hexentanz.gameboard.Feld;
 import com.example.di_1_hexentanz.network.messages.AbstractMessage;
 import com.example.di_1_hexentanz.network.messages.MessageTag;
+import com.example.di_1_hexentanz.player.PlayerColor;
 import com.example.di_1_hexentanz.player.Witch;
 
 public class MoveMessage extends AbstractMessage {
 
-    private Witch selectedWitch;
-    private int diceResult;
+    private Feld currentfield;
+    private Feld destinationfield;
 
-
-
-    private String msg = "witch moved";
-
-    public MoveMessage() {
+    public MoveMessage(Feld currentfield, Feld destinationfield) {
         super(MessageTag.MOVE_WITCH);
+        this.currentfield = currentfield;
+        this.destinationfield = destinationfield;
     }
 
-
-    public String getMsg() {
-        return msg;
+    public Feld getDestinationfield() {
+        return destinationfield;
     }
 
-
-    public void setSelectedWitch(Witch selectedWitch) {
-        this.selectedWitch = selectedWitch;
+    public Feld getCurrentfield() {
+        return currentfield;
     }
-
-    public Witch getSelectedWitch() {
-        return selectedWitch;
-    }
-
-    public void setDiceResult(int diceResult) {
-        this.diceResult = diceResult;
-    }
-
-    public int getDiceResult() {
-        return diceResult;
-    }
-
 }

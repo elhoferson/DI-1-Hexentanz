@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+import java.io.Serializable;
 
-public class FeldView extends View {
+
+public class FeldView extends View implements Serializable {
     int number;
     int x;
     int y;

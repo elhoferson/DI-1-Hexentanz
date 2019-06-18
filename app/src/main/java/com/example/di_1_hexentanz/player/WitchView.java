@@ -71,16 +71,8 @@ public class WitchView extends View {
                 b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_blau);
                 invalidate();
                 break;
-            case PINK:
-                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_lila);
-                invalidate();
-                break;
             case GREEN:
                 b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_gruen);
-                invalidate();
-                break;
-            case ORANGE:
-                b= BitmapFactory.decodeResource(getResources(), R.drawable.hexe_orange);
                 invalidate();
                 break;
             case YELLOW:
