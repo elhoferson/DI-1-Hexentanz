@@ -31,7 +31,7 @@ public class Goal implements Serializable {
 
 
     public boolean isWinner(Player player){
-       if( player.getWitchesInGoal() == 2){
+       if( player.getWitchesInGoal() == 4){
            return true;
        }else return false;
     }
