@@ -13,11 +13,13 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
@@ -33,6 +35,7 @@ import com.example.di_1_hexentanz.network.messages.std.CheatMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndGameMessage;
 import com.example.di_1_hexentanz.network.messages.std.EndTurnMessage;
 import com.example.di_1_hexentanz.network.messages.std.MoveMessage;
+import com.example.di_1_hexentanz.network.messages.std.TurnMessage;
 import com.example.di_1_hexentanz.network.mordechaim_server.Client;
 import com.example.di_1_hexentanz.network.mordechaim_server.Server;
 import com.example.di_1_hexentanz.player.Goal;
@@ -60,7 +63,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     int width;
     int fieldwidth;
     DisplayMetrics displayMetrics;
-    boolean colorVisible = false;
+    private boolean colorVisible = false;
     private GameState state;
     private int lastDiceResult;
     TouchableSurface surface;
@@ -147,7 +150,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
 
         findViewById(R.id.TestDisplay).setVisibility(INVISIBLE);
 
-        maxWitches = 4;
+        int maxWitches = 4;
 
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -210,27 +213,8 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         nb.setVisibility(INVISIBLE);
 
 
-        color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
-
-        switch (color) {
-            case BLUE:
-                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[0]);
-                break;
-
-            case GREEN:
-                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
-                break;
-
-            case YELLOW:
-                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
-                break;
-
-            case RED:
-                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
-                break;
-            default:
-                throw new RuntimeException("unreachable case");
-        }
+        PlayerColor color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
+        this.currentPlayer = getPlayerFromColour(color, maxWitches);
 
 
         currentPlayer.initWitches(getApplicationContext(), fieldRadius);
@@ -240,10 +224,10 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
 
         txtHome = findViewById(R.id.txtHome);
-        txtHome.setText("At home: " + currentPlayer.getWitchesAtHome());
+        txtHome.setText(String.format("At home: %d", currentPlayer.getWitchesAtHome()));
 
         txtGoal = findViewById(R.id.txtGoal);
-        txtGoal.setText("At goal: " + currentPlayer.getWitchesInGoal());
+        txtGoal.setText(String.format("At goal: %d", currentPlayer.getWitchesInGoal()));
 
         surface = new TouchableSurface(getApplicationContext(), this, dice, currentPlayer, yourTurnButton, yb, nb);
         surface.hideYourTurnButton();
@@ -325,13 +309,13 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 if (!colorVisible) {
                     for (Witch w : allWitches) {
                         w.showColor();
-                        colorVisible = true;
                     }
+                    colorVisible = true;
                 } else {
                     for (Witch w : allWitches) {
                         w.hideColor();
-                        colorVisible = false;
                     }
+                    colorVisible = false;
                 }
             }
         }, 2000);
@@ -508,8 +492,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         } else
             destination = felder[(witch.getPlayer().getStartFeld().getNumber() + lastDiceResult - 1) % 40];
 
-
+        for(Witch w : this.getAllWitches()){
+            if((w.getCurrentField()!=null) && w.getCurrentField().getNumber() == destination.getNumber()){
+                int nextFieldNumber = w.getCurrentField().getNumber()-4;
+                if(nextFieldNumber>=0) w.moveWitch(this.getFelder()[nextFieldNumber]);
+                else w.moveWitch(this.getFelder()[nextFieldNumber+40]);
+            }
+        }
         witch.putWitchOnGameboard(this, destination);
+
         surface.yb.setVisibility(INVISIBLE);
         surface.nb.setVisibility(INVISIBLE);
     }
@@ -654,6 +645,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     })
                             .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    checkIfWitchIsOnField();
                                     //selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + getLastDiceResult()) % 40]);
                                     //moveMessage.setSelectedWitch(selectedWitch);
                                     //moveMessage.setDiceResult(6);
@@ -705,7 +697,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
                     surface.setNextPlayer();
                 } else {
-                    //checkIfWitchIsOnField();
+                    checkIfWitchIsOnField();
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
                     surface.setNextPlayer();
                     //moveMessage.setSelectedWitch(selectedWitch);
@@ -753,11 +745,42 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         for (int i = 0; i < allWitches.size(); i++) {
 
             if (allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) {
-                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() % 40 - 4]);
+                int nextFieldNumber =   allWitches.get(i).getCurrentField().getNumber() % 40 - 4;
+                if(nextFieldNumber>=0) allWitches.get(i).moveWitch(getFelder()[nextFieldNumber]);
+                else  allWitches.get(i).moveWitch(getFelder()[nextFieldNumber + 40]);
             }
 
         }
     }
+
+    public Player getPlayerFromColour(PlayerColor color, int maxWitches) {
+        Player currentPlayer;
+        switch (color) {
+            case BLUE:
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
+                break;
+
+            case GREEN:
+                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
+                break;
+
+            case YELLOW:
+                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
+                break;
+
+            case RED:
+                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
+                break;
+            default:
+                throw new RuntimeException("unreachable case");
+        }
+        return currentPlayer;
+    }
+
+    public boolean isColorVisible() {
+        return this.colorVisible;
+    }
+
 
     public void startEndgameMessage(PlayerColor color){
         Intent winner = new Intent(getApplicationContext(), Winnerpop.class);

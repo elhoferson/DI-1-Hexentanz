@@ -1,6 +1,7 @@
 package com.example.di_1_hexentanz.network.obj.std;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ public class WifiP2pDeviceAdapter extends ArrayAdapter<WifiP2pDevice> {
         name.setText(devices.get(position).deviceName);
         summary.setText(devices.get(position).deviceAddress);
 
-        int white = context.getColor(android.R.color.white);
+        int white = Color.WHITE;
         name.setTextColor(white);
         summary.setTextColor(white);
         return convertView;
