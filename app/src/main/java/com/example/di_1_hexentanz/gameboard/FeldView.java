@@ -36,14 +36,12 @@ public class FeldView extends View {
     }
 
     public void highlight() {
-        color = Color.LTGRAY;
-        radius = radius+15;
+        color = Color.GRAY;
         invalidate();
     }
 
     public void unhighlight() {
         color = Color.WHITE;
-        radius = radius-15;
         invalidate();
     }
 }

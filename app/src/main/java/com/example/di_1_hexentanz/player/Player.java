@@ -88,4 +88,9 @@ public class Player {
     public void setHasCheated(boolean hasCheated) {
         this.hasCheated = hasCheated;
     }
+
+
+    public String getName() {
+        return name;
+    }
 }

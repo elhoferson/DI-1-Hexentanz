@@ -20,6 +20,7 @@ public class GameConfig {
     private Integer maxPlayers = 6;
 
     private List<Integer> turnOrder;
+    private Integer currentPlayer;
     private Integer round = 1;
 
     private GameConfig() {
@@ -43,18 +44,12 @@ public class GameConfig {
     
     public Boolean checkPlayerCheatedThisRound(Integer clientId) {
         Integer cheatRound = playersCheatRound.get(clientId);
-        if (cheatRound != null) {
+        if (cheatRound == null) {
             //player never cheated
             return false;
         }
-        
-        if (cheatRound == round) {
-            // the player cheated this round
-            return true;
-        } else {
-            // cheated in a round before
-            return false;
-        }    
+        // did the player cheat in this round?
+        return cheatRound.equals(round);
     }
 
     public Boolean registerPlayerColor(Integer clientId, PlayerColor color) {
@@ -103,7 +98,9 @@ public class GameConfig {
     }
 
     public Integer getStarter() {
-        return getTurnOrder().get(0);
+        Integer client = getTurnOrder().get(0);
+        currentPlayer = client;
+        return client;
     }
 
     public Integer getNextClient(Integer clientId) {
@@ -120,6 +117,7 @@ public class GameConfig {
         if (getSkipPlayers(round).contains(nextClient)) {
             nextClient = getNextClient(nextClient);
         }
+        currentPlayer = nextClient;
         return nextClient;
     }
 
@@ -127,7 +125,7 @@ public class GameConfig {
         gameStarted = true;
     }
 
-    public void reset() {
+    public static void reset() {
         instance = new GameConfig();
     }
 
@@ -137,6 +135,10 @@ public class GameConfig {
 
     public Integer getMaxPlayers() {
         return maxPlayers;
+    }
+
+    public Integer getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public Integer getRound() {

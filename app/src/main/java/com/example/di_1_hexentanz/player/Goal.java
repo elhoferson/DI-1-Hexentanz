@@ -2,7 +2,11 @@ package com.example.di_1_hexentanz.player;
 
 import android.support.v7.app.AppCompatActivity;
 
-public class Goal extends AppCompatActivity {
+import java.io.Serializable;
+
+
+public class Goal implements Serializable {
+
 
 
 
@@ -11,6 +15,7 @@ public class Goal extends AppCompatActivity {
             if((witch.getCurrentField().getNumber()+i)%40 == witch.player.getZielFeld().getNumber()
             || witch.getCurrentField().getNumber()+i == witch.player.getZielFeld().getNumber()){
                return true;
+
             }
 
     }
@@ -18,11 +23,12 @@ public class Goal extends AppCompatActivity {
 
     }
 
-    public void goInGoal(Player player){
-
-        player.setWitchesInGoal(player.getWitchesInGoal()+1);
-
+    public void checkRightGoal(Witch witch, Player player){
+        if(witch.getPlayer() != player){
+            player.setWitchesInGoal(player.getWitchesAtHome()+1);
+        }else witch.getPlayer().setWitchesInGoal(witch.getPlayer().getWitchesInGoal()+1);
     }
+
 
     public boolean isWinner(Player player){
        if( player.getWitchesInGoal() == 4){
@@ -31,19 +37,19 @@ public class Goal extends AppCompatActivity {
     }
 
     public boolean checkIfGoalInWay(Witch witch, int lastDiceResult) {
-       int witchFeld = witch.getPlayer().getZielFeld().getNumber();
+       int witchFeld;
 
-       try{
-           witchFeld = witch.getCurrentField().getNumber();
-       }catch (NullPointerException e){
-           return loop(witch,lastDiceResult,witchFeld);
 
-       }
+       if(witch.getCurrentField() == null){
+          witchFeld = witch.getPlayer().getZielFeld().getNumber();
+       }else witchFeld = witch.getCurrentField().getNumber();
 
-       return loop(witch,lastDiceResult,witchFeld);
-
+      return loop(witch,lastDiceResult,witchFeld);
+       
 
 }
+
+
 
 
     public boolean loop(Witch witch, int lastDiceResult, int witchFeld){
