@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.di_1_hexentanz.R;
 import com.example.di_1_hexentanz.dice.DiceUI;
@@ -67,7 +68,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     private TextView txtGoal;
     private DiceUI dice = new DiceUI();
     private Goal goal = new Goal();
-    MoveMessage moveMessage;
+    MoveMessage moveMessage = new MoveMessage();
 
 
     //handleTouch
@@ -181,7 +182,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                 surface.itsMyTurn();
             }
         });
-        
+
         drawBoardGame();
 
 
@@ -197,7 +198,6 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         nb.setVisibility(INVISIBLE);
 
 
-
         PlayerColor color = (PlayerColor) getIntent().getSerializableExtra("playerColor");
         this.currentPlayer = getPlayerFromColour(color, maxWitches);
 
@@ -209,15 +209,15 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
         }
 
         txtHome = findViewById(R.id.txtHome);
-        txtHome.setText(String.format("At home: %d", currentPlayer.getWitchesAtHome()) );
+        txtHome.setText(String.format("At home: %d", currentPlayer.getWitchesAtHome()));
 
         txtGoal = findViewById(R.id.txtGoal);
-        txtGoal.setText(String.format("At goal: %d" ,currentPlayer.getWitchesInGoal()));
+        txtGoal.setText(String.format("At goal: %d", currentPlayer.getWitchesInGoal()));
 
         surface = new TouchableSurface(getApplicationContext(), this, dice, currentPlayer, yourTurnButton, yb, nb);
         surface.setColor(color);
         addContentView(surface, findViewById(R.id.contraintLayout).getLayoutParams());
-        
+
         // add listeners for the host
         if (NetworkLogic.getInstance().isHost()) {
             NetworkLogic.getInstance().getHost().addServerListener(new AbstractHostMessageReceivedListener<EndTurnMessage>() {
@@ -235,12 +235,12 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     NetworkLogic.getInstance().sendMessageToAll(new MoveMessage());
                 }
             });
-            
+
             // calculate turn order and send starter turn msg
             GameConfig.getInstance().calculateTurnOrder();
             Integer firstPlayer = GameConfig.getInstance().getStarter();
             NetworkLogic.getInstance().sendMessageToClient(new TurnMessage(), firstPlayer);
-        } 
+        }
 
     }
 
@@ -511,7 +511,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     public ImageView getLuminosityIcon() {
         return luminosityIcon;
     }
-    
+
     public void playGame() {
 
         if (getState() == GameState.MY_TURN) {
@@ -592,6 +592,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     })
                             .setNegativeButton("6 Felder gehen", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    checkIfWitchIsOnField();
                                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 6 + getLastDiceResult()) % 40]);
                                     moveMessage.setSelectedWitch(selectedWitch);
                                     moveMessage.setDiceResult(6);
@@ -629,6 +630,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     })
                             .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    checkIfWitchIsOnField();
                                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
 
 
@@ -642,7 +644,7 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + 1 + getLastDiceResult()) % 40]);
 
                 } else {
-                    //checkIfWitchIsOnField();
+                    checkIfWitchIsOnField();
                     selectedWitch.moveWitch(getFelder()[(selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) % 40]);
                     moveMessage.setSelectedWitch(selectedWitch);
                     moveMessage.setDiceResult(getLastDiceResult());
@@ -685,43 +687,45 @@ public class Gamescreen extends AppCompatActivity implements SensorEventListener
     /**
      * check if there is already a witch on the field
      */
-   /* public void checkIfWitchIsOnField() {
+    public void checkIfWitchIsOnField() {
         for (int i = 0; i < allWitches.size(); i++) {
 
             if (allWitches.get(i).getCurrentField().getNumber() == selectedWitch.getCurrentField().getNumber() + getLastDiceResult()) {
-                allWitches.get(i).moveWitch(getFelder()[allWitches.get(i).getCurrentField().getNumber() % 40 - 4]);
+                int nextFieldNumber =   allWitches.get(i).getCurrentField().getNumber() % 40 - 4;
+                if(nextFieldNumber>=0) allWitches.get(i).moveWitch(getFelder()[nextFieldNumber]);
+                else  allWitches.get(i).moveWitch(getFelder()[nextFieldNumber + 40]);
             }
 
         }
-    }*/
+    }
 
-   public Player getPlayerFromColour(PlayerColor color, int maxWitches){
-       Player currentPlayer;
-       switch (color) {
-           case BLUE:
-               currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
-               break;
+    public Player getPlayerFromColour(PlayerColor color, int maxWitches) {
+        Player currentPlayer;
+        switch (color) {
+            case BLUE:
+                currentPlayer = new Player("Player1", PlayerColor.BLUE, 1, maxWitches, felder[1], felder[7]);
+                break;
 
-           case GREEN:
-               currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
-               break;
+            case GREEN:
+                currentPlayer = new Player("Player2", PlayerColor.GREEN, 2, maxWitches, felder[15], felder[14]);
+                break;
 
-           case YELLOW:
-               currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
-               break;
+            case YELLOW:
+                currentPlayer = new Player("Player3", PlayerColor.YELLOW, 3, maxWitches, felder[21], felder[20]);
+                break;
 
-           case RED:
-               currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
-               break;
-           default:
-               throw new RuntimeException("unreachable case");
-       }
-       return currentPlayer;
-   }
+            case RED:
+                currentPlayer = new Player("Player4", PlayerColor.RED, 4, maxWitches, felder[35], felder[34]);
+                break;
+            default:
+                throw new RuntimeException("unreachable case");
+        }
+        return currentPlayer;
+    }
 
-   public boolean isColorVisible(){
-       return this.colorVisible;
-   }
+    public boolean isColorVisible() {
+        return this.colorVisible;
+    }
 
 
 }
